@@ -1,0 +1,82 @@
+{
+  "id": "ev_e290296788b338763a6c4e482ac68836f3b112efcb5a2745a18858d847a89135",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x14039217e"
+  },
+  "result": {
+    "calls": [
+      "sub_140035790",
+      "sub_1400370f7",
+      "sub_140037136",
+      "sub_140040806",
+      "sub_1403588e3",
+      "sub_140358a54",
+      "sub_14037fa36"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x14039217e",
+    "function": "sub_14039217e",
+    "gotos": 3,
+    "inline_asm": 2,
+    "pseudo_code": "int64_t sub_14039217e(int64_t rdx, int64_t r8)\n{\n    rsi = rdx;\n    rdi = &stack_2c;\n    *(uint32_t*)(rdi) &= 0;\n    rax = \"width\";\n    rdx = &stack_90;\n    *(uint64_t*)(rdx) = rax;\n    rax = &data_1406bcd18;\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_1400370f7(r8, rdx, rdi);\n    if (*(uint32_t*)(rdi) == 0) {\n        rax = *(uint64_t*)(rsi);\n        rax = \"wrap_width\";\n        rdx = &stack_80;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406bcc3c;\n        *(uint64_t*)(rdx + 8) = rax;\n        rdi = &stack_2c;\n        sub_140040806(*(uint64_t*)(rax + 0x6e8), rdx, rdi);\n        if (*(uint32_t*)(rdi) == 0) {\n            rax = *(uint64_t*)(rsi);\n            rax = \"rulers\";\n            rdx = &stack_70;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406b6552;\n            *(uint64_t*)(rdx + 8) = rax;\n            rax = sub_14037fa36(*(uint64_t*)(rax + 0x6e8), rdx, &stack_30);\n            if (al == 0) {\nlabel_140392266:\n                eax = stack_2c;\n            } else {\n                rcx = stack_30;\n                rax = *(uint64_t*)(rcx);\n                if (rax == *(uint64_t*)(rcx + 8)) {\n                    goto label_140392266;\n                } else {\n                    ecx = *(uint32_t*)(rax);\n                    if (ecx == 5) {\n                        rcx = *(uint64_t*)(rax + 8);\n                        if (rcx != *(uint64_t*)(rax + 16)) {\n                            sub_140037136(rcx, &stack_2c);\n                        }\n                        goto label_140392266;\n                    } else {\n                        if (ecx != 1) {\n                            goto label_140392266;\n                        } else {\n                            eax = *(uint32_t*)(rax + 8);\n                            stack_2c = eax;\n                        }\n                    }\n                }\n            }\n            if (eax == 0) {\n                stack_2c = 0x4e;\n            }\n        }\n    }\n    rdi = &stack_30;\n    sub_1403588e3(rdi, rsi);\n    rax = *(uint64_t*)(rdi + 8);\n    rdi = &stack_50;\n    while (true) {\n        if (rax == stack_30) {\n            break;\n        } else {\n            rbx = rax - 0x18;\n            __asm(\"movups xmm0, [rax-0x18]\");\n            __asm(\"movaps [rsp+0x50], xmm0\");\n            rax = *(uint64_t*)(rax - 8);\n            stack_60 = rax;\n            sub_140358a54(rsi, rdi, stack_2c);\n            rax = rbx;\n            continue;\n        }\n        break;\n    }\n    sub_140035790(&stack_30);\n    return rax;\n}\n",
+    "signature": "int64_t sub_14039217e(int64_t rdx, int64_t r8)",
+    "strings": [
+      "width",
+      "wrap_width",
+      "rulers"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_14039217e (81 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "3 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "2 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x14039217e"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

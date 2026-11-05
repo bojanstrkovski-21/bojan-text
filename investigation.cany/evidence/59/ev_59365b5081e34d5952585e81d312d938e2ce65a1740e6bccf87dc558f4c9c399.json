@@ -1,0 +1,54 @@
+{
+  "id": "ev_59365b5081e34d5952585e81d312d938e2ce65a1740e6bccf87dc558f4c9c399",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 10,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "Line %"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406d9b2f",
+        "references": [
+          {
+            "from": "0x140565e28",
+            "function": "sub_140565e09"
+          }
+        ],
+        "section": ".rdata",
+        "text": "LTC_ARGCHK '%s' failure on line %d of file %s\n"
+      }
+    ],
+    "total": 1
+  },
+  "summary": "1 strings match \"Line %\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 1,
+    "total": 1
+  },
+  "locations": [],
+  "links": []
+}

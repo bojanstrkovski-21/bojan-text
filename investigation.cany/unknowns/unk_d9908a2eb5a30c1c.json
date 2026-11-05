@@ -1,0 +1,18 @@
+{
+  "id": "unk_d9908a2eb5a30c1c",
+  "revision": 2,
+  "question": "Does the original have built-in language-server (LSP) support, or only via the Python 'LSP' package?",
+  "severity": "medium",
+  "domain": "features",
+  "status": "resolved",
+  "probes": [
+    "search strings for LSP / languageServer / textDocument",
+    "list Python plugin API in Lib folder"
+  ],
+  "evidence_for": [
+    "ev_b802c724ca252d97c3145868bb7105505c3a3de6548a49a876033b8a2fc4e478",
+    "ev_bb565467d7c06a3510e890bc47b9ae85615c0b8aed9f05696388db91cb15ce86"
+  ],
+  "evidence_against": [],
+  "resolution": "No LSP protocol strings (\"LSP\", \"textDocument\") exist in the program; language-server support in the original comes only from the third-party Python LSP package run by plugin_host. The rebuild has its own small built-in LSP client and reads the Sublime LSP package's client settings."
+}

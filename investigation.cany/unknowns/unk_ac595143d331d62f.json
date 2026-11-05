@@ -1,0 +1,15 @@
+{
+  "id": "unk_ac595143d331d62f",
+  "revision": 2,
+  "question": "Exact look of the original window (tab bar height, sidebar width, padding) — no picture of the running original was captured",
+  "severity": "medium",
+  "domain": "ui",
+  "status": "blocked",
+  "probes": [
+    "capture the running original's window with native_window_capture",
+    "compare with rebuild_check picture diff"
+  ],
+  "evidence_for": [],
+  "evidence_against": [],
+  "resolution": "Capturing the running original was declined. Colors come from the Default Dark theme and Mariana scheme files; tab bar 36 px, status bar 26 px, side bar 220 px and minimap 110 px are estimates, marked so in mechanics.json."
+}

@@ -1,0 +1,87 @@
+{
+  "id": "ev_fcab9bd70fa6385ffec41a41bfef766f89cf66bb7ea87face0709cf6f8e67d29",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140387134"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax + 16",
+      "sub_14003132c",
+      "sub_1400318e6",
+      "sub_14003191a",
+      "sub_140032338",
+      "sub_14004bc1a",
+      "sub_14013d5fc",
+      "sub_14013f99e",
+      "sub_140189ac6",
+      "sub_140189b12",
+      "sub_140349ac0",
+      "sub_14034eace",
+      "sub_14034eca2",
+      "sub_14034edac",
+      "sub_14034efcc",
+      "sub_140369208",
+      "sub_140369256"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140387134",
+    "function": "sub_140387134",
+    "gotos": 0,
+    "inline_asm": 5,
+    "pseudo_code": "int64_t sub_140387134(int64_t rcx, int64_t rdx, int64_t r8)\n{\n    rbx = r8;\n    rdi = rdx;\n    rsi = rcx;\n    sub_14013d5fc();\n    rax = &data_140635788;\n    *(uint64_t*)(rsi) = rax;\n    rax = &data_140635988;\n    *(uint64_t*)(rsi + 8) = rax;\n    *(uint64_t*)(rsi + 0x110) &= 0;\n    rax = *(uint64_t*)(rdi);\n    *(uint64_t*)(rsi + 0x118) = rax;\n    *(uint64_t*)(rdi) &= 0;\n    rax = 0x3f80000060444444;\n    *(uint64_t*)(rsi + 0x120) = rax;\n    *(uint8_t*)(rsi + 0x128) = 0;\n    rax = \"minimap_control\";\n    rdx = &stack_68;\n    *(uint64_t*)(rdx) = rax;\n    rax = &data_1406bb96a;\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_14013f99e(rsi);\n    rax = *(uint64_t*)(rsi + 0x118);\n    rax = *(uint64_t*)(rax + 0x6c8);\n    stack_48 = rax;\n    if (rax == 0) {\n        r15d = 0;\n    } else {\n        *(uint32_t*)(rax + 16)++;\n        r15 = stack_48;\n    }\n    rax = &data_140635b70;\n    r14 = &stack_28;\n    *(uint64_t*)(r14) = rax;\n    *(uint64_t*)(r14 + 8) = rsi;\n    sub_14034eace(r15, rsi, r14);\n    rax = *(uint64_t*)(r14);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    rax = &data_140635b88;\n    r14 = &stack_28;\n    *(uint64_t*)(r14) = rax;\n    *(uint64_t*)(r14 + 8) = rsi;\n    sub_14034eca2(r15, rsi, r14);\n    rax = *(uint64_t*)(r14);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    rax = &data_140635ba0;\n    r14 = &stack_28;\n    *(uint64_t*)(r14) = rax;\n    *(uint64_t*)(r14 + 8) = rsi;\n    sub_14034edac(r15, rsi, r14);\n    rax = *(uint64_t*)(r14);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    r14 = rsi + 0x110;\n    rax = &data_140635bb8;\n    r12 = &stack_28;\n    *(uint64_t*)(r12) = rax;\n    *(uint64_t*)(r12 + 8) = rsi;\n    sub_14034efcc(r15, rsi, r12);\n    rax = *(uint64_t*)(r12);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    r12 = &stack_28;\n    sub_140349ac0(r15, r12, rbx, 0);\n    sub_1400318e6(r14, r12);\n    sub_14003191a(r12);\n    rax = *(uint64_t*)(rsi + 0x110);\n    sub_140189b12(*(uint64_t*)(rax + 0x6e8));\n    rax = *(uint64_t*)(rsi + 0x110);\n    rdx = *(uint64_t*)(rsi + 0x118);\n    rcx = *(uint64_t*)(rax + 0x6e8);\n    rax = *(uint64_t*)(rdx + 0x6e8);\n    stack_50 = rax;\n    if (rax != 0) {\n        *(uint32_t*)(rax + 8)++;\n    }\n    sub_140189ac6(rcx, &stack_50);\n    ecx = 0x720;\n    rdx = *(uint64_t*)(rsi + 0x118);\n    rdx += rcx;\n    rcx += *(uint64_t*)(rsi + 0x110);\n    sub_14004bc1a();\n    rax = *(uint64_t*)(rsi + 0x110);\n    rcx = *(uint64_t*)(rsi + 0x118);\n    rdx = *(uint64_t*)(rcx + 0x650);\n    __asm(\"movss xmm0, [rdx+8]\");\n    __asm(\"addss xmm0, [rcx+0x6a8]\");\n    __asm(\"addss xmm0, [rcx+0x6ac]\");\n    __asm(\"mulss xmm0, [0x1405aa7a4]\");\n    __asm(\"movss [rax+0x710], xmm0\");\n    rcx = *(uint64_t*)(rsi + 0x110);\n    rax = *(uint64_t*)(rcx + 0x6e8);\n    if (rax != 0) {\n        rcx = \"minimap_horizontal_scrolling\";\n        rdx = &stack_58;\n        *(uint64_t*)(rdx) = rcx;\n        rcx = &data_1406bd84a;\n        *(uint64_t*)(rdx + 8) = rcx;\n        sub_140032338(rax, rdx, rsi + 0x128);\n        rcx = *(uint64_t*)(r14);\n    }\n    rax = &data_140635bd0;\n    rbx = &stack_28;\n    *(uint64_t*)(rbx) = rax;\n    *(uint64_t*)(rbx + 8) = rsi;\n    sub_140369208(rcx, rsi, rbx);\n    rax = *(uint64_t*)(rbx);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    rax = &data_140635be8;\n    rbx = &stack_28;\n    *(uint64_t*)(rbx) = rax;\n    *(uint64_t*)(rbx + 8) = rsi;\n    sub_140369256(*(uint64_t*)(rsi + 0x110), rsi, rbx);\n    rax = *(uint64_t*)(rbx);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_28);\n    }\n    sub_14003132c(&stack_48);\n    sub_14003191a(rdi);\n    rax = rsi;\n    return rax;\n}\n",
+    "signature": "int64_t sub_140387134(int64_t rcx, int64_t rdx, int64_t r8)",
+    "strings": [
+      "minimap_control",
+      "minimap_horizontal_scrolling"
+    ],
+    "structured": true
+  },
+  "summary": "Pseudo-C for sub_140387134 (131 lines).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "inline_asm",
+      "message": "5 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140387134"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

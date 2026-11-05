@@ -1,0 +1,200 @@
+{
+    "name": "Bojan Night",
+    "author": "Bojan Text",
+    "variables": {
+        "bg": "#1b2230",
+        "fg": "#d6deeb",
+        "caret": "#ffb454",
+        "accent": "#5ab0f6",
+        "line": "#ffffff0d",
+        "sel": "#3b4d6b",
+        "comment": "#7f8ea3",
+        "string": "#a5d98f",
+        "keyword": "#c792ea",
+        "func": "#82aaff",
+        "number": "#f78c6c",
+        "type": "#ffcb6b",
+        "tag": "#ff6b81",
+        "attr": "#ffd580",
+        "var": "#e6edf3",
+        "param": "#f2a3c9",
+        "punct": "#89ddff",
+        "constant": "#f78c6c",
+        "heading": "#82aaff",
+        "link": "#5ab0f6",
+        "regex": "#89ddff",
+        "invalid": "#ff5370"
+    },
+    "globals": {
+        "foreground": "var(fg)",
+        "background": "var(bg)",
+        "caret": "var(caret)",
+        "accent": "var(accent)",
+        "line_highlight": "var(line)",
+        "selection": "var(sel)",
+        "inactive_selection": "color(var(sel) alpha(0.6))",
+        "selection_border": "var(sel)",
+        "gutter_foreground": "color(var(fg) alpha(0.35))",
+        "find_highlight": "color(var(caret) alpha(0.35))",
+        "find_highlight_foreground": "var(fg)",
+        "guide": "color(var(fg) alpha(0.08))",
+        "active_guide": "color(var(accent) alpha(0.5))",
+        "misspelling": "var(invalid)"
+    },
+    "rules": [
+        {
+            "name": "Comment",
+            "scope": "comment, punctuation.definition.comment",
+            "foreground": "var(comment)",
+            "font_style": "italic"
+        },
+        {
+            "name": "String",
+            "scope": "string",
+            "foreground": "var(string)"
+        },
+        {
+            "name": "Escape",
+            "scope": "constant.character.escape",
+            "foreground": "var(punct)"
+        },
+        {
+            "name": "Number",
+            "scope": "constant.numeric",
+            "foreground": "var(number)"
+        },
+        {
+            "name": "Constant",
+            "scope": "constant.language, constant.other, support.constant",
+            "foreground": "var(constant)"
+        },
+        {
+            "name": "Keyword",
+            "scope": "keyword, storage.type, storage.modifier",
+            "foreground": "var(keyword)"
+        },
+        {
+            "name": "Operator",
+            "scope": "keyword.operator",
+            "foreground": "var(punct)"
+        },
+        {
+            "name": "Punctuation",
+            "scope": "punctuation.separator, punctuation.terminator, punctuation.accessor, punctuation.section",
+            "foreground": "var(punct)"
+        },
+        {
+            "name": "Function",
+            "scope": "entity.name.function, support.function, variable.function, meta.function-call",
+            "foreground": "var(func)"
+        },
+        {
+            "name": "Type",
+            "scope": "entity.name.type, entity.name.class, support.type, support.class, entity.other.inherited-class, storage.type.class",
+            "foreground": "var(type)"
+        },
+        {
+            "name": "Tag",
+            "scope": "entity.name.tag",
+            "foreground": "var(tag)"
+        },
+        {
+            "name": "Attribute",
+            "scope": "entity.other.attribute-name",
+            "foreground": "var(attr)",
+            "font_style": "italic"
+        },
+        {
+            "name": "CSS property",
+            "scope": "support.type.property-name",
+            "foreground": "var(func)"
+        },
+        {
+            "name": "CSS value",
+            "scope": "support.constant.property-value, meta.property-value",
+            "foreground": "var(constant)"
+        },
+        {
+            "name": "Variable",
+            "scope": "variable",
+            "foreground": "var(var)"
+        },
+        {
+            "name": "Parameter",
+            "scope": "variable.parameter",
+            "foreground": "var(param)",
+            "font_style": "italic"
+        },
+        {
+            "name": "Language variable",
+            "scope": "variable.language",
+            "foreground": "var(tag)",
+            "font_style": "italic"
+        },
+        {
+            "name": "Regex",
+            "scope": "string.regexp",
+            "foreground": "var(regex)"
+        },
+        {
+            "name": "Heading",
+            "scope": "markup.heading, entity.name.section",
+            "foreground": "var(heading)",
+            "font_style": "bold"
+        },
+        {
+            "name": "Bold",
+            "scope": "markup.bold",
+            "foreground": "var(number)",
+            "font_style": "bold"
+        },
+        {
+            "name": "Italic",
+            "scope": "markup.italic",
+            "foreground": "var(param)",
+            "font_style": "italic"
+        },
+        {
+            "name": "Link",
+            "scope": "markup.underline.link, meta.link",
+            "foreground": "var(link)",
+            "font_style": "underline"
+        },
+        {
+            "name": "Code",
+            "scope": "markup.raw",
+            "foreground": "var(string)"
+        },
+        {
+            "name": "Quote",
+            "scope": "markup.quote",
+            "foreground": "var(comment)",
+            "font_style": "italic"
+        },
+        {
+            "name": "List",
+            "scope": "markup.list punctuation.definition.list_item, markup.list.numbered.bullet",
+            "foreground": "var(keyword)"
+        },
+        {
+            "name": "Inserted",
+            "scope": "markup.inserted",
+            "foreground": "var(string)"
+        },
+        {
+            "name": "Deleted",
+            "scope": "markup.deleted",
+            "foreground": "var(tag)"
+        },
+        {
+            "name": "Changed",
+            "scope": "markup.changed",
+            "foreground": "var(type)"
+        },
+        {
+            "name": "Invalid",
+            "scope": "invalid",
+            "foreground": "var(invalid)"
+        }
+    ]
+}

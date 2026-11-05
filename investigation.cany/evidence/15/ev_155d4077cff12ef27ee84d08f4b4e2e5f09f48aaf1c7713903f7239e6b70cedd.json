@@ -1,0 +1,305 @@
+{
+  "id": "ev_155d4077cff12ef27ee84d08f4b4e2e5f09f48aaf1c7713903f7239e6b70cedd",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 40,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "^(copy_with_empty_selection|word_separators|caret_extra_width|line_padding_top|minimap_scroll_to_clicked_text|tab_completion|auto_indent|trim_automatic_white_space|ensure_newline_at_eof_on_save|find_selected_text|shift_tab_unindent|wrap_width|rulers|scroll_speed|margin|fold_buttons|draw_indent_guides|indent_guide_options|highlight_line|caret_style|block_caret|default_line_ending|show_definitions|drag_text)$"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406b4679",
+        "references": [
+          {
+            "from": "0x14037f7b5",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "drag_text"
+      },
+      {
+        "address": "0x1406b4690",
+        "references": [
+          {
+            "from": "0x140065430",
+            "function": "sub_140065390"
+          },
+          {
+            "from": "0x14006ca24",
+            "function": "sub_14006c940"
+          }
+        ],
+        "section": ".rdata",
+        "text": "find_selected_text"
+      },
+      {
+        "address": "0x1406b46a3",
+        "references": [
+          {
+            "from": "0x1403877e9",
+            "function": "sub_1403876e2"
+          }
+        ],
+        "section": ".rdata",
+        "text": "minimap_scroll_to_clicked_text"
+      },
+      {
+        "address": "0x1406b4efb",
+        "references": [
+          {
+            "from": "0x140346e5f",
+            "function": "sub_14034676c"
+          },
+          {
+            "from": "0x14036abdb",
+            "function": "sub_14036aadb"
+          }
+        ],
+        "section": ".rdata",
+        "text": "auto_indent"
+      },
+      {
+        "address": "0x1406b55ff",
+        "references": [
+          {
+            "from": "0x140332a5e",
+            "function": "sub_140332710"
+          },
+          {
+            "from": "0x1403365a7",
+            "function": "sub_140333e6a"
+          },
+          {
+            "from": "0x14037f4e0",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "block_caret"
+      },
+      {
+        "address": "0x1406b654c",
+        "references": [
+          {
+            "from": "0x140332b24",
+            "function": "sub_140332710"
+          },
+          {
+            "from": "0x140336189",
+            "function": "sub_140333e6a"
+          },
+          {
+            "from": "0x14037ec77",
+            "function": "sub_14037d6b4"
+          },
+          {
+            "from": "0x140392207",
+            "function": "sub_14039217e"
+          }
+        ],
+        "section": ".rdata",
+        "text": "rulers"
+      },
+      {
+        "address": "0x1406b68a1",
+        "references": [
+          {
+            "from": "0x14037e4b7",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "fold_buttons"
+      },
+      {
+        "address": "0x1406b7695",
+        "references": [
+          {
+            "from": "0x14037ebba",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "draw_indent_guides"
+      },
+      {
+        "address": "0x1406b9903",
+        "references": [
+          {
+            "from": "0x14037e6c1",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "line_padding_top"
+      },
+      {
+        "address": "0x1406ba68f",
+        "references": [
+          {
+            "from": "0x14038dbf7",
+            "function": "sub_14038dafa"
+          },
+          {
+            "from": "0x14038ddac",
+            "function": "sub_14038dcf6"
+          }
+        ],
+        "section": ".rdata",
+        "text": "copy_with_empty_selection"
+      },
+      {
+        "address": "0x1406bafa9",
+        "references": [
+          {
+            "from": "0x140177f56",
+            "function": "sub_140176c05"
+          },
+          {
+            "from": "0x140178070",
+            "function": "sub_140176c05"
+          },
+          {
+            "from": "0x14037e441",
+            "function": "sub_14037d6b4"
+          },
+          {
+            "from": "0x1403a1850",
+            "function": "sub_1403a1754"
+          }
+        ],
+        "section": ".rdata",
+        "text": "margin"
+      },
+      {
+        "address": "0x1406bcc32",
+        "references": [
+          {
+            "from": "0x14037df4d",
+            "function": "sub_14037d6b4"
+          },
+          {
+            "from": "0x1403921ce",
+            "function": "sub_14039217e"
+          }
+        ],
+        "section": ".rdata",
+        "text": "wrap_width"
+      },
+      {
+        "address": "0x1406bcc74",
+        "references": [
+          {
+            "from": "0x14037f734",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "caret_extra_width"
+      },
+      {
+        "address": "0x1406bda17",
+        "references": [
+          {
+            "from": "0x140346ff5",
+            "function": "sub_14034676c"
+          },
+          {
+            "from": "0x14036ac60",
+            "function": "sub_14036aadb"
+          }
+        ],
+        "section": ".rdata",
+        "text": "default_line_ending"
+      },
+      {
+        "address": "0x1406be17f",
+        "references": [
+          {
+            "from": "0x1403471b3",
+            "function": "sub_14034676c"
+          },
+          {
+            "from": "0x14036acac",
+            "function": "sub_14036aadb"
+          }
+        ],
+        "section": ".rdata",
+        "text": "ensure_newline_at_eof_on_save"
+      },
+      {
+        "address": "0x1406bf34c",
+        "references": [
+          {
+            "from": "0x14037e5e5",
+            "function": "sub_14037d6b4"
+          },
+          {
+            "from": "0x1403a18f9",
+            "function": "sub_1403a1754"
+          }
+        ],
+        "section": ".rdata",
+        "text": "highlight_line"
+      },
+      {
+        "address": "0x1406bfbd7",
+        "references": [
+          {
+            "from": "0x14037f547",
+            "function": "sub_14037d6b4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "caret_style"
+      },
+      {
+        "address": "0x1406c120f",
+        "references": [
+          {
+            "from": "0x140346ef5",
+            "function": "sub_14034676c"
+          },
+          {
+            "from": "0x14036ac14",
+            "function": "sub_14036aadb"
+          }
+        ],
+        "section": ".rdata",
+        "text": "trim_automatic_white_space"
+      }
+    ],
+    "total": 18
+  },
+  "summary": "18 strings match \"^(copy_with_empty_selection|word_separators|caret_extra_width|line_padding_top|minimap_scroll_to_clicked_text|tab_completion|auto_indent|trim_automatic_white_space|ensure_newline_at_eof_on_save|find_selected_text|shift_tab_unindent|wrap_width|rulers|scroll_speed|margin|fold_buttons|draw_indent_guides|indent_guide_options|highlight_line|caret_style|block_caret|default_line_ending|show_definitions|drag_text)$\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 18,
+    "total": 18
+  },
+  "locations": [],
+  "links": []
+}

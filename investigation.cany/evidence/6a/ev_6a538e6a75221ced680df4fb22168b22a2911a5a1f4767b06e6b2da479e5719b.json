@@ -1,0 +1,54 @@
+{
+  "id": "ev_6a538e6a75221ced680df4fb22168b22a2911a5a1f4767b06e6b2da479e5719b",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": true,
+    "limit": 10,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "Column"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406d18cd",
+        "references": [
+          {
+            "from": "0x140368458",
+            "function": "sub_14036805e"
+          }
+        ],
+        "section": ".rdata",
+        "text": ", Column "
+      }
+    ],
+    "total": 1
+  },
+  "summary": "1 strings match \"Column\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 1,
+    "total": 1
+  },
+  "locations": [],
+  "links": []
+}

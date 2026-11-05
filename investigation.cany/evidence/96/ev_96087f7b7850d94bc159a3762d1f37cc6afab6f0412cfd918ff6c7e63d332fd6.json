@@ -1,0 +1,207 @@
+{
+  "id": "ev_96087f7b7850d94bc159a3762d1f37cc6afab6f0412cfd918ff6c7e63d332fd6",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 30,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "^(hsla?|rgba?|hwb|blend|blenda|alpha|lightness|saturation|min-contrast)$"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406a19df",
+        "references": [],
+        "section": ".rdata",
+        "text": "alpha"
+      },
+      {
+        "address": "0x1406b4b01",
+        "references": [
+          {
+            "from": "0x1401740b9",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "min-contrast"
+      },
+      {
+        "address": "0x1406b61fa",
+        "references": [
+          {
+            "from": "0x140136e65",
+            "function": "sub_140136ccc"
+          },
+          {
+            "from": "0x140173b70",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x140339eb2",
+            "function": "sub_1403398a5"
+          }
+        ],
+        "section": ".rdata",
+        "text": "lightness"
+      },
+      {
+        "address": "0x1406ba9ba",
+        "references": [
+          {
+            "from": "0x140136e14",
+            "function": "sub_140136ccc"
+          },
+          {
+            "from": "0x140173a86",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x140339e57",
+            "function": "sub_1403398a5"
+          },
+          {
+            "from": "0x14033a01c",
+            "function": "sub_1403398a5"
+          }
+        ],
+        "section": ".rdata",
+        "text": "saturation"
+      },
+      {
+        "address": "0x1406ba9c5",
+        "references": [
+          {
+            "from": "0x140620490",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "Saturation"
+      },
+      {
+        "address": "0x1406bb5fd",
+        "references": [
+          {
+            "from": "0x1401371dd",
+            "function": "sub_140136ccc"
+          },
+          {
+            "from": "0x1401734ba",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x140173f8f",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x1401ada80",
+            "function": "sub_1401ada22"
+          }
+        ],
+        "section": ".rdata",
+        "text": "hsl"
+      },
+      {
+        "address": "0x1406c1857",
+        "references": [
+          {
+            "from": "0x140136e8c",
+            "function": "sub_140136ccc"
+          },
+          {
+            "from": "0x1401738b6",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x140173d0f",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "blend"
+      },
+      {
+        "address": "0x1406c40c4",
+        "references": [
+          {
+            "from": "0x1401370c8",
+            "function": "sub_140136ccc"
+          },
+          {
+            "from": "0x1401732dc",
+            "function": "sub_140173198"
+          },
+          {
+            "from": "0x140173c5c",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "rgb"
+      },
+      {
+        "address": "0x1406c4416",
+        "references": [
+          {
+            "from": "0x1401735ca",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "hsla"
+      },
+      {
+        "address": "0x1406c4473",
+        "references": [
+          {
+            "from": "0x1401738e7",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "blenda"
+      },
+      {
+        "address": "0x1406c447d",
+        "references": [
+          {
+            "from": "0x1401733ba",
+            "function": "sub_140173198"
+          }
+        ],
+        "section": ".rdata",
+        "text": "rgba"
+      }
+    ],
+    "total": 11
+  },
+  "summary": "11 strings match \"^(hsla?|rgba?|hwb|blend|blenda|alpha|lightness|saturation|min-contrast)$\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 11,
+    "total": 11
+  },
+  "locations": [],
+  "links": []
+}

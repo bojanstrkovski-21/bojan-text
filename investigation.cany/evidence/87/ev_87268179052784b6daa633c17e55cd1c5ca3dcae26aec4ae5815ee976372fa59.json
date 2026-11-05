@@ -1,0 +1,46 @@
+{
+  "id": "ev_87268179052784b6daa633c17e55cd1c5ca3dcae26aec4ae5815ee976372fa59",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_data_show",
+  "params": {
+    "address": "0x1405aa7a4",
+    "type": "f32"
+  },
+  "result": {
+    "address": "0x1405aa7a4",
+    "name": null,
+    "references_to": 245,
+    "section": ".rdata",
+    "type": "f32",
+    "value": "0.5"
+  },
+  "summary": "0x1405aa7a4 looks like f32.",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "no_type_recovery",
+      "message": "the clean-room engine doesn't recover declared types; this reads the bytes and infers what they look like"
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x1405aa7a4"
+    }
+  ],
+  "links": []
+}

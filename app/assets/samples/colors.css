@@ -1,0 +1,24 @@
+/* Every kind of color code is recognized */
+:root {
+	--accent: #5ab0f6;
+	--accent-soft: #5ab0f680;
+	--warm: rgb(255, 122, 89);
+	--leaf: rgb(52 211 153 / 85%);
+	--sun: hsl(40, 94%, 68%);
+	--plum: hsla(300, 30%, 68%, 0.9);
+	--ink: hwb(220 10% 70%);
+	--sky: oklch(75% 0.12 230);
+	--rose: lab(62% 48 12);
+}
+
+.button {
+	color: white;
+	background: tomato;
+	border: 1px solid rebeccapurple;
+	box-shadow: 0 2px 8px #0003;
+}
+
+.badge {
+	background: #fc0;
+	color: #1b2230;
+}

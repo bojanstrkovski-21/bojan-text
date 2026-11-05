@@ -1,0 +1,118 @@
+{
+  "id": "ev_ac2658fb8fcbfbefaf90aca6bf7255475437613b7a8262fd24a6aef284405532",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 30,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "color_scheme"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406b4c6f",
+        "references": [
+          {
+            "from": "0x1400ebb44",
+            "function": "sub_1400ebb1c"
+          },
+          {
+            "from": "0x1403a51a5",
+            "function": "sub_1403a5169"
+          }
+        ],
+        "section": ".rdata",
+        "text": "color_scheme_"
+      },
+      {
+        "address": "0x1406b733d",
+        "references": [
+          {
+            "from": "0x140031f60",
+            "function": "sub_140031dfe"
+          }
+        ],
+        "section": ".rdata",
+        "text": "color_schemes"
+      },
+      {
+        "address": "0x1406bf529",
+        "references": [
+          {
+            "from": "0x14017b564",
+            "function": "sub_14017b513"
+          }
+        ],
+        "section": ".rdata",
+        "text": "light_color_scheme"
+      },
+      {
+        "address": "0x1406bf541",
+        "references": [
+          {
+            "from": "0x140031e87",
+            "function": "sub_140031dfe"
+          },
+          {
+            "from": "0x1400c1c08",
+            "function": "sub_1400c18de"
+          },
+          {
+            "from": "0x1400c1d84",
+            "function": "sub_1400c18de"
+          },
+          {
+            "from": "0x14017b523",
+            "function": "sub_14017b513"
+          }
+        ],
+        "section": ".rdata",
+        "text": "color_scheme"
+      },
+      {
+        "address": "0x1406cbf23",
+        "references": [
+          {
+            "from": "0x1400ebb95",
+            "function": "sub_1400ebb1c"
+          },
+          {
+            "from": "0x1403a51f9",
+            "function": "sub_1403a5169"
+          }
+        ],
+        "section": ".rdata",
+        "text": "color_scheme_tint_2"
+      }
+    ],
+    "total": 5
+  },
+  "summary": "5 strings match \"color_scheme\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 5,
+    "total": 5
+  },
+  "locations": [],
+  "links": []
+}

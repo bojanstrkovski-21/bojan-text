@@ -1,0 +1,78 @@
+{
+  "id": "ev_a16f296509be956dcdc8dd5eff51e12d61292fd2bbe78b18d87dd2b7af0cbf99",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x14017b513"
+  },
+  "result": {
+    "calls": [
+      "sub_14002e7ec",
+      "sub_140033076",
+      "sub_14003510c",
+      "sub_14003af90",
+      "sub_1401122e2",
+      "sub_1401e269f"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x14017b513",
+    "function": "sub_14017b513",
+    "gotos": 1,
+    "inline_asm": 0,
+    "pseudo_code": "int32_t sub_14017b513(int64_t rcx, int64_t rdx, int64_t r8)\n{\n    rdi = r8;\n    rsi = rdx;\n    rbx = rcx;\n    rax = \"color_scheme\";\n    rdx = &stack_30;\n    *(uint64_t*)(rdx) = rax;\n    rax = &data_1406bf54d;\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_140033076(rcx, rdx, rsi);\n    eax = sub_14003af90(rsi, \"auto\");\n    if (al != 0) {\n        eax = sub_1401e269f();\n        rcx = \"dark_\";\n        r8 = \"light_color_scheme\";\n        r8 = rcx;\n        rdx = &stack_20;\n        *(uint64_t*)(rdx) = r8;\n        eax = al;\n        rax = -rax;\n        rax += r8;\n        rax += 0x12;\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_140033076(rbx, rdx, rsi);\n    }\n    if (*(uint64_t*)(rsi + 16) == 0) {\nlabel_14017b5b3:\n        rbx = &stack_40;\n        sub_1401122e2(rdi, rbx);\n        sub_14003510c(rsi, rbx);\n        sub_14002e7ec(rbx);\n        eax = 0;\n    } else {\n        eax = sub_14003af90(rsi, \"auto\");\n        ecx = eax;\n        al = 1;\n        if (cl != 0) {\n            goto label_14017b5b3;\n        }\n    }\n    return eax;\n}\n",
+    "signature": "int32_t sub_14017b513(int64_t rcx, int64_t rdx, int64_t r8)",
+    "strings": [
+      "color_scheme",
+      "auto",
+      "dark_",
+      "light_color_scheme"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_14017b513 (43 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "1 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra stopped before the bridge started; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-runtime-7600-1793869743127780400\\ghidra.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x14017b513"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

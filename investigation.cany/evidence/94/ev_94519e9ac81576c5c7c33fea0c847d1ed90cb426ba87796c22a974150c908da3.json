@@ -1,0 +1,109 @@
+{
+  "id": "ev_94519e9ac81576c5c7c33fea0c847d1ed90cb426ba87796c22a974150c908da3",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 30,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "^(sort_lines|permute_lines|swap_line_up|join_lines|duplicate_line|toggle_bookmark|wrap_lines|expand_selection|title_case|upper_case|convert_ident_case|transpose|find_under_expand|select_lines|next_bookmark|jump_back)$"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406b72ec",
+        "references": [],
+        "section": ".rdata",
+        "text": "select_lines"
+      },
+      {
+        "address": "0x1406b72f9",
+        "references": [],
+        "section": ".rdata",
+        "text": "wrap_lines"
+      },
+      {
+        "address": "0x1406b731f",
+        "references": [
+          {
+            "from": "0x14038939b",
+            "function": "sub_140388bec"
+          }
+        ],
+        "section": ".rdata",
+        "text": "join_lines"
+      },
+      {
+        "address": "0x1406ba76f",
+        "references": [],
+        "section": ".rdata",
+        "text": "expand_selection"
+      },
+      {
+        "address": "0x1406bc3d1",
+        "references": [],
+        "section": ".rdata",
+        "text": "next_bookmark"
+      },
+      {
+        "address": "0x1406bc3ef",
+        "references": [],
+        "section": ".rdata",
+        "text": "toggle_bookmark"
+      },
+      {
+        "address": "0x1406bf381",
+        "references": [],
+        "section": ".rdata",
+        "text": "duplicate_line"
+      },
+      {
+        "address": "0x1406c18cd",
+        "references": [
+          {
+            "from": "0x14006320e",
+            "function": "sub_140062f76"
+          },
+          {
+            "from": "0x14006fe95",
+            "function": "sub_14006fd7c"
+          },
+          {
+            "from": "0x1400f422d",
+            "function": "sub_1400f419d"
+          }
+        ],
+        "section": ".rdata",
+        "text": "find_under_expand"
+      }
+    ],
+    "total": 8
+  },
+  "summary": "8 strings match \"^(sort_lines|permute_lines|swap_line_up|join_lines|duplicate_line|toggle_bookmark|wrap_lines|expand_selection|title_case|upper_case|convert_ident_case|transpose|find_under_expand|select_lines|next_bookmark|jump_back)$\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 8,
+    "total": 8
+  },
+  "locations": [],
+  "links": []
+}

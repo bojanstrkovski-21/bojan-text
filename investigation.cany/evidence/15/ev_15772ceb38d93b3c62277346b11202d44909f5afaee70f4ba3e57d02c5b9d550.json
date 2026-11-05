@@ -1,0 +1,89 @@
+{
+  "id": "ev_15772ceb38d93b3c62277346b11202d44909f5afaee70f4ba3e57d02c5b9d550",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x1403876e2"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax + 0x30",
+      "*(uint64_t*)(rax + 16",
+      "sub_14003191a",
+      "sub_140032338",
+      "sub_1400af94d",
+      "sub_1400af9da",
+      "sub_14013da44",
+      "sub_14013de26",
+      "sub_14013ee68",
+      "sub_14013fc7a",
+      "sub_1403554b0",
+      "sub_14036591c",
+      "sub_140387b3e",
+      "sub_1403881de",
+      "sub_14051bbcc",
+      "sub_140560544"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x1403876e2",
+    "function": "sub_1403876e2",
+    "gotos": 10,
+    "inline_asm": 78,
+    "pseudo_code": "int64_t sub_1403876e2(int64_t rcx, int64_t rdx)\n{\n    __asm(\"movapd [rsp+0x140], xmm15\");\n    __asm(\"movapd [rsp+0x130], xmm14\");\n    __asm(\"movapd [rsp+0x120], xmm13\");\n    __asm(\"movapd [rsp+0x110], xmm12\");\n    __asm(\"movapd [rsp+0x100], xmm11\");\n    __asm(\"movapd [rsp+0xf0], xmm10\");\n    __asm(\"movapd [rsp+0xe0], xmm9\");\n    __asm(\"movapd [rsp+0xd0], xmm8\");\n    __asm(\"movapd [rsp+0xc0], xmm7\");\n    __asm(\"movapd [rsp+0xb0], xmm6\");\n    rdi = rdx;\n    rsi = rcx;\n    eax = *(uint32_t*)(rdx);\n    if (eax == 3) {\n        if ((*(uint8_t*)(rsi + 0x100) & 1) == 0) {\n            __asm(\"movsd xmm2, [0x1405d8530]\");\n            al = sub_1400af94d(rdi, rsi);\n            if (al == 0) {\n                al = sub_14051bbcc(0x48);\n                rbx = rax;\n                r14 = &stack_40;\n                *(uint64_t*)(r14) &= 0;\n                __asm(\"movsd xmm2, [0x1405c2ca8]\");\n                sub_1400af9da(rax, rsi, r8, r14);\n                sub_14013ee68(rsi, rbx);\n                rax = *(uint64_t*)(r14);\n                if (rax != 0) {\n                    (**(uint64_t*)(rax + 16))(&stack_40);\n                }\n            } else {\n                sub_14013fc7a(rsi, 1, 1);\n            }\n        }\nlabel_140387931:\n        sub_14013da44(rsi, rdi);\n    } else {\n        if (eax != 2) {\n            goto label_140387931;\n        } else {\n            if (*(uint32_t*)(rdi + 0x28) != 1) {\n                goto label_140387931;\n            } else {\n                if (*(uint8_t*)(rdi + 0x2c) == 0) {\n                    goto label_140387931;\n                } else {\n                    __asm(\"movsd xmm13, [rdi+0x10]\");\n                    __asm(\"movsd xmm12, [rdi+0x18]\");\n                    r14 = rsi + 0x118;\n                    rbx = *(uint64_t*)(rsi + 0x118);\n                    rdi = &stack_90;\n                    sub_140387b3e(rdi, *(uint64_t*)(rsi + 0x110), rbx);\n                    r15 = &stack_40;\n                    sub_14013de26(rsi, r15);\n                    __asm(\"movapd xmm10, xmm12\");\n                    __asm(\"subsd xmm10, [r15+8]\");\n                    __asm(\"movapd xmm11, xmm13\");\n                    __asm(\"subsd xmm11, [r15]\");\n                    r8 = &stack_2f;\n                    *(uint8_t*)(r8) = 1;\n                    rax = \"minimap_scroll_to_clicked_text\";\n                    rdx = &stack_60;\n                    *(uint64_t*)(rdx) = rax;\n                    rax = &data_1406b46c1;\n                    *(uint64_t*)(rdx + 8) = rax;\n                    sub_140032338(*(uint64_t*)(rbx + 0x6e8));\n                    __asm(\"movsd xmm9, [rdi]\");\n                    __asm(\"movsd xmm8, [rdi+8]\");\n                    __asm(\"movsd xmm7, [rdi+0x10]\");\n                    __asm(\"movsd xmm0, [rdi+0x18]\");\n                    sub_140560544();\n                    __asm(\"movapd xmm6, xmm0\");\n                    __asm(\"movapd xmm0, xmm7\");\n                    sub_140560544();\n                    __asm(\"movapd xmm7, xmm0\");\n                    __asm(\"movapd xmm0, xmm8\");\n                    sub_140560544();\n                    __asm(\"movapd xmm8, xmm0\");\n                    __asm(\"movapd xmm0, xmm9\");\n                    sub_140560544();\n                    __asm(\"ucomisd xmm11, xmm0\");\n                    if (xmm11 < 0 /* unsigned */) {\nlabel_14038786c:\n                        if (stack_2f == 0) {\nlabel_1403879a3:\n                            rdi = *(uint64_t*)(rsi + 0x28);\n                            if (rdi != 0) {\n                                al = sub_14051bbcc(0x50);\n                                rbx = rax;\n                                rax = *(uint64_t*)(r14);\n                                stack_38 = rax;\n                                if (rax != 0) {\n                                    *(uint32_t*)(rax + 8)++;\n                                }\n                                rax = *(uint64_t*)(rsi + 0x110);\n                                stack_30 = rax;\n                                if (rax == 0) {\n                                    edx = 0;\n                                } else {\n                                    *(uint32_t*)(rax + 8)++;\n                                    rdx = stack_30;\n                                }\n                                *(uint32_t*)(rbx + 8) = 0;\n                                *(uint64_t*)(rbx + 16) &= 0;\n                                rax = &data_140635c08;\n                                *(uint64_t*)(rbx) = rax;\n                                *(uint64_t*)(rbx + 0x18) = rsi;\n                                *(uint64_t*)(rbx + 0x20) = rdx;\n                                stack_30 &= 0;\n                                r8 = stack_38;\n                                *(uint64_t*)(rbx + 0x28) = r8;\n                                stack_38 &= 0;\n                                __asm(\"xorpd xmm0, xmm0\");\n                                __asm(\"movupd [rbx+0x30], xmm0\");\n                                __asm(\"movups xmm0, [r8+0x6f0]\");\n                                __asm(\"movups [rbx+0x40], xmm0\");\n                                r14 = &stack_40;\n                                sub_140387b3e(r14);\n                                r15 = &stack_70;\n                                sub_14013de26(rsi, r15);\n                                __asm(\"movapd xmm14, xmm12\");\n                                __asm(\"subsd xmm14, [r15+8]\");\n                                __asm(\"movapd xmm15, xmm13\");\n                                __asm(\"subsd xmm15, [r15]\");\n                                __asm(\"movsd xmm6, [r14]\");\n                                __asm(\"movsd xmm7, [r14+8]\");\n                                __asm(\"movsd xmm10, [r14+0x10]\");\n                                __asm(\"movsd xmm8, [r14+0x18]\");\n                                __asm(\"movapd xmm0, xmm8\");\n                                sub_140560544();\n                                __asm(\"movapd xmm9, xmm0\");\n                                __asm(\"movapd xmm0, xmm10\");\n                                sub_140560544();\n                                __asm(\"movapd xmm10, xmm0\");\n                                __asm(\"movapd xmm0, xmm7\");\n                                sub_140560544();\n                                __asm(\"movapd xmm11, xmm0\");\n                                __asm(\"movapd xmm0, xmm6\");\n                                sub_140560544();\n                                __asm(\"ucomisd xmm15, xmm0\");\n                                if (xmm15 < 0 /* unsigned */) {\nlabel_140387ae6:\n                                    __asm(\"subsd xmm8, xmm7\");\n                                    __asm(\"mulsd xmm8, [0x1405aa1d8]\");\n                                    *(uint64_t*)(rbx + 0x30) &= 0;\n                                    __asm(\"movsd [rbx+0x38], xmm8\");\n                                    rdx = &stack_70;\n                                    __asm(\"movsd [rdx], xmm13\");\n                                    __asm(\"movsd [rdx+8], xmm12\");\n                                    sub_1403881de(rbx);\n                                } else {\n                                    __asm(\"ucomisd xmm10, xmm15\");\n                                    if (xmm10 <= 0 /* unsigned */) {\n                                        goto label_140387ae6;\n                                    } else {\n                                        __asm(\"ucomisd xmm14, xmm11\");\n                                        if (xmm14 < 0 /* unsigned */) {\n                                            goto label_140387ae6;\n                                        } else {\n                                            __asm(\"ucomisd xmm9, xmm14\");\n                                            if (xmm9 <= 0 /* unsigned */) {\n                                                goto label_140387ae6;\n                                            } else {\n                                                __asm(\"subsd xmm14, xmm7\");\n                                                __asm(\"subsd xmm15, xmm6\");\n                                                __asm(\"movsd [rbx+0x30], xmm15\");\n                                                __asm(\"movsd [rbx+0x38], xmm14\");\n                                            }\n                                        }\n                                    }\n                                }\n                                sub_14003191a(&stack_30);\n                                sub_14003191a(&stack_38);\n                                rax = *(uint64_t*)(rdi);\n                                (**(uint64_t*)(rax + 0x30))(rdi, rbx);\n                            }\n                        } else {\n                            rcx = *(uint64_t*)(rsi + 0x110);\n                            __asm(\"addsd xmm10, [rcx+0x6f8]\");\n                            __asm(\"addsd xmm11, [rcx+0x6f0]\");\n                            rdx = &stack_40;\n                            __asm(\"movsd [rdx], xmm11\");\n                            __asm(\"movsd [rdx+8], xmm10\");\n                            al = sub_14036591c();\n                            sub_1403554b0(r14, rax, 1);\n                        }\n                    } else {\n                        __asm(\"ucomisd xmm7, xmm11\");\n                        if (xmm7 <= 0 /* unsigned */) {\n                            goto label_14038786c;\n                        } else {\n                            __asm(\"ucomisd xmm10, xmm8\");\n                            if (xmm10 < 0 /* unsigned */) {\n                                goto label_14038786c;\n                            } else {\n                                __asm(\"ucomisd xmm6, xmm10\");\n                                if (xmm6 > 0 /* unsigned */) {\n                                    goto label_1403879a3;\n                                } else {\n                                    goto label_14038786c;\n                                }\n                            }\n                        }\n                    }\n                    al = 1;\n                }\n            }\n        }\n    }\n    __asm(\"movaps xmm6, [rsp+0xb0]\");\n    __asm(\"movaps xmm7, [rsp+0xc0]\");\n    __asm(\"movaps xmm8, [rsp+0xd0]\");\n    __asm(\"movaps xmm9, [rsp+0xe0]\");\n    __asm(\"movaps xmm10, [rsp+0xf0]\");\n    __asm(\"movaps xmm11, [rsp+0x100]\");\n    __asm(\"movaps xmm12, [rsp+0x110]\");\n    __asm(\"movaps xmm13, [rsp+0x120]\");\n    __asm(\"movaps xmm14, [rsp+0x130]\");\n    __asm(\"movaps xmm15, [rsp+0x140]\");\n    return al;\n}\n",
+    "signature": "int64_t sub_1403876e2(int64_t rcx, int64_t rdx)",
+    "strings": [
+      "minimap_scroll_to_clicked_text"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_1403876e2 (222 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "10 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "78 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x1403876e2"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

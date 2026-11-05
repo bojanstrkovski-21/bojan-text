@@ -1,0 +1,158 @@
+{
+  "id": "ev_a6a3d9ce2122ebf2a59fe1ba7bab1089deacac9c144cdfd78f3d12405a6c351b",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 30,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "^(Untitled|untitled|Line \\d|Spaces: |Tab Size: |UTF-8)"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1405a8790",
+        "references": [
+          {
+            "from": "0x14052dc90",
+            "function": "sub_14052da64"
+          }
+        ],
+        "section": ".rdata",
+        "text": "UTF-8"
+      },
+      {
+        "address": "0x1405a87b0",
+        "references": [
+          {
+            "from": "0x14052df86",
+            "function": "sub_14052dd28"
+          }
+        ],
+        "section": ".rdata",
+        "text": "UTF-8"
+      },
+      {
+        "address": "0x1406c223d",
+        "references": [
+          {
+            "from": "0x14034d8ac",
+            "function": "sub_14034d83a"
+          }
+        ],
+        "section": ".rdata",
+        "text": "untitled"
+      },
+      {
+        "address": "0x1406c2afb",
+        "references": [
+          {
+            "from": "0x1400eb113",
+            "function": "sub_1400eb0e2"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Spaces: %d"
+      },
+      {
+        "address": "0x1406c2b06",
+        "references": [
+          {
+            "from": "0x1400eb11a",
+            "function": "sub_1400eb0e2"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Tab Size: %d"
+      },
+      {
+        "address": "0x1406c905f",
+        "references": [
+          {
+            "from": "0x14072e418",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "UTF-8-BOM"
+      },
+      {
+        "address": "0x1406c909a",
+        "references": [
+          {
+            "from": "0x140115916",
+            "function": "sub_140115626"
+          }
+        ],
+        "section": ".rdata",
+        "text": "UTF-8 with BOM"
+      },
+      {
+        "address": "0x1406cab75",
+        "references": [
+          {
+            "from": "0x140115903",
+            "function": "sub_140115626"
+          },
+          {
+            "from": "0x14032e8e5",
+            "function": "sub_14032e56e"
+          },
+          {
+            "from": "0x140425266",
+            "function": "sub_140424e42"
+          },
+          {
+            "from": "0x140433966",
+            "function": "sub_1404337b6"
+          },
+          {
+            "from": "0x140433a7c",
+            "function": "sub_1404337b6"
+          }
+        ],
+        "section": ".rdata",
+        "text": "UTF-8"
+      },
+      {
+        "address": "0x1406df520",
+        "references": [
+          {
+            "from": "0x14055817c",
+            "function": "sub_14055812c"
+          }
+        ],
+        "section": ".rdata",
+        "text": "utf-8"
+      }
+    ],
+    "total": 9
+  },
+  "summary": "9 strings match \"^(Untitled|untitled|Line \\d|Spaces: |Tab Size: |UTF-8)\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 9,
+    "total": 9
+  },
+  "locations": [],
+  "links": []
+}

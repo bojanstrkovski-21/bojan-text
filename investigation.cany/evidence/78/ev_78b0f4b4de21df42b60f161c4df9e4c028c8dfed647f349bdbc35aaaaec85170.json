@@ -1,0 +1,74 @@
+{
+  "id": "ev_78b0f4b4de21df42b60f161c4df9e4c028c8dfed647f349bdbc35aaaaec85170",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 30,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "tab_size"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406bdf85",
+        "references": [
+          {
+            "from": "0x1403261e6",
+            "function": "sub_14032355e"
+          },
+          {
+            "from": "0x140346f8b",
+            "function": "sub_14034676c"
+          },
+          {
+            "from": "0x14036ac4d",
+            "function": "sub_14036aadb"
+          },
+          {
+            "from": "0x14037dedd",
+            "function": "sub_14037d6b4"
+          },
+          {
+            "from": "0x1403929f6",
+            "function": "sub_140392940"
+          },
+          {
+            "from": "0x1403a1080",
+            "function": "sub_1403a1026"
+          }
+        ],
+        "section": ".rdata",
+        "text": "tab_size"
+      }
+    ],
+    "total": 1
+  },
+  "summary": "1 strings match \"tab_size\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 1,
+    "total": 1
+  },
+  "locations": [],
+  "links": []
+}

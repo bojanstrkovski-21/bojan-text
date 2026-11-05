@@ -1,0 +1,72 @@
+{
+  "id": "ev_36a9592b7094bd44bd4e8f1238ccd72b430e8531bd060cdef327ac1e26c33e2b",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x14038dafa"
+  },
+  "result": {
+    "calls": [
+      "sub_14003191a",
+      "sub_140032338",
+      "sub_140357785"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x14038dafa",
+    "function": "sub_14038dafa",
+    "gotos": 2,
+    "inline_asm": 0,
+    "pseudo_code": "int32_t sub_14038dafa(int64_t rcx)\n{\n    rsi = rcx;\n    rax = *(uint64_t*)(rcx + 8);\n    rax = *(uint64_t*)(rax + 0x128);\n    rcx = &stack_20;\n    *(uint64_t*)(rcx) = rax;\n    *(uint32_t*)(rax + 8)++;\n    rax = *(uint64_t*)(rcx);\n    rax = *(uint64_t*)(rax + 0x6c8);\n    bl = *(uint8_t*)(rax + 0x2a4);\n    dil = *(uint8_t*)(rax + 0x2b0);\n    sub_14003191a();\n    eax = 0;\n    if (dil == 0) {\n        if ((bl & 1) == 0) {\n            rax = *(uint64_t*)(rsi + 8);\n            rax = *(uint64_t*)(rax + 0x128);\n            stack_20 = rax;\n            if (rax == 0) {\nlabel_14038dc25:\n                sub_14003191a(&stack_20);\nlabel_14038dc2f:\n                eax = 0;\n            } else {\n                *(uint32_t*)(rax + 8)++;\n                rax = stack_20;\n                if (rax == 0) {\n                    goto label_14038dc25;\n                } else {\n                    rax = *(uint64_t*)(rax + 0x720);\n                    rdi = *(uint64_t*)(rax + 0x20);\n                    rbx = *(uint64_t*)(rax + 0x28);\n                    sub_14003191a(&stack_20);\n                    if (rdi == rbx) {\n                        goto label_14038dc2f;\n                    } else {\n                        rax = *(uint64_t*)(rsi + 8);\n                        rax = *(uint64_t*)(rax + 0x128);\n                        stack_20 = rax;\n                        if (rax != 0) {\n                            *(uint32_t*)(rax + 8)++;\n                        }\n                        rdi = &stack_20;\n                        eax = sub_140357785(rdi);\n                        ebx = eax;\n                        sub_14003191a(rdi);\n                        al = 1;\n                        if (bl == 0) {\n                            rdi = &stack_2f;\n                            *(uint8_t*)(rdi) = 1;\n                            rax = *(uint64_t*)(rsi + 8);\n                            rax = *(uint64_t*)(rax + 0x128);\n                            rsi = &stack_20;\n                            *(uint64_t*)(rsi) = rax;\n                            *(uint32_t*)(rax + 8)++;\n                            rax = *(uint64_t*)(rsi);\n                            rax = \"copy_with_empty_selection\";\n                            rdx = &stack_30;\n                            *(uint64_t*)(rdx) = rax;\n                            rax = &data_1406ba6a8;\n                            *(uint64_t*)(rdx + 8) = rax;\n                            sub_140032338(*(uint64_t*)(rax + 0x6e8), rdx, rdi);\n                            sub_14003191a(rsi);\n                            al = *(uint8_t*)(rdi);\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return eax;\n}\n",
+    "signature": "int32_t sub_14038dafa(int64_t rcx)",
+    "strings": [
+      "copy_with_empty_selection"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_14038dafa (73 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "2 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x14038dafa"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

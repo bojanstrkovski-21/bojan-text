@@ -1,0 +1,173 @@
+{
+  "id": "ev_245da8e4ac67c51894f21766a572bbfae9c3fca7f85293396115defb70ceb1c5",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 40,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "minimap"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406b46a3",
+        "references": [
+          {
+            "from": "0x1403877e9",
+            "function": "sub_1403876e2"
+          }
+        ],
+        "section": ".rdata",
+        "text": "minimap_scroll_to_clicked_text"
+      },
+      {
+        "address": "0x1406b6e7d",
+        "references": [
+          {
+            "from": "0x140031d33",
+            "function": "sub_140031cc2"
+          },
+          {
+            "from": "0x1400f0261",
+            "function": "sub_1400eff42"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Minimap.sublime-settings"
+      },
+      {
+        "address": "0x1406b8ce9",
+        "references": [
+          {
+            "from": "0x140332dac",
+            "function": "sub_140332710"
+          },
+          {
+            "from": "0x140336b87",
+            "function": "sub_140333e6a"
+          }
+        ],
+        "section": ".rdata",
+        "text": "minimap_border"
+      },
+      {
+        "address": "0x1406b9ad6",
+        "references": [
+          {
+            "from": "0x140044461",
+            "function": "sub_140044424"
+          },
+          {
+            "from": "0x14004658c",
+            "function": "sub_140046554"
+          }
+        ],
+        "section": ".rdata",
+        "text": "show_minimap"
+      },
+      {
+        "address": "0x1406b9ae3",
+        "references": [],
+        "section": ".rdata",
+        "text": "toggle_minimap"
+      },
+      {
+        "address": "0x1406b9af2",
+        "references": [],
+        "section": ".rdata",
+        "text": "Show Minimap"
+      },
+      {
+        "address": "0x1406b9aff",
+        "references": [],
+        "section": ".rdata",
+        "text": "Hide Minimap"
+      },
+      {
+        "address": "0x1406bb95b",
+        "references": [
+          {
+            "from": "0x140387192",
+            "function": "sub_140387134"
+          }
+        ],
+        "section": ".rdata",
+        "text": "minimap_control"
+      },
+      {
+        "address": "0x1406bd82e",
+        "references": [
+          {
+            "from": "0x140387387",
+            "function": "sub_140387134"
+          },
+          {
+            "from": "0x1403881b0",
+            "function": "sub_140388192"
+          }
+        ],
+        "section": ".rdata",
+        "text": "minimap_horizontal_scrolling"
+      },
+      {
+        "address": "0x1406fba80",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVtoggle_minimap_command@@"
+      },
+      {
+        "address": "0x14072bda0",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVskyline_minimap_control@@"
+      },
+      {
+        "address": "0x14072bdd0",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$property_impl@Vskyline_minimap_control@@Vcolor@@V2@@@"
+      },
+      {
+        "address": "0x14072be20",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$property_impl@Vskyline_minimap_control@@MM@@"
+      },
+      {
+        "address": "0x14072be70",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVminimap_drag_handler@@"
+      }
+    ],
+    "total": 14
+  },
+  "summary": "14 strings match \"minimap\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 14,
+    "total": 14
+  },
+  "locations": [],
+  "links": []
+}

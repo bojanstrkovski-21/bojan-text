@@ -1,0 +1,14 @@
+# Cargo build output. `cargo build` writes the exe and everything it needs
+# to rebuild into a target/ directory (app/target and app/tools/probe/target):
+#   debug/bojan_text.exe and other executables
+#   debug/deps/          compiled libraries
+#   debug/incremental/   incremental cache
+#   debug/build/         build-script output
+#   *.rlib, *.rmeta, *.o, *.bc, *.d, *.pdb
+target/
+
+# rustfmt backups
+**/*.rs.bk
+
+# MSVC debug symbols, if a build drops them outside target/
+*.pdb

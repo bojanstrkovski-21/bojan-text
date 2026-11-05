@@ -1,0 +1,268 @@
+{
+  "id": "ev_572b9866dbf1e950590fa346cf4467874369f0e1b99a9498db93df2a068d52c2",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 20,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": ".sublime-syntax"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1405c2d90",
+        "references": [
+          {
+            "from": "0x14009a75c",
+            "function": "sub_14009a6cc"
+          },
+          {
+            "from": "0x1400f395e",
+            "function": "sub_1400f38c2"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Binary/Binary.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3a6c",
+        "references": [
+          {
+            "from": "0x140343649",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Rails/Ruby on Rails.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3a98",
+        "references": [
+          {
+            "from": "0x14038a2ab",
+            "function": "sub_140389fc8"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Default/Plain Text with Links.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3ace",
+        "references": [
+          {
+            "from": "0x14034366f",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Rails/Ruby Haml.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3af6",
+        "references": [
+          {
+            "from": "0x14038a293",
+            "function": "sub_140389fc8"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Default/Commit Message.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3b25",
+        "references": [
+          {
+            "from": "0x140343695",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/C#/Build.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3b46",
+        "references": [
+          {
+            "from": "0x1403435fd",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/ASP/HTML-ASP.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3b6b",
+        "references": [
+          {
+            "from": "0x140099472",
+            "function": "sub_140099444"
+          },
+          {
+            "from": "0x1403435d7",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/JavaScript/JSON.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3b93",
+        "references": [
+          {
+            "from": "0x1403435ea",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/JSON/JSON.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3bb5",
+        "references": [
+          {
+            "from": "0x1403436a8",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/XML/XML.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3bd5",
+        "references": [
+          {
+            "from": "0x140099498",
+            "function": "sub_140099444"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/YAML/YAML.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3bf7",
+        "references": [
+          {
+            "from": "0x140343682",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Rails/HAML.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3c1a",
+        "references": [
+          {
+            "from": "0x14033cae6",
+            "function": "sub_14033c950"
+          },
+          {
+            "from": "0x14033cdca",
+            "function": "sub_14033cb82"
+          },
+          {
+            "from": "0x1406f9cb0",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "*.sublime-syntax"
+      },
+      {
+        "address": "0x1406b3c2b",
+        "references": [
+          {
+            "from": "0x14034365c",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Rails/Ruby (Rails).sublime-syntax"
+      },
+      {
+        "address": "0x1406b3c56",
+        "references": [
+          {
+            "from": "0x140343623",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Java/Java Server Pages (JSP).sublime-syntax"
+      },
+      {
+        "address": "0x1406b3c8b",
+        "references": [
+          {
+            "from": "0x140343636",
+            "function": "sub_1403435cc"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Packages/Java/HTML (JSP).sublime-syntax"
+      },
+      {
+        "address": "0x1406bfed6",
+        "references": [
+          {
+            "from": "0x1403187b3",
+            "function": "sub_140317f6c"
+          }
+        ],
+        "section": ".rdata",
+        "text": "extends must be a path to a .sublime-syntax file"
+      },
+      {
+        "address": "0x1406c04ee",
+        "references": [
+          {
+            "from": "0x1406f9cc0",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "*.sublime-syntax.rcache"
+      },
+      {
+        "address": "0x1406c057e",
+        "references": [
+          {
+            "from": "0x1406f9cb8",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "*.sublime-syntax.cache"
+      }
+    ],
+    "total": 19
+  },
+  "summary": "19 strings match \".sublime-syntax\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 19,
+    "total": 19
+  },
+  "locations": [],
+  "links": []
+}

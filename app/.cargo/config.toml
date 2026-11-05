@@ -1,0 +1,9 @@
+# This PC has no Visual Studio C++ linker, so the project uses Rust's
+# self-contained GNU toolchain (see rust-toolchain.toml).
+# - Import libraries: LLVM's ar (rustup's llvm-tools component) works as
+#   "dlltool" when named llvm-dlltool; a copy lives in tools/.
+# - Linking: the bundled GNU ld mis-links those import tables (the program
+#   crashed before main), so Rust's bundled LLD linker is used instead.
+[target.x86_64-pc-windows-gnu]
+linker = "C:/Users/User/.rustup/toolchains/stable-x86_64-pc-windows-gnu/lib/rustlib/x86_64-pc-windows-gnu/bin/rust-lld.exe"
+rustflags = ["-C", "dlltool=D:/My Backups/Bojan/craft-text/app/tools/llvm-dlltool.exe", "-C", "linker-flavor=ld.lld"]

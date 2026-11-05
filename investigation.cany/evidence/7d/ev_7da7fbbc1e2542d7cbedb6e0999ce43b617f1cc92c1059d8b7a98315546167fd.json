@@ -1,0 +1,70 @@
+{
+  "id": "ev_7da7fbbc1e2542d7cbedb6e0999ce43b617f1cc92c1059d8b7a98315546167fd",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x1400eb0e2"
+  },
+  "result": {
+    "calls": [
+      "sub_14002e47e",
+      "sub_14003191a",
+      "sub_1400515d1",
+      "sub_1400eaecc"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x1400eb0e2",
+    "function": "sub_1400eb0e2",
+    "gotos": 0,
+    "inline_asm": 0,
+    "pseudo_code": "int64_t sub_1400eb0e2(int64_t rdx)\n{\n    rsi = rdx;\n    stack_30 = 0;\n    rdi = &stack_28;\n    sub_1400eaecc(rcx, rdi);\n    rax = *(uint64_t*)(rdi);\n    if (rax != 0) {\n        rax = *(uint64_t*)(rax + 0x6c8);\n        rcx = \"Spaces: %d\";\n        r8 = \"Tab Size: %d\";\n        sub_1400515d1(&stack_30, 0x40, rcx, *(uint32_t*)(rax + 0x34c));\n    }\n    sub_14002e47e(rsi, &stack_30);\n    sub_14003191a(&stack_28);\n    rax = rsi;\n    return rax;\n}\n",
+    "signature": "int64_t sub_1400eb0e2(int64_t rdx)",
+    "strings": [
+      "Spaces: %d",
+      "Tab Size: %d"
+    ],
+    "structured": true
+  },
+  "summary": "Pseudo-C for sub_1400eb0e2 (18 lines).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x1400eb0e2"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}
