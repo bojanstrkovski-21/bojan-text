@@ -3,6 +3,20 @@
 
 use super::*;
 
+/// Position of split line `i` of `n` equal parts. The original's 3-way layouts use
+/// 0.33 / 0.66 (not exact thirds) in its set_layout key bindings.
+fn edge(i: usize, n: usize) -> f32 {
+    if i == 0 {
+        0.0
+    } else if i >= n {
+        1.0
+    } else if n == 3 {
+        [0.0, 0.33, 0.66, 1.0][i]
+    } else {
+        i as f32 / n as f32
+    }
+}
+
 /// Status-bar text, following sub_14036805e:
 /// - empty selection: "Line L, Column C" where C is a *virtual* column
 ///   (selection_description_column_type = "virtual"): a tab advances to the
@@ -52,6 +66,7 @@ impl App {
     pub(super) fn status_bar(&mut self, ui: &mut egui::Ui) {
         let p = self.pal;
         let mut open_syntax = false;
+        let mut anchor = self.syntax_anchor;
         let mut open_lsp = false;
         let mut open_colors = false;
         let fsz = self.s.theme.ui_font_size * 0.92;
@@ -63,7 +78,7 @@ impl App {
             let desc = selection_description(&d.text, a, b, self.s.tab_size.max(1));
             // when the find bar is in use, the original shows "N of M matches"
             let find_desc = if self.find.open && !self.fif.open && !self.find.query.is_empty() {
-                let m = editor::find_matches(&d.text, &self.find.query, self.find.case, self.find.regex);
+                let m = self.find_all(&d.text);
                 let (lo, hi) = (char_to_byte(&d.text, a.min(b)), char_to_byte(&d.text, a.max(b)));
                 match m.len() {
                     0 => None,
@@ -84,7 +99,12 @@ impl App {
             }
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 let syn = self.syntax_name_for(d);
-                if ui.add(egui::Label::new(small(syn)).sense(egui::Sense::click())).on_hover_text("Set syntax").clicked() {
+                let r = ui.add(egui::Label::new(small(syn)).sense(egui::Sense::click()));
+                if r.hovered() {
+                    ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
+                }
+                anchor = r.rect;
+                if r.on_hover_text("Set syntax").clicked() {
                     open_syntax = true;
                 }
                 // original: "Spaces: %d" / "Tab Size: %d" (sub_1400eb0e2)
@@ -92,8 +112,14 @@ impl App {
                 ui.label(small(ind));
                 if self.s.colorizer {
                     let n = d.view.colors.list.len();
-                    if n > 0 && ui.add(egui::Label::new(small(format!("● {n} colors"))).sense(egui::Sense::click())).on_hover_text("List color codes").clicked() {
-                        open_colors = true;
+                    if n > 0 {
+                        let r = ui.add(egui::Label::new(small(format!("● {n} colors"))).sense(egui::Sense::click()));
+                        if r.hovered() {
+                            ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
+                        }
+                        if r.on_hover_text("List color codes").clicked() {
+                            open_colors = true;
+                        }
                     }
                 }
                 if d.path.is_some() {
@@ -106,7 +132,11 @@ impl App {
                         let key = d.path.as_ref().map(|p| lsp::norm_key(p)).unwrap_or_default();
                         let errs = self.diags.get(&key).map(|v| v.iter().filter(|x| x.severity == 1).count()).unwrap_or(0);
                         let warns = self.diags.get(&key).map(|v| v.iter().filter(|x| x.severity == 2).count()).unwrap_or(0);
-                        if ui.add(egui::Label::new(small(format!("{}: {}  ✖ {errs}  ⚠ {warns}", spec.name, st))).sense(egui::Sense::click())).clicked() {
+                        let r = ui.add(egui::Label::new(small(format!("{}: {}  ✖ {errs}  ⚠ {warns}", spec.name, st))).sense(egui::Sense::click()));
+                        if r.hovered() {
+                            ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
+                        }
+                        if r.clicked() {
                             open_lsp = true;
                         }
                     }
@@ -125,14 +155,87 @@ impl App {
                 }
             });
         });
+        self.syntax_anchor = anchor;
         if open_syntax {
-            self.open_palette(PaletteMode::Syntax);
+            self.syntax_popup = !self.syntax_popup;
         }
         if open_lsp {
             self.run("toggle_problems");
         }
         if open_colors {
             self.win_colors = true;
+        }
+    }
+
+    /// The syntax chooser: a narrow list that opens just above the syntax name in the
+    /// status bar (like the original's), with a check mark on the current syntax.
+    pub(super) fn syntax_chooser(&mut self, ctx: &egui::Context) {
+        if !self.syntax_popup {
+            return;
+        }
+        let p = self.pal;
+        let Some(d) = self.docs.get(self.active) else {
+            self.syntax_popup = false;
+            return;
+        };
+        let current = self.syntax_name_for(d);
+        let mut names: Vec<String> = self
+            .syntax_set
+            .syntaxes()
+            .iter()
+            .filter(|s| !s.hidden && !s.name.contains("(for ") && !s.name.contains("Embedded"))
+            .map(|s| s.name.clone())
+            .collect();
+        names.sort_by_key(|n| n.to_lowercase());
+        names.dedup();
+        let anchor = self.syntax_anchor;
+        let width = 210.0f32;
+        let max_h = (anchor.top() - 56.0).clamp(160.0, 640.0);
+        let mut chosen: Option<String> = None;
+        let radius = self.s.theme.radius;
+        let resp = egui::Area::new(egui::Id::new("syntax_chooser"))
+            .order(egui::Order::Foreground)
+            .pivot(egui::Align2::RIGHT_BOTTOM)
+            .fixed_pos(egui::pos2(anchor.right(), anchor.top() - 4.0))
+            .show(ctx, |ui| {
+                egui::Frame::popup(ui.style()).fill(mix(p.sidebar_bg, p.bg, 0.3)).corner_radius(radius).inner_margin(egui::Margin::symmetric(0, 4)).show(ui, |ui| {
+                    ui.set_width(width);
+                    ui.spacing_mut().item_spacing.y = 0.0;
+                    egui::ScrollArea::vertical().max_height(max_h).auto_shrink([false, true]).show(ui, |ui| {
+                        for n in &names {
+                            let (rect, r) = ui.allocate_exact_size(egui::vec2(width, 24.0), egui::Sense::click());
+                            if r.hovered() {
+                                ui.painter().rect_filled(rect, 0.0, mix(p.sidebar_bg, p.accent, 0.3));
+                                ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
+                            }
+                            let is_cur = *n == current;
+                            if is_cur {
+                                ui.painter().text(egui::pos2(rect.left() + 10.0, rect.center().y), egui::Align2::LEFT_CENTER, "✔", FontId::proportional(13.0), p.fg);
+                                if !self.syntax_scrolled {
+                                    r.scroll_to_me(Some(egui::Align::Center));
+                                    self.syntax_scrolled = true;
+                                }
+                            }
+                            ui.painter().text(egui::pos2(rect.left() + 32.0, rect.center().y), egui::Align2::LEFT_CENTER, n, FontId::proportional(self.s.theme.ui_font_size), p.fg);
+                            if r.clicked() {
+                                chosen = Some(n.clone());
+                            }
+                        }
+                    });
+                });
+            });
+        let outside = ctx.input(|i| i.pointer.any_pressed()) && ctx.input(|i| i.pointer.interact_pos()).map(|pp| !resp.response.rect.contains(pp) && !self.syntax_anchor.contains(pp)).unwrap_or(false);
+        if let Some(n) = chosen {
+            if let Some(d) = self.docs.get_mut(self.active) {
+                d.syntax_override = Some(n);
+                d.view.hl.invalidate();
+            }
+            self.syntax_popup = false;
+        } else if outside || ctx.input(|i| i.key_pressed(Key::Escape)) {
+            self.syntax_popup = false;
+        }
+        if !self.syntax_popup {
+            self.syntax_scrolled = false;
         }
     }
 
@@ -224,26 +327,27 @@ impl App {
         }
     }
 
-    pub(super) fn tab_bar(&mut self, ui: &mut egui::Ui) {
+    pub(super) fn tab_bar(&mut self, ui: &mut egui::Ui, group: usize) {
         let p = self.pal;
         let mut activate = None;
         let mut close = None;
         let radius = self.s.theme.radius;
         let style = self.s.theme.tab_style;
         let ufs = self.s.theme.ui_font_size;
+        let group_sel = self.group_active.get(group).copied().flatten();
         egui::ScrollArea::horizontal()
-            .id_salt("tabs")
+            .id_salt(("tabs", group))
             .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysHidden)
             .show(ui, |ui| {
                 ui.horizontal(|ui| {
                     ui.spacing_mut().item_spacing.x = 2.0;
                     ui.add_space(6.0);
-                    for (i, d) in self.docs.iter().enumerate() {
-                        let sel = i == self.active;
+                    for (i, d) in self.docs.iter().enumerate().filter(|(_, d)| d.group == group) {
+                        let sel = group_sel == Some(d.id);
                         let font = FontId::proportional(ufs);
                         let galley = ui.painter().layout_no_wrap(d.title.clone(), font.clone(), p.fg);
-                        let w = (galley.size().x + 52.0).clamp(90.0, 260.0);
-                        let (rect, resp) = ui.allocate_exact_size(egui::vec2(w, 36.0), egui::Sense::click());
+                        let w = (galley.size().x + 52.0).clamp(48.0, 180.0);
+                        let (rect, resp) = ui.allocate_exact_size(egui::vec2(w, 35.0), egui::Sense::click());
                         let hovered = resp.hovered();
                         let fill = if sel { p.tab_active } else if hovered { p.tab_hover } else { p.tab_inactive };
                         let r = rect.with_min_y(rect.top() + 5.0);
@@ -266,7 +370,7 @@ impl App {
                             ui.painter().rect_filled(bar, cr, p.accent);
                         }
                         let txt_col = if sel { p.fg } else { mix(p.fg, p.tab_inactive, 0.35) };
-                        ui.painter().text(egui::pos2(r.left() + 14.0, r.center().y), egui::Align2::LEFT_CENTER, &d.title, font, txt_col);
+                        ui.painter().with_clip_rect(egui::Rect::from_min_max(r.left_top(), egui::pos2(r.right() - 30.0, r.bottom()))).text(egui::pos2(r.left() + 14.0, r.center().y), egui::Align2::LEFT_CENTER, &d.title, font, txt_col);
                         let cb = egui::Rect::from_center_size(egui::pos2(r.right() - 16.0, r.center().y), egui::vec2(16.0, 16.0));
                         let cresp = ui.interact(cb, egui::Id::new(("tabclose", d.id)), egui::Sense::click());
                         if cresp.hovered() {
@@ -292,6 +396,7 @@ impl App {
         if let Some(i) = close {
             self.close_doc(i);
         } else if activate == Some(usize::MAX) {
+            self.focus_group = group;
             self.run("new");
         } else if let Some(i) = activate {
             self.active = i;
@@ -299,6 +404,164 @@ impl App {
                 d.view.focus = true;
             }
         }
+    }
+
+    // ------------------------------------------------------------------
+    // split panes: View ▸ Layout / Groups
+
+    /// Keep groups, their active files and the focused group consistent.
+    pub(super) fn sync_groups(&mut self) {
+        self.groups = self.groups.clamp(1, 16);
+        self.cols = self.cols.clamp(1, self.groups);
+        self.group_active.resize(self.groups, None);
+        for d in self.docs.iter_mut() {
+            if d.group >= self.groups {
+                d.group = self.groups - 1;
+            }
+        }
+        for g in 0..self.groups {
+            let ok = self.group_active[g].map(|id| self.docs.iter().any(|d| d.id == id && d.group == g)).unwrap_or(false);
+            if !ok {
+                self.group_active[g] = self.docs.iter().rev().find(|d| d.group == g).map(|d| d.id);
+            }
+        }
+        let cur = self.docs.get(self.active).map(|d| d.id);
+        if cur != self.last_active_id {
+            // the active file changed (tab click, Goto Anything, new file…): follow it
+            if let Some(d) = self.docs.get(self.active) {
+                self.focus_group = d.group.min(self.groups - 1);
+                self.group_active[self.focus_group] = Some(d.id);
+            }
+            self.last_active_id = cur;
+        }
+        self.focus_group = self.focus_group.min(self.groups - 1);
+    }
+
+    pub(super) fn set_layout(&mut self, groups: usize, cols: usize) {
+        self.groups = groups.max(1);
+        self.cols = cols.clamp(1, self.groups);
+        self.sync_groups();
+    }
+
+    pub(super) fn focus_group_to(&mut self, g: usize) {
+        if g >= self.groups {
+            return;
+        }
+        self.focus_group = g;
+        if let Some(id) = self.group_active[g] {
+            if let Some(i) = self.docs.iter().position(|d| d.id == id) {
+                self.active = i;
+                self.last_active_id = Some(id);
+                self.docs[i].view.focus = true;
+            }
+        }
+    }
+
+    pub(super) fn move_file_to_group(&mut self, g: usize) {
+        if g >= self.groups {
+            return;
+        }
+        if let Some(d) = self.docs.get_mut(self.active) {
+            d.group = g;
+            let id = d.id;
+            self.group_active[g] = Some(id);
+            self.focus_group = g;
+            self.last_active_id = Some(id);
+            d.view.focus = true;
+        }
+        self.sync_groups();
+    }
+
+    pub(super) fn new_group(&mut self) {
+        // a single row grows by one column (up to "Max Columns"); otherwise a new row starts
+        let single_row = self.cols == self.groups;
+        self.groups += 1;
+        if single_row && self.groups <= self.max_columns {
+            self.cols = self.groups;
+        }
+        self.sync_groups();
+    }
+
+    pub(super) fn close_group(&mut self) {
+        if self.groups <= 1 {
+            return;
+        }
+        let g = self.focus_group;
+        // files of the closed group move to the neighbouring group
+        let to = if g == 0 { 1 } else { g - 1 };
+        for d in self.docs.iter_mut() {
+            if d.group == g {
+                d.group = to;
+            } else if d.group > g {
+                d.group -= 1;
+            }
+        }
+        self.group_active.remove(g);
+        self.groups -= 1;
+        self.cols = self.cols.min(self.groups);
+        self.focus_group = to.min(self.groups - 1);
+        self.sync_groups();
+        let fg = self.focus_group;
+        self.focus_group_to(fg);
+    }
+
+    /// Keep split copies of a file (File ▸ Split View) showing the same text.
+    pub(super) fn sync_clones(&mut self) {
+        let mut ids: Vec<u64> = self.docs.iter().filter(|d| d.clone_id != 0).map(|d| d.clone_id).collect();
+        ids.sort_unstable();
+        ids.dedup();
+        for cid in ids {
+            let members: Vec<usize> = (0..self.docs.len()).filter(|&i| self.docs[i].clone_id == cid).collect();
+            if members.len() < 2 {
+                for &i in &members {
+                    self.docs[i].clone_id = 0;
+                }
+                continue;
+            }
+            let last = self.clone_sync.get(&cid).copied();
+            let hashes: Vec<u64> = members.iter().map(|&i| hash_text(&self.docs[i].text)).collect();
+            let changed = members.iter().zip(hashes.iter()).find(|(_, h)| Some(**h) != last).map(|(i, _)| *i);
+            if let Some(src) = changed {
+                let text = self.docs[src].text.clone();
+                let h = hash_text(&text);
+                for &i in &members {
+                    if i != src && self.docs[i].text != text {
+                        self.docs[i].text = text.clone();
+                    }
+                }
+                self.clone_sync.insert(cid, h);
+            }
+        }
+    }
+
+    pub(super) fn split_view(&mut self) {
+        let Some(d) = self.docs.get(self.active) else { return };
+        let (title, text, path, enc, le, syn) = (d.title.clone(), d.text.clone(), d.path.clone(), d.encoding, d.line_ending, d.syntax_override.clone());
+        let cid = if d.clone_id != 0 { d.clone_id } else {
+            let c = self.next_clone;
+            self.next_clone += 1;
+            c
+        };
+        let saved = (d.saved_hash, d.saved_text.clone());
+        self.docs[self.active].clone_id = cid;
+        if self.groups < 2 {
+            self.set_layout(2, 2);
+        }
+        let target = (self.focus_group + 1) % self.groups;
+        let id = self.new_doc(&title, text.clone(), path);
+        if let Some(n) = self.docs.iter_mut().find(|x| x.id == id) {
+            n.clone_id = cid;
+            n.group = target;
+            n.encoding = enc;
+            n.line_ending = le;
+            n.syntax_override = syn;
+            n.saved_hash = saved.0;
+            n.saved_text = saved.1;
+        }
+        self.clone_sync.insert(cid, hash_text(&text));
+        self.focus_group = target;
+        self.sync_groups();
+        self.group_active[target] = Some(id);
     }
 
     pub(super) fn command_palette(&mut self, ctx: &egui::Context) {
@@ -836,15 +1099,75 @@ impl App {
         }
     }
 
-    pub(super) fn editor_area(&mut self, ui: &mut egui::Ui) {
-        if self.docs.get(self.active).is_none() {
-            ui.centered_and_justified(|ui| {
-                ui.label(RichText::new("Ctrl+N for a new file · Ctrl+O to open · Ctrl+Shift+P for commands").color(self.pal.muted));
-            });
-            return;
-        }
+    /// Draw all split panes: each has its own tab bar and shows its own file.
+    pub(super) fn panes(&mut self, ui: &mut egui::Ui) {
         let p = self.pal;
-        let idx = self.active;
+        let full = ui.available_rect_before_wrap();
+        let rows = (self.groups + self.cols - 1) / self.cols;
+        let gap = 1.0;
+        let mut press_group: Option<usize> = None;
+        let pressed_at = ui.input(|i| if i.pointer.any_pressed() { i.pointer.interact_pos() } else { None });
+        for g in 0..self.groups {
+            let (r, c) = (g / self.cols, g % self.cols);
+            let in_row = (self.groups - r * self.cols).min(self.cols);
+            let (x0, x1) = (edge(c, in_row), edge(c + 1, in_row));
+            let (y0, y1) = (edge(r, rows), edge(r + 1, rows));
+            let rect = egui::Rect::from_min_max(
+                egui::pos2(full.left() + x0 * full.width() + if c > 0 { gap / 2.0 } else { 0.0 }, full.top() + y0 * full.height() + if r > 0 { gap / 2.0 } else { 0.0 }),
+                egui::pos2(full.left() + x1 * full.width() - if c + 1 < in_row { gap / 2.0 } else { 0.0 }, full.top() + y1 * full.height() - if r + 1 < rows { gap / 2.0 } else { 0.0 }),
+            );
+            if pressed_at.map(|pp| rect.contains(pp)).unwrap_or(false) {
+                press_group = Some(g);
+            }
+            let focused = g == self.focus_group && self.groups > 1;
+            let mut child = ui.new_child(egui::UiBuilder::new().max_rect(rect).layout(egui::Layout::top_down(egui::Align::Min)));
+            child.set_clip_rect(rect);
+            if self.s.show_tabs {
+                egui::Panel::top(("pane_tabs", g)).exact_size(35.0).frame(egui::Frame::new().fill(p.tabbar_bg)).show(&mut child, |ui| {
+                    ui.horizontal(|ui| {
+                        if g == 0 && !self.s.show_menu && ui.add(egui::Button::new(RichText::new("☰").size(16.0).color(p.muted)).frame(false)).on_hover_text("Show the menu again").clicked() {
+                            self.s.show_menu = true;
+                        }
+                        self.tab_bar(ui, g);
+                    });
+                });
+            }
+            let id = self.group_active.get(g).copied().flatten();
+            egui::CentralPanel::no_frame().show(&mut child, |ui| match id.and_then(|id| self.docs.iter().position(|d| d.id == id)) {
+                Some(idx) => self.editor_area(ui, idx, g == self.focus_group),
+                None => {
+                    ui.painter().rect_filled(ui.available_rect_before_wrap(), 0.0, p.bg);
+                    ui.centered_and_justified(|ui| {
+                        ui.label(RichText::new("Ctrl+N for a new file · Ctrl+O to open · Ctrl+Shift+P for commands").color(p.muted));
+                    });
+                }
+            });
+            if focused {
+                // a thin accent line marks the focused pane
+                ui.painter().hline(rect.x_range(), rect.top() + 0.5, egui::Stroke::new(2.0, p.accent));
+            }
+            if self.groups > 1 && c + 1 < in_row {
+                ui.painter().vline(full.left() + x1 * full.width(), rect.y_range(), egui::Stroke::new(1.0, p.border));
+            }
+        }
+        if self.groups > 1 {
+            for r in 1..rows {
+                let y = full.top() + edge(r, rows) * full.height();
+                ui.painter().hline(full.x_range(), y, egui::Stroke::new(1.0, p.border));
+            }
+        }
+        if let Some(g) = press_group {
+            if g != self.focus_group {
+                self.focus_group_to(g);
+                // an empty pane can be focused too
+                self.focus_group = g;
+            }
+        }
+        ui.allocate_rect(full, egui::Sense::hover());
+    }
+
+    pub(super) fn editor_area(&mut self, ui: &mut egui::Ui, idx: usize, _focused_group: bool) {
+        let p = self.pal;
         let syntax_name = self.syntax_name_for(&self.docs[idx]);
         let named = self.named_colors_for(&self.docs[idx]);
         let md_mode = self.docs[idx].md_mode;
@@ -855,13 +1178,16 @@ impl App {
         let diag_key = self.docs[idx].path.as_ref().map(|p| lsp::norm_key(p));
 
         // markdown preview pane
-        if md_mode != MdMode::Off {
+        // in a narrow pane the split preview would squeeze the text: show the text only
+        if md_mode != MdMode::Off && !(md_mode == MdMode::Split && ui.available_width() < 520.0) {
             let full_w = ui.available_width();
             let mut want_browser = false;
             let mut toggle_full = false;
             let panel = egui::Panel::right(egui::Id::new(("mdprev", self.docs[idx].id)))
                 .resizable(md_mode == MdMode::Split)
                 .default_size(full_w * 0.5)
+                .min_size(120.0_f32.min(full_w * 0.3))
+                .max_size(full_w * 0.6)
                 .frame(egui::Frame::new().fill(if p.dark { mix(p.bg, Color32::BLACK, 0.12) } else { Color32::WHITE }).inner_margin(egui::Margin { left: 22, right: 18, top: 10, bottom: 8 }));
             let panel = if md_mode == MdMode::Preview { panel.exact_size(full_w) } else { panel };
             let ss = self.syntax_set.clone();
@@ -927,7 +1253,8 @@ impl App {
 
         self.modified_range(idx);
         let syntax = highlight::syntax_by_name(&self.syntax_set, &syntax_name).unwrap_or_else(|| self.syntax_set.find_syntax_plain_text());
-        let find_q = if self.find.open && !self.find.query.is_empty() && !self.fif.open { Some((self.find.query.as_str(), self.find.case, self.find.regex)) } else { None };
+        let spec = self.find_spec();
+        let find_q = if self.find.open && self.find.highlight && !self.find.query.is_empty() && !self.fif.open { Some((spec.0.as_str(), spec.1, spec.2)) } else { None };
         let bookmarks = self.docs[idx].bookmarks.clone();
         let rulers = self.s.rulers.clone();
         let cfg = ViewCfg {

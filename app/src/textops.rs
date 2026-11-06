@@ -266,6 +266,86 @@ pub fn delete_to(text: &str, lo: usize, end: bool) -> (Out, String) {
     (Out { text: splice(&c, a, b, ""), sel: (a, a) }, s(&c[a..b]))
 }
 
+/// Enter key (Default (Windows).sublime-keymap): inserts "\n" and, with `auto_indent`,
+/// copies the current line's indent. When `{` is right before the cursor and `}` right
+/// after it, the "Add Line in Braces" macro runs instead (blank indented line between).
+/// `trim_automatic_white_space`: a line holding only auto-inserted whitespace is emptied.
+pub fn newline(text: &str, lo: usize, hi: usize, unit: &str, auto_indent: bool) -> Out {
+    let c: Vec<char> = text.chars().collect();
+    let ls = line_start(&c, lo);
+    let le = line_end(&c, lo);
+    let ind: String = if auto_indent { c[ls..le].iter().take_while(|ch| **ch == ' ' || **ch == '\t').take(lo - ls).collect() } else { String::new() };
+    let only_ws_before = c[ls..lo].iter().all(|ch| *ch == ' ' || *ch == '\t');
+    let nothing_after = c[hi..line_end(&c, hi)].iter().all(|ch| ch.is_whitespace());
+    let start = if lo == hi && only_ws_before && nothing_after && !ind.is_empty() { ls } else { lo };
+    let in_braces = auto_indent && lo == hi && lo > 0 && c[lo - 1] == '{' && c.get(hi) == Some(&'}');
+    let (ins, caret) = if in_braces {
+        let first = format!("\n{ind}{unit}");
+        let n = first.chars().count();
+        (format!("{first}\n{ind}"), n)
+    } else {
+        let v = format!("\n{ind}");
+        let n = v.chars().count();
+        (v, n)
+    };
+    let mut out: String = c[..start].iter().collect();
+    out.push_str(&ins);
+    out.extend(c[hi..].iter());
+    let p = start + caret;
+    Out { text: out, sel: (p, p) }
+}
+
+/// Reindent: set each line's indent from the previous non-blank line and the
+/// brackets opened / closed on it (the whole file when nothing is selected).
+pub fn reindent(text: &str, lo: usize, hi: usize, unit: &str) -> Out {
+    let c: Vec<char> = text.chars().collect();
+    let (a, b) = if lo == hi { (0, c.len()) } else { line_span(&c, lo, hi) };
+    // indent level carried in from the lines above the range
+    let first_line = c[..a].iter().filter(|ch| **ch == '\n').count();
+    let all: Vec<&str> = text.split('\n').collect();
+    let net = |l: &str| -> i32 {
+        let mut n = 0;
+        let mut in_str: Option<char> = None;
+        let mut prev = ' ';
+        for ch in l.chars() {
+            match in_str {
+                Some(q) => {
+                    if ch == q && prev != '\\' {
+                        in_str = None;
+                    }
+                }
+                None => match ch {
+                    '"' | '\'' | '`' => in_str = Some(ch),
+                    '{' | '(' | '[' => n += 1,
+                    '}' | ')' | ']' => n -= 1,
+                    _ => {}
+                },
+            }
+            prev = ch;
+        }
+        n
+    };
+    let mut level: i32 = 0;
+    for l in &all[..first_line] {
+        level = (level + net(l)).max(0);
+    }
+    let mut out = Vec::new();
+    for l in lines_of(&c, a, b) {
+        let t = l.trim_start();
+        if t.is_empty() {
+            out.push(String::new());
+            continue;
+        }
+        let closers = t.chars().take_while(|ch| matches!(ch, '}' | ')' | ']')).count() as i32;
+        let this = (level - closers).max(0);
+        out.push(format!("{}{}", unit.repeat(this as usize), t));
+        level = (level + net(t)).max(0);
+    }
+    let rep = out.join("\n");
+    let n = rep.chars().count();
+    Out { text: splice(&c, a, b, &rep), sel: (a, a + n) }
+}
+
 pub fn transpose(text: &str, lo: usize, hi: usize) -> Option<Out> {
     let c: Vec<char> = text.chars().collect();
     if lo != hi {
@@ -909,6 +989,14 @@ mod tests {
         let (s, at) = expand_snippet("for ${1:i} in $2 {\n\t$0\n}");
         assert_eq!(s, "for i in  {\n\t\n}");
         assert_eq!(at, 4);
+    }
+    #[test]
+    fn enter_rules() {
+        assert_eq!(newline("\tab", 3, 3, "\t", true).text, "\tab\n\t");
+        let o = newline("{}", 1, 1, "\t", true);
+        assert_eq!(o.text, "{\n\t\n}");
+        assert_eq!(o.sel, (3, 3));
+        assert_eq!(newline("  \n", 2, 2, "\t", true).text, "\n  \n");
     }
     #[test]
     fn transpose_rules() {

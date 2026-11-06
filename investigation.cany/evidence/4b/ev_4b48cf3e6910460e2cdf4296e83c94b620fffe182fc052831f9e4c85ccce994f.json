@@ -1,0 +1,85 @@
+{
+  "id": "ev_4b48cf3e6910460e2cdf4296e83c94b620fffe182fc052831f9e4c85ccce994f",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140070bdd"
+  },
+  "result": {
+    "calls": [
+      "sub_14002e47e",
+      "sub_14002e7ec",
+      "sub_140032d24",
+      "sub_140032d8a",
+      "sub_140040e05",
+      "sub_140057464",
+      "sub_140070ecb"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140070bdd",
+    "function": "sub_140070bdd",
+    "gotos": 0,
+    "inline_asm": 0,
+    "pseudo_code": "int64_t sub_140070bdd(int64_t rcx, int64_t rdx)\n{\n    rbx = rdx;\n    rsi = rcx;\n    rdi = &stack_40;\n    sub_140032d24(rdi);\n    r14 = rbx + 0x560;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"find_history\");\n    sub_140040e05(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x5b8;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"replace_history\");\n    sub_140040e05(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x2c0;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"in_selection\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x2e8;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"regex\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x310;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"case_sensitive\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x338;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"whole_word\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x360;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"reverse\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x388;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"wrap\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x3b0;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"highlight\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x3d8;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"preserve_case\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x400;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"show_context\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x428;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"use_buffer2\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    r14 = rbx + 0x478;\n    r15 = &stack_20;\n    sub_14002e47e(r15, \"use_gitignore\");\n    sub_140070ecb(rdi, r15, r14);\n    sub_14002e7ec(r15);\n    rbx += 0x4a0;\n    r14 = &stack_20;\n    sub_14002e47e(r14, \"scrollbar_highlights\");\n    sub_140070ecb(rdi, r14, rbx);\n    sub_14002e7ec(r14);\n    sub_140057464(rsi, rdi);\n    sub_140032d8a(rdi);\n    rax = rsi;\n    return rax;\n}\n",
+    "signature": "int64_t sub_140070bdd(int64_t rcx, int64_t rdx)",
+    "strings": [
+      "find_history",
+      "replace_history",
+      "in_selection",
+      "regex",
+      "case_sensitive",
+      "whole_word",
+      "reverse",
+      "wrap",
+      "highlight",
+      "preserve_case",
+      "show_context",
+      "use_buffer2",
+      "use_gitignore",
+      "scrollbar_highlights"
+    ],
+    "structured": true
+  },
+  "summary": "Pseudo-C for sub_140070bdd (81 lines).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140070bdd"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

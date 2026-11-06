@@ -1,0 +1,131 @@
+{
+  "id": "ev_95b4f268372d881a2bd18cd72fe22de1829c6dd8bbff3e75a33fddcc14f76129",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140067264"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax + 0x18",
+      "*(uint64_t*)(rax + 0x1f0",
+      "*(uint64_t*)(rax + 0x210",
+      "*(uint64_t*)(rax + 0x30",
+      "*(uint64_t*)(rax + 0x38",
+      "*(uint64_t*)(rax + 0x60",
+      "*(uint64_t*)(rax + 0x78",
+      "*(uint64_t*)(rax + 0x88",
+      "*(uint64_t*)(rax + 0x98",
+      "*(uint64_t*)(rax + 16",
+      "*(uint64_t*)(rax + 8",
+      "*(uint64_t*)(rdx + 0x98",
+      "sub_14003132c",
+      "sub_1400318e6",
+      "sub_14003191a",
+      "sub_140032338",
+      "sub_140032d40",
+      "sub_140035790",
+      "sub_14003d7c8",
+      "sub_140040806",
+      "sub_140041436",
+      "sub_14004bc1a",
+      "sub_140054260",
+      "sub_14005a644",
+      "sub_140065b16",
+      "sub_140065ba8",
+      "sub_140067a4c",
+      "sub_140067a8c",
+      "sub_14006f400",
+      "sub_14008b75f",
+      "sub_1400adf5a",
+      "sub_1400dc05a",
+      "sub_1400de14a",
+      "sub_1400de426",
+      "sub_14013e868",
+      "sub_14013e90a",
+      "sub_140189a34",
+      "sub_140189f94",
+      "sub_1401ab478",
+      "sub_1401e90a8",
+      "sub_140347cf0",
+      "sub_140348636",
+      "sub_140348a72",
+      "sub_140349c64",
+      "sub_14034f952",
+      "sub_14035560f",
+      "sub_1404aeac0",
+      "sub_14051bbcc",
+      "sub_140528188"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140067264",
+    "function": "sub_140067264",
+    "gotos": 5,
+    "inline_asm": 0,
+    "pseudo_code": "int64_t sub_140067264(int64_t rcx)\n{\n    rsi = rcx;\n    rcx = *(uint64_t*)(rcx + 0x138);\n    rax = *(uint64_t*)(rcx + 0x18);\n    rcx += 0x18;\n    rdi = &stack_48;\n    (**(uint64_t*)(rax + 0x18))(rcx, rdi);\n    rbx = *(uint64_t*)(rdi + 16);\n    sub_140041436(rdi);\n    if (rbx == 0) {\n        rcx = *(uint64_t*)(rsi + 0x28);\n        if (rcx == 0) {\n            ecx = 0;\n        } else {\n            rax = *(uint64_t*)(rcx);\n            rax = (**(uint64_t*)(rax + 0x78))();\n            rcx = rax;\n        }\n        sub_1401e90a8(rcx, \"No find \");\n    } else {\n        sub_14006f400(*(uint64_t*)(rsi + 0x138));\n        rax = sub_140065ba8(rsi, 0);\n        stack_28 &= 0;\n        rdi = rax;\n        rax = *(uint64_t*)(rsi + 0x140);\n        al = *(uint8_t*)(rax + 0x188);\n        stack_37 = al;\n        if (al == 0) {\n            rax = *(uint64_t*)(rsi + 0x1a0);\n            rax = *(uint64_t*)(rax + 0x1c0);\n            rax = *(uint64_t*)(rax + 0x128);\n            stack_48 = rax;\n            if (rax != 0) {\n                *(uint32_t*)(rax + 8)++;\n            }\n            rbx = &stack_48;\n            sub_1400318e6(&stack_28, rbx);\n            sub_14003191a(rbx);\n            ebx = 0;\n            r14d = 0;\n        } else {\n            rcx = *(uint64_t*)(rsi + 0x120);\n            rax = *(uint64_t*)(rcx);\n            rax = (**(uint64_t*)(rax + 8))();\n            rbx = &stack_70;\n            sub_1400dc05a(rax, rbx);\n            r12 = *(uint64_t*)(rbx);\n            r14 = &data_1406fa670;\n            r15 = &data_1406fa690;\n            while (true) {\n                if (r12 == stack_78) {\n                    goto label_1400673b0;\n                } else {\n                    stack_20 &= 0;\n                    rax = sub_140528188(*(uint64_t*)(r12), 0, r14, r15);\n                    if (rax == 0) {\nlabel_140067348:\n                        r12 += 8;\n                        continue;\n                    } else {\n                        rbx = rax;\n                        rax = sub_140065b16(rax);\n                        if (al != 0) {\n                            goto label_1400674c6;\n                        } else {\n                            goto label_140067348;\n                        }\n                        break;\n                    }\n                    break;\n                }\n                break;\n            }\nlabel_14006762e:\n            rax = stack_28;\n            r14 = &stack_48;\n            *(uint8_t*)(r14) = 1;\n            rax = \"scroll_past_end\";\n            rdx = &stack_120;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406c186c;\n            *(uint64_t*)(rdx + 8) = rax;\n            sub_14003d7c8(*(uint64_t*)(rax + 0x6e8), rdx, r14);\n            rax = stack_28;\n            *(uint8_t*)(r14) = 0;\n            rax = \"detect_indentation\";\n            rdx = &stack_110;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406ba968;\n            *(uint64_t*)(rdx + 8) = rax;\n            sub_14003d7c8(*(uint64_t*)(rax + 0x6e8), rdx, &stack_48);\n            rax = stack_28;\n            sub_140189f94(*(uint64_t*)(rax + 0x6e8));\n            r14 = *(uint64_t*)(rbx + 0x108);\n            sub_140035790(&stack_70);\n        }\n        rax = stack_28;\n        ebp = 0;\n        r8 = &stack_48;\n        *(uint8_t*)(r8) = bpl;\n        rax = \"line_numbers\";\n        rdx = &stack_100;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406b676a;\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_14003d7c8(*(uint64_t*)(rax + 0x6e8));\n        r15 = &stack_40;\n        *(uint32_t*)(r15) &= 0;\n        rax = stack_28;\n        r12 = \"output_tag\";\n        rdx = &stack_f0;\n        *(uint64_t*)(rdx) = r12;\n        r13 = &data_1406bdba2;\n        *(uint64_t*)(rdx + 8) = r13;\n        sub_140040806(*(uint64_t*)(rax + 0x6e8), rdx, r15);\n        *(uint32_t*)(r15)++;\n        rax = stack_28;\n        rdx = &stack_e0;\n        *(uint64_t*)(rdx) = r12;\n        *(uint64_t*)(rdx + 8) = r13;\n        sub_140067a4c(*(uint64_t*)(rax + 0x6e8), rdx, r15);\n        eax = *(uint32_t*)(r15);\n        *(uint32_t*)(rdi + 0xbc) = eax;\n        rax = stack_28;\n        rax = \"result_file_regex\";\n        rdx = &stack_d0;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406b388e;\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_140067a8c(*(uint64_t*)(rax + 0x6e8), rdx, \"^([^ \\t].*):$\");\n        rax = stack_28;\n        rax = \"result_line_regex\";\n        rdx = &stack_c0;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406b3879;\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_140067a8c(*(uint64_t*)(rax + 0x6e8), rdx, \"^ +([0-9]+):\");\n        rax = stack_28;\n        r12 = *(uint64_t*)(rax + 0x6e8);\n        r13 = &stack_48;\n        sub_140032d40(r13, &data_1406da712);\n        rax = \"result_base_dir\";\n        r15 = &stack_70;\n        *(uint64_t*)(r15) = rax;\n        rax = &data_1406b814b;\n        *(uint64_t*)(r15 + 8) = rax;\n        sub_140189a34(r12, r15, r13);\n        sub_1401ab478(r13);\n        r12 = &stack_38;\n        *(uint8_t*)(r12) = bpl;\n        rax = stack_28;\n        rax = \"find_in_files_suppress_errors\";\n        rdx = &stack_b0;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406b6474;\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_140032338(*(uint64_t*)(rax + 0x6e8), rdx, r12);\n        rax = stack_28;\n        rcx = *(uint64_t*)(rax + 0x20);\n        rax = \"Packages/Default/Find Results.hidden-tmLanguage\";\n        rdx = &stack_a0;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406c092b;\n        *(uint64_t*)(rdx + 8) = rax;\n        rax = *(uint64_t*)(rcx);\n        (**(uint64_t*)(rax + 0x210))(rcx, rdx, 1);\n        rax = sub_14051bbcc(0x48);\n        r13d = *(uint8_t*)(r12);\n        stack_88 = rsi;\n        *(uint32_t*)(rsi + 16)++;\n        r12 = rax;\n        rax = stack_28;\n        *(uint64_t*)(r15) = rax;\n        if (rax != 0) {\n            *(uint32_t*)(rax + 8)++;\n        }\n        rax = &data_1405bd998;\n        r15 = &stack_48;\n        *(uint64_t*)(r15) = rax;\n        *(uint64_t*)(r15 + 8) = rbp;\n        stack_70 &= 0;\n        rcx = &data_1405bd9e8;\n        *(uint64_t*)(r12) = rcx;\n        rcx = r12;\n        rcx += 8;\n        *(uint64_t*)(r12 + 8) = rax;\n        sub_140054260(rcx, r15);\n        *(uint64_t*)(r15) &= 0;\n        rcx = &stack_88;\n        rax = *(uint64_t*)(rcx);\n        *(uint64_t*)(r12 + 0x28) = rax;\n        *(uint64_t*)(rcx) &= 0;\n        *(uint64_t*)(r12 + 0x30) = rdi;\n        *(uint64_t*)(r12 + 0x38) &= 0;\n        r13d ^= 1;\n        r13d = -r13d;\n        *(uint32_t*)(r12 + 0x40) = r13d;\n        sub_14003132c();\n        *(uint64_t*)(rdi + 0x118) = r12;\n        rax = *(uint64_t*)(r15);\n        if (rax != 0) {\n            (**(uint64_t*)(rax + 16))(&stack_48);\n        }\n        sub_14003191a(&stack_70);\n        if (stack_37 == 0) {\n            rbx = &stack_48;\n            *(uint64_t*)(rbx) &= 0;\n            sub_1400adf5a(*(uint64_t*)(rsi + 0x1a0), rbx);\n            rax = *(uint64_t*)(rbx);\n            if (rax != 0) {\n                (**(uint64_t*)(rax + 16))(&stack_48);\n            }\n            rbx = *(uint64_t*)(rsi + 0x120);\n            rax = -0x100000000;\n            r14 = &stack_48;\n            *(uint64_t*)(r14) = rax;\n            rcx = *(uint64_t*)(rsi + 0x1a0);\n            rax = *(uint64_t*)(rcx);\n            r15 = &stack_90;\n            (**(uint64_t*)(rax + 0x1f0))(rcx, r15);\n            rax = *(uint64_t*)(rbx);\n            (**(uint64_t*)(rax + 0x30))(rbx, r15, r14);\n            sub_1401ab478(r14);\n            rcx = *(uint64_t*)(rsi + 0x120);\n            rax = *(uint64_t*)(rcx);\n            rax = (**(uint64_t*)(rax + 8))();\n            rax = sub_1400de426(rax);\n            if (rax != 0) {\n                rax = (**(uint64_t*)(rdx + 0x98))(rax, *(uint64_t*)(rax));\n                sub_14013e90a(rax, 0);\n            }\n        } else {\n            rcx = *(uint64_t*)(rsi + 0x120);\n            rax = *(uint64_t*)(rcx);\n            (**(uint64_t*)(rax + 0x98))(rcx, r14, rbx);\n            rcx = *(uint64_t*)(rsi + 0x120);\n            rax = *(uint64_t*)(rcx);\n            (**(uint64_t*)(rax + 0x38))(rcx, 0);\n        }\n        *(uint64_t*)(rsi + 0x200) = rdi;\n        sub_14008b75f(rdi);\n        sub_14003191a(&stack_28);\n    }\n    return rax;\nlabel_1400673b0:\n    rcx = *(uint64_t*)(rsi + 0x120);\n    rax = *(uint64_t*)(rcx);\n    r14 = &stack_48;\n    r15d = 0;\n    (**(uint64_t*)(rax + 0x78))(rcx, r14, 0xffffffff, 0);\n    rbx = *(uint64_t*)(r14);\n    sub_14003191a(r14);\n    rax = *(uint64_t*)(rbx + 0x108);\n    rcx = \"find_in_files:output\";\n    *(uint64_t*)(rax + 0x348) = rcx;\n    edx = 0x128;\n    rdx += *(uint64_t*)(rbx + 0x108);\n    r14 = &stack_28;\n    sub_14004bc1a(r14);\n    rax = *(uint64_t*)(r14);\n    sub_14034f952(*(uint64_t*)(rax + 0x6c8), 1);\n    rax = \"Find Results\";\n    rdx = &stack_130;\n    *(uint64_t*)(rdx) = rax;\n    rax = &data_1406b60ab;\n    *(uint64_t*)(rdx + 8) = rax;\n    rax = *(uint64_t*)(rbx);\n    (**(uint64_t*)(rax + 0x18))(rbx);\n    stack_40 = rsi;\n    *(uint32_t*)(rsi + 16)++;\n    rax = stack_40;\n    stack_38 = rax;\n    if (rax != 0) {\n        *(uint32_t*)(rax + 16)++;\n        r15 = stack_38;\n    }\n    rax = &data_1405bd980;\n    r14 = &stack_48;\n    *(uint64_t*)(r14) = rax;\n    *(uint64_t*)(r14 + 8) = r15;\n    stack_38 &= 0;\n    rax = *(uint64_t*)(rbx);\n    (**(uint64_t*)(rax + 0x88))(rbx, r14);\n    rax = *(uint64_t*)(r14);\n    if (rax != 0) {\n        (**(uint64_t*)(rax + 16))(&stack_48);\n    }\n    sub_14003132c(&stack_38);\n    sub_14003132c(&stack_40);\n    goto label_14006762e;\nlabel_1400674c6:\n    edx = 0x128;\n    rdx += *(uint64_t*)(rbx + 0x108);\n    r14 = &stack_28;\n    sub_14004bc1a(r14);\n    rax = *(uint64_t*)(r14);\n    rax = &data_1406da712;\n    rdx = &stack_150;\n    *(uint64_t*)(rdx) = rax;\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_140348636(*(uint64_t*)(rax + 0x6c8));\n    rax = *(uint64_t*)(r14);\n    r15 = *(uint64_t*)(rax + 0x6c8);\n    rax = &data_1406dc1cc;\n    r12 = &stack_140;\n    *(uint64_t*)(r12) = rax;\n    rax = &data_1406dc1d4;\n    *(uint64_t*)(r12 + 8) = rax;\n    rax = sub_140347cf0(r15);\n    stack_20 = 1;\n    sub_140349c64(r15, rax, r12, 0);\n    rax = *(uint64_t*)(r14);\n    rax = sub_140347cf0(*(uint64_t*)(rax + 0x6c8));\n    rax--;\n    rdx = &stack_160;\n    *(uint64_t*)(rdx) = rax;\n    *(uint64_t*)(rdx + 8) = rax;\n    rax = -0x4010000000000000;\n    *(uint64_t*)(rdx + 16) = rax;\n    r15 = &stack_48;\n    sub_1404aeac0(r15);\n    rax = *(uint64_t*)(r14);\n    rcx = *(uint64_t*)(rax + 0x720);\n    rax = *(uint64_t*)(rcx + 0x18);\n    *(uint8_t*)(rax + 0x4dc) = 0;\n    rcx += 0x20;\n    sub_14005a644(rcx, r15);\n    sub_140035790(r15);\n    rdx = *(uint64_t*)(r14);\n    sub_140348a72(*(uint64_t*)(rdx + 0x6c8), rdx, 0, 0);\n    rcx = *(uint64_t*)(rsi + 0x120);\n    rax = *(uint64_t*)(rcx);\n    rax = (**(uint64_t*)(rax + 8))();\n    sub_1400de14a(rax, rbx, 0);\n    rax = *(uint64_t*)(rbx + 0x108);\n    rcx = *(uint64_t*)(rax + 0x28);\n    if (rcx != 0) {\n        rax = *(uint64_t*)(rcx);\n        rax = (**(uint64_t*)(rax + 0x60))();\n        sub_14013e868(rax);\n    }\n    r14 = &stack_28;\n    rax = *(uint64_t*)(r14);\n    rax = sub_140347cf0(*(uint64_t*)(rax + 0x6c8));\n    sub_14035560f(r14, rax - 1);\n    rcx = *(uint64_t*)(rsi + 0x120);\n    rax = *(uint64_t*)(rcx);\n    (**(uint64_t*)(rax + 0x60))();\n    goto label_14006762e;\n}\n",
+    "signature": "int64_t sub_140067264(int64_t rcx)",
+    "strings": [
+      "find_in_files:output",
+      "Find Results",
+      "No find ",
+      "scroll_past_end",
+      "detect_indentation",
+      "line_numbers",
+      "output_tag",
+      "result_file_regex",
+      "^([^ \t].*):$",
+      "result_line_regex",
+      "^ +([0-9]+):",
+      "result_base_dir",
+      "find_in_files_suppress_errors",
+      "Packages/Default/Find Results.hidden-tmLanguage"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_140067264 (351 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "5 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140067264"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

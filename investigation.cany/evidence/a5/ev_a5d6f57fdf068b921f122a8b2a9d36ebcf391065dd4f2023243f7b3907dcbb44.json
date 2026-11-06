@@ -1,0 +1,266 @@
+{
+  "id": "ev_a5d6f57fdf068b921f122a8b2a9d36ebcf391065dd4f2023243f7b3907dcbb44",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 40,
+    "mode": "literal",
+    "offset": 0,
+    "pattern": "layout"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406b4897",
+        "references": [],
+        "section": ".rdata",
+        "text": "set_layout"
+      },
+      {
+        "address": "0x1406b48a2",
+        "references": [
+          {
+            "from": "0x1400436b0",
+            "function": "sub_14004367c"
+          }
+        ],
+        "section": ".rdata",
+        "text": "remember_layout"
+      },
+      {
+        "address": "0x1406b48c3",
+        "references": [
+          {
+            "from": "0x140043713",
+            "function": "sub_14004367c"
+          },
+          {
+            "from": "0x14004462f",
+            "function": "sub_1400445fe"
+          },
+          {
+            "from": "0x1400471b1",
+            "function": "sub_140047186"
+          }
+        ],
+        "section": ".rdata",
+        "text": "layout"
+      },
+      {
+        "address": "0x1406bb7de",
+        "references": [
+          {
+            "from": "0x140091356",
+            "function": "sub_140091327"
+          }
+        ],
+        "section": ".rdata",
+        "text": "grid_layout_control"
+      },
+      {
+        "address": "0x1406bb836",
+        "references": [
+          {
+            "from": "0x14014789b",
+            "function": "sub_14014786b"
+          }
+        ],
+        "section": ".rdata",
+        "text": "manual_layout_container_control"
+      },
+      {
+        "address": "0x1406d30de",
+        "references": [
+          {
+            "from": "0x1401c929c",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform float texture_size;\n\nuniform sampler2D tex;\n\nflat in vec4 tint;\nsmooth in vec2 uv;\n\n#if defined(FADED) || defined(CLIPPED) || defined(SUBPIXEL_INTERP)\nsmooth in float view_position_x;\n#endif\n\n#ifdef FADED\nflat in float fade_start;\nflat in float fade_end;\n#endif\n\n#ifdef CLIPPED\nflat in float clip_start;\nflat in float clip_end;\n#endif\n\n#ifdef SUBPIXEL_INTERP\n#ifdef COLORED\n    #error \"Cannot be colored and subpixel interpolated\"\n#endif\nflat in float subpixel_x;\nflat in float left_edge_x;\nflat in float right_edge_x;\n#endif\n\n#if defined(NO_THREE_CHANNEL_ALPHA)\nout vec4 frag_color;\n#else\nlayout(location = 0, index = 0) out vec4 frag_color;\nlayout(location = 0, index = 1) out vec4 frag_alpha;\n#endif\n\nvoid main()\n{\n#if defined(COLORED)\n    vec4 color = texture(tex, uv) * tint.a;\n    vec4 alpha = vec4(color.a);\n#elif defined(SUBPIXEL_INTERP)\n    // Take two samples, one for this pixel and another for the pixel to the\n    // left. These need to be zeroed out if they're outside the glyph.\n    float is_inside_right = step(ceil(view_position_x), right_edge_x);\n    vec4 sample1 = texture(tex, uv) * is_inside_right;\n\n    float is_inside_left = step(left_edge_x, floor(view_position_x));\n    vec4 sample2 = texture(tex, uv - vec2(1/texture_size, 0)) * is_inside_left;\n\n    // Mix the two samples by the subpixel position\n    vec4 color = tint;\n    vec4 alpha = mix(sample1, sample2, subpixel_x) * tint.a;\n#else\n    vec4 color = tint;\n    vec4 alpha = texture(tex, uv) * tint.a;\n#endif\n\n#ifdef FADED\n    alpha *= 1 - smoothstep(fade_start, fade_end, view_position_x);\n#endif\n\n#ifdef CLIPPED\n    alpha *= step(clip_start, view_position_x) * step(view_position_x, clip_end);\n#endif\n\n#if defined(NO_THREE_CHANNEL_ALPHA)\n    frag_color = color * alpha.g;\n#else\n    frag_color = color;\n    frag_alpha = alpha;\n#endif\n}\n"
+      },
+      {
+        "address": "0x1406d73f9",
+        "references": [
+          {
+            "from": "0x1401c9109",
+            "function": "sub_1401c8f20"
+          },
+          {
+            "from": "0x1401c918d",
+            "function": "sub_1401c8f20"
+          },
+          {
+            "from": "0x1401c920e",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform samplerBuffer instances;\n\nuniform vec2 viewport;\n\n#if defined(TEXTURED) && !defined(REPEAT)\nuniform vec2 texture_size;\n#endif\n\n// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\nflat out vec4 tint;\n\n#ifdef TEXTURED\n#ifdef REPEAT\nsmooth out vec2 local_position;\nflat out vec2 size;\nflat out vec2 texture_source_position;\nflat out vec2 texture_source_size;\n#else\nsmooth out vec2 uv;\n#endif\n#endif\n\nvoid main()\n{\n#if !defined(TEXTURED)\n    tint = texelFetch(instances, gl_InstanceID * 2 + 0);\n    vec4 position_and_size = texelFetch(instances, gl_InstanceID * 2 + 1);\n#else\n    tint = texelFetch(instances, gl_InstanceID * 3 + 0);\n    vec4 position_and_size = texelFetch(instances, gl_InstanceID * 3 + 1);\n    vec4 texture_source_position_and_size = texelFetch(instances, gl_InstanceID * 3 + 2);\n\n#if !defined(REPEAT)\n    vec2 texture_source_position;\n    vec2 texture_source_size;\n#endif\n    texture_source_position = texture_source_position_and_size.xy;\n    texture_source_size = texture_source_position_and_size.zw;\n#endif\n\n#if !defined(REPEAT)\n    vec2 size;\n#endif\n    vec2 position = position_and_size.xy;\n    size = position_and_size.zw;\n\n#if defined(TEXTURED) && !defined(REPEAT)\n    // Use a_position as a texture coord here\n    vec2 texture_position = texture_source_position + a_position * texture_source_size;\n    uv = texture_position / texture_size;\n#endif\n\n#if !defined(REPEAT)\n    vec2 local_position;\n#endif\n    local_position = a_position * size;\n    vec2 view_position = position + local_position;\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d7a7a",
+        "references": [
+          {
+            "from": "0x1401c8f67",
+            "function": "sub_1401c8f20"
+          },
+          {
+            "from": "0x1401c90cd",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform vec2 viewport;\nuniform vec2 position;\nuniform vec2 size;\n\n// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\n#if defined(TEXTURED) && !defined(REPEAT)\nuniform vec2 texture_size;\nuniform vec2 texture_source_position;\nuniform vec2 texture_source_size;\n\nsmooth out vec2 uv;\n#endif\n\n#if defined(ROUNDED) || defined(BORDERED) || defined(REPEAT)\nsmooth out vec2 local_position;\n#endif\n\nvoid main()\n{\n#if defined(TEXTURED) && !defined(REPEAT)\n    // Use a_position as a texture coord here\n    vec2 texture_position = texture_source_position + a_position * texture_source_size;\n    uv = texture_position / texture_size;\n#endif\n\n#if !defined(ROUNDED) && !defined(BORDERED) && !defined(REPEAT)\n    vec2 local_position;\n#endif\n    local_position = a_position * size;\n    vec2 view_position = position + local_position;\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d7e39",
+        "references": [
+          {
+            "from": "0x1401c924b",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform vec2 viewport;\nuniform vec2 position;\nuniform vec2 size;\nuniform float checkerboard_size;\n\n// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\nsmooth out vec2 uv;\n\nvoid main()\n{\n    vec2 local_position = a_position * size;\n\n    uv = local_position / checkerboard_size;\n\n    vec2 view_position = position + local_position;\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d8011",
+        "references": [
+          {
+            "from": "0x1401c9291",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\nuniform vec2 viewport;\nuniform float texture_size;\n\nuniform samplerBuffer instances;\n\nflat out vec4 tint;\nsmooth out vec2 uv;\n\n#if defined(FADED) || defined(CLIPPED) || defined(SUBPIXEL_INTERP)\nsmooth out float view_position_x;\n#endif\n\n#ifdef FADED\nflat out float fade_start;\nflat out float fade_end;\n#endif\n\n#ifdef CLIPPED\nflat out float clip_start;\nflat out float clip_end;\n#endif\n\n#ifdef SUBPIXEL_INTERP\nflat out float subpixel_x;\nflat out float left_edge_x;\nflat out float right_edge_x;\n#endif\n\nvoid main()\n{\n    vec4 color = texelFetch(instances, gl_InstanceID * 3 + 0);\n    vec4 position_and_size = texelFetch(instances, gl_InstanceID * 3 + 1);\n    vec4 texture_source_position_and_extra = texelFetch(instances, gl_InstanceID * 3 + 2);\n\n    // Unpack uniform block\n    tint = color;\n    vec2 position = position_and_size.xy;\n    vec2 size = position_and_size.zw;\n    vec2 texture_source_position = texture_source_position_and_extra.xy;\n\n#ifdef SUBPIXEL_INTERP\n    // To properly interpolate on subpixels we need to draw an extra pixel to\n    // the right and position the glyph on the lower pixel boundry. The pixel\n    // shader will then interpolate based on the subpixel position.\n    left_edge_x = position.x;\n    right_edge_x = left_edge_x + size.x;\n    subpixel_x = position.x - floor(position.x);\n\n    position.x = floor(position.x);\n    size.x += 1;\n#endif\n\n#ifdef FADED\n    fade_start = texture_source_position_and_extra.z;\n    fade_end = texture_source_position_and_extra.w;\n#endif\n\n#ifdef CLIPPED\n    clip_start = texture_source_position_and_extra.z;\n    clip_end = texture_source_position_and_extra.w;\n#endif\n\n    // Use a_position as a texture coord here\n    vec2 texture_position = texture_source_position + a_position * size;\n    uv = texture_position / texture_size;\n\n    vec2 view_position = position + a_position * size;\n\n#if defined(FADED) || defined(CLIPPED) || defined(SUBPIXEL_INTERP)\n    view_position_x = view_position.x;\n#endif\n\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d887b",
+        "references": [
+          {
+            "from": "0x1401c95e9",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform samplerBuffer instances;\n\nuniform vec2 viewport;\n// uniform mat3x2 transform;\n\n// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\nflat out vec4 tint;\n\n#ifdef STIPPLED\nflat out float stipple_length;\nflat out float stipple_on_length;\n\nsmooth out float stipple_pos;\n#endif\n\n#ifdef SQUIGGLE\nflat out float width;\n\nsmooth out vec2 line_pos;\n#endif\n\n#ifdef ANTIALIAS\n#error \"Not supported for regular lines\"\n#endif\n\nvoid main()\n{\n#ifdef STIPPLED\n    tint = texelFetch(instances, gl_InstanceID * 4 + 0);\n    vec4 mat0 = texelFetch(instances, gl_InstanceID * 4 + 1);\n    vec4 mat1 = texelFetch(instances, gl_InstanceID * 4 + 2);\n    vec4 stipple = texelFetch(instances, gl_InstanceID * 4 + 3);\n\n    float line_length = stipple.x;\n    float stipple_offset = stipple.y;\n    stipple_length = stipple.z;\n    stipple_on_length = stipple.w;\n#else\n    tint = texelFetch(instances, gl_InstanceID * 3 + 0);\n    vec4 mat0 = texelFetch(instances, gl_InstanceID * 3 + 1);\n    vec4 mat1 = texelFetch(instances, gl_InstanceID * 3 + 2);\n\n#ifdef SQUIGGLE\n    width = mat1.b;\n    float line_length = mat1.a;\n#endif\n#endif\n\n    mat3x2 transform = mat3x2(mat0.rg, mat0.ba, mat1.rg);\n\n    vec2 view_position = (transform * vec3(a_position, 1)).xy;\n\n#ifdef SQUIGGLE\n    line_pos = vec2(a_position.x * line_length, a_position.y * width);\n#endif\n\n#ifdef STIPPLED\n    stipple_pos = (stipple_offset + a_position.x * line_length) / stipple_length;\n#endif\n\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d8ea0",
+        "references": [
+          {
+            "from": "0x1401c9702",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform samplerBuffer instances;\n\nuniform vec2 viewport;\n\nuniform uint segments;\n\n// a_position.y is in range 0,1\n// a_position.x goes from 0 til the number of segments\nlayout (location = 0) in vec2 a_position;\n\nflat out vec4 tint;\n\n#ifdef STIPPLED\nflat out float stipple_length;\nflat out float stipple_on_length;\n\nsmooth out float stipple_pos;\n#endif\n\n#ifdef ANTIALIAS\n#define ANTIALIAS_FEATHER 0.5\n\nflat out float width;\n\nsmooth out float local_x;\n#endif\n\nvec2 perpendicular(vec2 v)\n{\n    return vec2(-v.y, v.x);\n}\n\nvoid main()\n{\n#if !defined(ANTIALIAS)\n    float width;\n#endif\n\n#ifdef STIPPLED\n    tint = texelFetch(instances, gl_InstanceID * 5 + 0);\n    vec4 points_0_and_1 = texelFetch(instances, gl_InstanceID * 5 + 1);\n    vec4 points_2_and_3 = texelFetch(instances, gl_InstanceID * 5 + 2);\n    width = texelFetch(instances, gl_InstanceID * 5 + 3).r;\n    vec4 stipple = texelFetch(instances, gl_InstanceID * 5 + 4);\n\n    float line_length = stipple.x;\n    float stipple_offset = stipple.y;\n    stipple_length = stipple.z;\n    stipple_on_length = stipple.w;\n#else\n    tint = texelFetch(instances, gl_InstanceID * 4 + 0);\n    vec4 points_0_and_1 = texelFetch(instances, gl_InstanceID * 4 + 1);\n    vec4 points_2_and_3 = texelFetch(instances, gl_InstanceID * 4 + 2);\n    width = texelFetch(instances, gl_InstanceID * 4 + 3).r;\n#endif\n\n    vec2 point0 = points_0_and_1.xy;\n    vec2 point1 = points_0_and_1.zw;\n    vec2 point2 = points_2_and_3.xy;\n    vec2 point3 = points_2_and_3.zw;\n\n    float t = a_position.x / segments;\n    float nt = 1 - t;\n\n    // Hard maths\n    vec2 bezier_point = point0 * nt * nt * nt + 3.0 * point1 * nt * nt * t + 3.0 * point2 * nt * t * t + point3 * t * t * t;\n\n    vec2 tangent = -3.0 * point0 * nt * nt + 3.0 * point1 * (1.0 - 4.0 * t + 3.0 * t * t) + 3.0 * point2 * (2.0 * t - 3.0 * t * t) + 3.0 * point3 * t * t;\n\n    vec2 normal = perpendicular(tangent);\n\n#ifdef ANTIALIAS\n    float half_width = width / 2 + ANTIALIAS_FEATHER;\n#else\n    float half_width = width / 2;\n    float local_x;\n#endif\n    local_x = (a_position.y * 2 - 1) * half_width;\n\n    // Offset from y to give it width\n    vec2 view_position = bezier_point + local_x * normalize(normal);\n\n#ifdef STIPPLED\n    stipple_pos = (stipple_offset + t * line_length) / stipple_length;\n#endif\n\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d9806",
+        "references": [
+          {
+            "from": "0x1401c98c9",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform vec2 viewport;\nuniform vec2 position;\nuniform vec2 size;\n\n// a_position is in range 0,1\nlayout (location = 0) in vec2 a_position;\n\nsmooth out vec2 view_position;\n\nvoid main()\n{\n    vec2 local_position = a_position * size;\n    view_position = position + local_position;\n\n    vec2 clip_space_position = (view_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n}\n"
+      },
+      {
+        "address": "0x1406d9995",
+        "references": [
+          {
+            "from": "0x1401c9888",
+            "function": "sub_1401c8f20"
+          }
+        ],
+        "section": ".rdata",
+        "text": "uniform vec2 viewport;\n\n// a_position is already in view space, just need to convert it to clip space\nlayout (location = 0) in vec2 a_position;\n\nvoid main()\n{\n    vec2 clip_space_position = (a_position / viewport) * 2 - 1;\n    gl_Position = vec4(clip_space_position, 0, 1);\n\n}\n"
+      },
+      {
+        "address": "0x1406fac30",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVgrid_layout_control@@"
+      },
+      {
+        "address": "0x1406facd0",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVlayout_influencing_position_animation@@"
+      },
+      {
+        "address": "0x1406fb780",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVset_layout_command@@"
+      },
+      {
+        "address": "0x1406fda40",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$property_impl@Vgrid_layout_control@@HH@@"
+      },
+      {
+        "address": "0x1406fda80",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$property_impl@Vgrid_layout_control@@Vcolor@@V2@@@"
+      },
+      {
+        "address": "0x14071c710",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$property_impl@Vmanual_layout_container_control@@NN@@"
+      },
+      {
+        "address": "0x14071c760",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVmanual_layout_container_control@@"
+      },
+      {
+        "address": "0x14071f3f0",
+        "references": [],
+        "section": ".data",
+        "text": ".?AV?$run_visitor@V<lambda_0>@?0??shape@direct_write_font@@QEAAPEAUfx_layout@@PEB_S_K@Z@@@"
+      },
+      {
+        "address": "0x14072b870",
+        "references": [],
+        "section": ".data",
+        "text": ".?AVLayoutTracker@@"
+      }
+    ],
+    "total": 23
+  },
+  "summary": "23 strings match \"layout\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 23,
+    "total": 23
+  },
+  "locations": [],
+  "links": []
+}

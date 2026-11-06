@@ -1,0 +1,82 @@
+{
+  "id": "ev_3688bf06f20bf90add499812c1e13a636de340358e227b7b89a70e702e4ab6f3",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140074d8c"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax",
+      "*(uint64_t*)(rax + 16",
+      "sub_14002e7ec",
+      "sub_140031c2f",
+      "sub_1400515d1",
+      "sub_1400531ac",
+      "sub_140074ee3",
+      "sub_14010e8ea",
+      "sub_140386e86"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140074d8c",
+    "function": "sub_140074d8c",
+    "gotos": 1,
+    "inline_asm": 2,
+    "pseudo_code": "int64_t sub_140074d8c(int64_t rcx)\n{\n    rsi = rcx;\n    if (*(uint8_t*)(rcx + 0x30) == 0) {\n        rax = *(uint64_t*)(rsi + 8);\n        eax = *(uint32_t*)(rax + 8);\n        if (eax >= 2) {\n            rdi = rdx;\n            rax = *(uint64_t*)(rdx + 0x20);\n            rbx = &stack_90;\n            sub_1400515d1(rbx, 0x80, \" (%d files)\", *(uint32_t*)(rax + 0x94));\n            r14 = *(uint64_t*)0x140748490;\n            rax = *(uint64_t*)(rdi + 0x20);\n            __asm(\"movups xmm0, [rax+0x28]\");\n            rdx = &stack_20;\n            __asm(\"movaps [rdx], xmm0\");\n            rdi = &stack_30;\n            sub_14010e8ea(rdi);\n            r15 = &stack_50;\n            sub_140074ee3(r15, rsi + 16, rdi);\n            r12 = &stack_70;\n            sub_140031c2f(r12, r15, rbx);\n            sub_140386e86(r14, r12);\n            sub_14002e7ec(r12);\n            sub_14002e7ec(r15);\n            sub_14002e7ec(rdi);\n        }\n    }\n    rsi = *(uint64_t*)(rsi + 8);\n    *(uint32_t*)(rsi + 0x190)--;\n    if (*(uint32_t*)(rsi + 0x190) == 0) {\n        rax = *(uint64_t*)(rsi + 0x60);\n        if (rax == 0) {\nlabel_140074eb3:\n            rax = *(uint64_t*)(rsi + 0x40);\n            if (rax != 0) {\n                rsi += 0x40;\n                (**(uint64_t*)(rax))(rsi);\n            }\n        } else {\n            rdi = rsi + 0x60;\n            (**(uint64_t*)(rax))(rdi);\n            rbx = &stack_90;\n            *(uint64_t*)(rbx) &= 0;\n            sub_1400531ac(rdi, rbx);\n            rax = *(uint64_t*)(rbx);\n            if (rax != 0) {\n                (**(uint64_t*)(rax + 16))(&stack_90);\n            }\n            if (*(uint32_t*)(rsi + 0x190) == 0) {\n                goto label_140074eb3;\n            }\n        }\n    }\n    return rax;\n}\n",
+    "signature": "int64_t sub_140074d8c(int64_t rcx)",
+    "strings": [
+      " (%d files)"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_140074d8c (56 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "1 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "2 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140074d8c"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

@@ -1,0 +1,692 @@
+{
+  "id": "ev_73ff4bb2b8914c041ed72c38d9c494f2dacb0f4032782b62b02c25ffb83fee8b",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 40,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "^ ?(matches|match|files|file|across|in|on|of)( |$)"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x140632454",
+        "references": [],
+        "section": ".rdata",
+        "text": "match"
+      },
+      {
+        "address": "0x1406328c0",
+        "references": [],
+        "section": ".rdata",
+        "text": "match"
+      },
+      {
+        "address": "0x1406b2ec6",
+        "references": [
+          {
+            "from": "0x1403238af",
+            "function": "sub_14032355e"
+          }
+        ],
+        "section": ".rdata",
+        "text": "file is empty"
+      },
+      {
+        "address": "0x1406b4b53",
+        "references": [
+          {
+            "from": "0x1401ccf1a",
+            "function": "sub_1401ccd48"
+          },
+          {
+            "from": "0x140390cb2",
+            "function": "sub_140390bdc"
+          },
+          {
+            "from": "0x140398b43",
+            "function": "sub_140398378"
+          },
+          {
+            "from": "0x1403a3e5b",
+            "function": "sub_1403a3d38"
+          }
+        ],
+        "section": ".rdata",
+        "text": "in"
+      },
+      {
+        "address": "0x1406b66e3",
+        "references": [
+          {
+            "from": "0x140051f83",
+            "function": "sub_140051eb0"
+          }
+        ],
+        "section": ".rdata",
+        "text": "File not found in open folders"
+      },
+      {
+        "address": "0x1406b749e",
+        "references": [
+          {
+            "from": "0x14005d9c9",
+            "function": "sub_14005d996"
+          },
+          {
+            "from": "0x14005dbf7",
+            "function": "sub_14005dbc8"
+          },
+          {
+            "from": "0x14005e8e4",
+            "function": "sub_14005e8aa"
+          },
+          {
+            "from": "0x14005ed86",
+            "function": "sub_14005ed62"
+          },
+          {
+            "from": "0x14005f035",
+            "function": "sub_14005f02e"
+          },
+          {
+            "from": "0x140078041",
+            "function": "sub_140077d02"
+          },
+          {
+            "from": "0x1404f84b8",
+            "function": "sub_1404f8336"
+          },
+          {
+            "from": "0x1404fa74b",
+            "function": "sub_1404fa718"
+          },
+          {
+            "from": "0x1404faa86",
+            "function": "sub_1404faa4a"
+          },
+          {
+            "from": "0x1404faf7d",
+            "function": "sub_1404faf4c"
+          },
+          {
+            "from": "0x1404fb1e8",
+            "function": "sub_1404fb1a8"
+          }
+        ],
+        "section": ".rdata",
+        "text": "files"
+      },
+      {
+        "address": "0x1406b7605",
+        "references": [
+          {
+            "from": "0x140069651",
+            "function": "sub_140069544"
+          },
+          {
+            "from": "0x14035ea8b",
+            "function": "sub_14035e7b6"
+          },
+          {
+            "from": "0x1403682fd",
+            "function": "sub_14036805e"
+          }
+        ],
+        "section": ".rdata",
+        "text": " matches"
+      },
+      {
+        "address": "0x1406ba436",
+        "references": [
+          {
+            "from": "0x1404d7b64",
+            "function": "sub_1404d6b00"
+          }
+        ],
+        "section": ".rdata",
+        "text": "on"
+      },
+      {
+        "address": "0x1406ba795",
+        "references": [
+          {
+            "from": "0x14035e27a",
+            "function": "sub_14035d976"
+          },
+          {
+            "from": "0x14035ea0a",
+            "function": "sub_14035e7b6"
+          },
+          {
+            "from": "0x14035f5ac",
+            "function": "sub_14035f245"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in selection"
+      },
+      {
+        "address": "0x1406ba7a3",
+        "references": [
+          {
+            "from": "0x14006b4a8",
+            "function": "sub_14006b0a4"
+          },
+          {
+            "from": "0x14006bb29",
+            "function": "sub_14006b0a4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "In selection"
+      },
+      {
+        "address": "0x1406bd0ca",
+        "references": [
+          {
+            "from": "0x140319535",
+            "function": "sub_140317f6c"
+          },
+          {
+            "from": "0x14031a81e",
+            "function": "sub_14031a7c2"
+          },
+          {
+            "from": "0x14031af4f",
+            "function": "sub_14031aa9b"
+          },
+          {
+            "from": "0x14031d0c9",
+            "function": "sub_14031d097"
+          },
+          {
+            "from": "0x14031d39d",
+            "function": "sub_14031d097"
+          }
+        ],
+        "section": ".rdata",
+        "text": "match"
+      },
+      {
+        "address": "0x1406bd815",
+        "references": [
+          {
+            "from": "0x140068f1b",
+            "function": "sub_140068eaa"
+          }
+        ],
+        "section": ".rdata",
+        "text": "File too large, skipping"
+      },
+      {
+        "address": "0x1406c00ef",
+        "references": [
+          {
+            "from": "0x140031e4d",
+            "function": "sub_140031dfe"
+          },
+          {
+            "from": "0x140031f97",
+            "function": "sub_140031dfe"
+          },
+          {
+            "from": "0x140036f16",
+            "function": "sub_140036e70"
+          },
+          {
+            "from": "0x140037038",
+            "function": "sub_140036fba"
+          },
+          {
+            "from": "0x140044fd6",
+            "function": "sub_1400445fe"
+          },
+          {
+            "from": "0x14004575c",
+            "function": "sub_1400445fe"
+          },
+          {
+            "from": "0x14004f7ca",
+            "function": "sub_14004f73a"
+          },
+          {
+            "from": "0x1400532e4",
+            "function": "sub_1400532cc"
+          },
+          {
+            "from": "0x140059c4d",
+            "function": "sub_140059c0e"
+          },
+          {
+            "from": "0x14005a3c3",
+            "function": "sub_14005a3a8"
+          },
+          {
+            "from": "0x14005adc9",
+            "function": "sub_14005adb2"
+          },
+          {
+            "from": "0x14005c56a",
+            "function": "sub_14005c510"
+          },
+          {
+            "from": "0x140093032",
+            "function": "sub_140092fc4"
+          },
+          {
+            "from": "0x1400930ef",
+            "function": "sub_1400930cc"
+          },
+          {
+            "from": "0x1400941db",
+            "function": "sub_14009412a"
+          },
+          {
+            "from": "0x1400f19c7",
+            "function": "sub_1400f1752"
+          },
+          {
+            "from": "0x1400f21fd",
+            "function": "sub_1400f1752"
+          },
+          {
+            "from": "0x1400f25ab",
+            "function": "sub_1400f24cc"
+          },
+          {
+            "from": "0x1400fd78b",
+            "function": "sub_1400fd766"
+          },
+          {
+            "from": "0x1400fd886",
+            "function": "sub_1400fd86e"
+          },
+          {
+            "from": "0x1400fd9ae",
+            "function": "sub_1400fd95c"
+          },
+          {
+            "from": "0x1400fe011",
+            "function": "sub_1400fdf60"
+          },
+          {
+            "from": "0x1400fe192",
+            "function": "sub_1400fe0e0"
+          },
+          {
+            "from": "0x1400fe715",
+            "function": "sub_1400fe6fa"
+          },
+          {
+            "from": "0x1403498c1",
+            "function": "sub_14034984a"
+          },
+          {
+            "from": "0x14038ee6c",
+            "function": "sub_14038ee3c"
+          },
+          {
+            "from": "0x14038ef91",
+            "function": "sub_14038ef68"
+          }
+        ],
+        "section": ".rdata",
+        "text": "file"
+      },
+      {
+        "address": "0x1406c0296",
+        "references": [
+          {
+            "from": "0x14050d3b0",
+            "function": "sub_14050d370"
+          }
+        ],
+        "section": ".rdata",
+        "text": "file is too short to be an s"
+      },
+      {
+        "address": "0x1406c1e69",
+        "references": [
+          {
+            "from": "0x1400f5935",
+            "function": "sub_1400f5780"
+          }
+        ],
+        "section": ".rdata",
+        "text": "File"
+      },
+      {
+        "address": "0x1406c231c",
+        "references": [
+          {
+            "from": "0x1402fa4b6",
+            "function": "sub_1402f9f12"
+          }
+        ],
+        "section": ".rdata",
+        "text": "File not found, ReplaceFile failed"
+      },
+      {
+        "address": "0x1406c8a42",
+        "references": [
+          {
+            "from": "0x140580199",
+            "function": "sub_140580107"
+          }
+        ],
+        "section": ".rdata",
+        "text": "in use by IDAT"
+      },
+      {
+        "address": "0x1406c9194",
+        "references": [
+          {
+            "from": "0x14001eaf1",
+            "function": "sub_14001e7c2"
+          },
+          {
+            "from": "0x14001ede1",
+            "function": "sub_14001ecda"
+          },
+          {
+            "from": "0x14001f11d",
+            "function": "sub_14001ee08"
+          },
+          {
+            "from": "0x14001f526",
+            "function": "sub_14001f43e"
+          },
+          {
+            "from": "0x14001fa78",
+            "function": "sub_14001f9ac"
+          },
+          {
+            "from": "0x14001fb75",
+            "function": "sub_14001fb05"
+          },
+          {
+            "from": "0x14001fc58",
+            "function": "sub_14001fb8f"
+          },
+          {
+            "from": "0x14001fe35",
+            "function": "sub_14001fcb3"
+          },
+          {
+            "from": "0x14001ffb8",
+            "function": "sub_14001febc"
+          },
+          {
+            "from": "0x140028b64",
+            "function": "sub_140028817"
+          },
+          {
+            "from": "0x14002ce9f",
+            "function": "sub_14002cdd0"
+          },
+          {
+            "from": "0x14002d00b",
+            "function": "sub_14002cf3d"
+          },
+          {
+            "from": "0x140565faf",
+            "function": "sub_140565f6a"
+          },
+          {
+            "from": "0x140566075",
+            "function": "sub_140565fe2"
+          },
+          {
+            "from": "0x140566404",
+            "function": "sub_140566308"
+          },
+          {
+            "from": "0x14056654d",
+            "function": "sub_140566450"
+          },
+          {
+            "from": "0x140566696",
+            "function": "sub_140566599"
+          },
+          {
+            "from": "0x1405667df",
+            "function": "sub_1405666e2"
+          },
+          {
+            "from": "0x14056696d",
+            "function": "sub_14056682b"
+          },
+          {
+            "from": "0x140566bee",
+            "function": "sub_1405669b9"
+          },
+          {
+            "from": "0x140566f3f",
+            "function": "sub_140566c3a"
+          },
+          {
+            "from": "0x140599487",
+            "function": "sub_1405993aa"
+          }
+        ],
+        "section": ".rdata",
+        "text": "in != NULL"
+      },
+      {
+        "address": "0x1406d1205",
+        "references": [
+          {
+            "from": "0x14030a374",
+            "function": "sub_14030a2a4"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in regex "
+      },
+      {
+        "address": "0x1406d147e",
+        "references": [
+          {
+            "from": "0x1400696a2",
+            "function": "sub_140069544"
+          }
+        ],
+        "section": ".rdata",
+        "text": " across "
+      },
+      {
+        "address": "0x1406d188e",
+        "references": [
+          {
+            "from": "0x14008d6c9",
+            "function": "sub_14008d114"
+          },
+          {
+            "from": "0x14039a3dd",
+            "function": "sub_14039985c"
+          },
+          {
+            "from": "0x140489f53",
+            "function": "sub_140489f10"
+          },
+          {
+            "from": "0x14048ba88",
+            "function": "sub_14048ba40"
+          },
+          {
+            "from": "0x14048ceb8",
+            "function": "sub_14048ce70"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in regular expression "
+      },
+      {
+        "address": "0x1406d18e3",
+        "references": [
+          {
+            "from": "0x14009c025",
+            "function": "sub_14009ba4a"
+          }
+        ],
+        "section": ".rdata",
+        "text": " files in "
+      },
+      {
+        "address": "0x1406d1930",
+        "references": [
+          {
+            "from": "0x140069672",
+            "function": "sub_140069544"
+          },
+          {
+            "from": "0x1400a8e8a",
+            "function": "sub_1400a8b10"
+          },
+          {
+            "from": "0x14014328d",
+            "function": "sub_140143174"
+          },
+          {
+            "from": "0x14031513b",
+            "function": "sub_140314e8e"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in "
+      },
+      {
+        "address": "0x1406d1bdd",
+        "references": [
+          {
+            "from": "0x140312ba0",
+            "function": "sub_140312425"
+          },
+          {
+            "from": "0x1403682c2",
+            "function": "sub_14036805e"
+          },
+          {
+            "from": "0x14036862b",
+            "function": "sub_14036805e"
+          }
+        ],
+        "section": ".rdata",
+        "text": " of "
+      },
+      {
+        "address": "0x1406d1d8b",
+        "references": [
+          {
+            "from": "0x140329be5",
+            "function": "sub_140329a96"
+          },
+          {
+            "from": "0x14032a20f",
+            "function": "sub_140329a96"
+          },
+          {
+            "from": "0x140487884",
+            "function": "sub_140487830"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in file "
+      },
+      {
+        "address": "0x1406d216c",
+        "references": [
+          {
+            "from": "0x1403972a9",
+            "function": "sub_140396e73"
+          },
+          {
+            "from": "0x14039731e",
+            "function": "sub_140396e73"
+          },
+          {
+            "from": "0x140397588",
+            "function": "sub_140396e73"
+          },
+          {
+            "from": "0x1403975f8",
+            "function": "sub_140396e73"
+          },
+          {
+            "from": "0x1403979c7",
+            "function": "sub_140396e73"
+          },
+          {
+            "from": "0x140397a2c",
+            "function": "sub_140396e73"
+          }
+        ],
+        "section": ".rdata",
+        "text": " in"
+      },
+      {
+        "address": "0x1406d2aed",
+        "references": [
+          {
+            "from": "0x1404879a3",
+            "function": "sub_140487830"
+          }
+        ],
+        "section": ".rdata",
+        "text": " on"
+      },
+      {
+        "address": "0x1406dc428",
+        "references": [
+          {
+            "from": "0x1405abf18",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "file exists"
+      },
+      {
+        "address": "0x1406dca30",
+        "references": [
+          {
+            "from": "0x1405abf28",
+            "function": null
+          }
+        ],
+        "section": ".rdata",
+        "text": "file too large"
+      }
+    ],
+    "total": 29
+  },
+  "summary": "29 strings match \"^ ?(matches|match|files|file|across|in|on|of)( |$)\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 29,
+    "total": 29
+  },
+  "locations": [],
+  "links": []
+}

@@ -34,15 +34,37 @@ impl App {
         let mut cmd: Cmd = None;
         let doc_le = self.docs.get(self.active).map(|d| d.line_ending);
         let doc_enc = self.docs.get(self.active).map(|d| d.encoding);
+        let doc_dirty = self.docs.get(self.active).map(|d| d.dirty() && d.path.is_some()).unwrap_or(false);
+        let doc_has_mod = self.docs.get(self.active).map(|d| d.mod_cache.1.is_some()).unwrap_or(false);
+        let bookmarks: Vec<usize> = self.docs.get(self.active).map(|d| d.bookmarks.clone()).unwrap_or_default();
         let cur_syntax = self.docs.get(self.active).map(|d| self.syntax_name_for(d)).unwrap_or_default();
         let mut syntaxes: Vec<String> = self.syntax_set.syntaxes().iter().filter(|s| !s.hidden).map(|s| s.name.clone()).collect();
         syntaxes.sort_by_key(|s| s.to_lowercase());
         syntaxes.dedup();
         let builds = self.build_systems();
         let matching_names: Vec<String> = self.build_systems_for_menu();
-        let macros = Self::saved_macros();
+        let user_macros = Self::saved_macros();
+        let mut pkg_macros: Vec<(String, Vec<String>)> = Vec::new();
+        for (pkg, name) in &self.extras.macros {
+            match pkg_macros.iter_mut().find(|(p, _)| p == pkg) {
+                Some((_, v)) => v.push(name.clone()),
+                None => pkg_macros.push((pkg.clone(), vec![name.clone()])),
+            }
+        }
+        for (_, v) in pkg_macros.iter_mut() {
+            v.sort_by_key(|s| s.to_lowercase());
+        }
+        pkg_macros.sort_by(|a, b| (a.0 != "Default").cmp(&(b.0 != "Default")).then(a.0.to_lowercase().cmp(&b.0.to_lowercase())));
         let recording = self.recording.is_some();
         let building = self.build.running.load(std::sync::atomic::Ordering::Relaxed);
+        let has_build_output = self.build.output.lock().map(|o| o.len() > 1).unwrap_or(false);
+        let has_results = !self.fif.hits.is_empty() || !self.build_results().is_empty();
+        let has_folders = !self.all_folders().is_empty();
+        let has_project = self.project_file.is_some();
+        let (groups, cols, max_cols) = (self.groups, self.cols, self.max_columns);
+        let hist_empty = self.paste_history.is_empty();
+        let yank_empty = self.yank.is_empty();
+        let tab_titles: Vec<String> = self.docs.iter().take(10).map(|d| d.title.clone()).collect();
 
         egui::MenuBar::new().ui(ui, |ui| {
             // ---------------------------------------------------------------- File
@@ -65,9 +87,7 @@ impl App {
                         item(ui, e.label(), "", &format!("reopen_enc:{}", e.label()), &mut cmd);
                     }
                 });
-                off(ui, "Reopen File as Image", "", "Images can't be shown in a tab yet");
-                item(ui, "Reopen File as Text", "", "revert", &mut cmd);
-                off(ui, "Split View", "", PANES);
+                item(ui, "Split View", "", "split_view", &mut cmd);
                 ui.separator();
                 item(ui, "Save", "Ctrl+S", "save", &mut cmd);
                 ui.menu_button("Save with Encoding", |ui| {
@@ -77,7 +97,6 @@ impl App {
                 });
                 item(ui, "Save As…", "Ctrl+Shift+S", "save_as", &mut cmd);
                 item(ui, "Save All", "", "save_all", &mut cmd);
-                ui.separator();
                 item(ui, "Print…", "", "print", &mut cmd);
                 item(ui, "Export Markdown as HTML…", "", "md_export", &mut cmd);
                 ui.separator();
@@ -85,7 +104,11 @@ impl App {
                 item(ui, "Close Window", "Ctrl+Shift+W", "close_window", &mut cmd);
                 ui.separator();
                 item(ui, "Close File", "Ctrl+W", "close", &mut cmd);
-                item(ui, "Revert File", "", "revert", &mut cmd);
+                if doc_dirty {
+                    item(ui, "Revert File", "", "revert", &mut cmd);
+                } else {
+                    off(ui, "Revert File", "", "The file has no unsaved changes");
+                }
                 item(ui, "Close All Files", "", "close_all", &mut cmd);
                 ui.separator();
                 item(ui, "Exit", "", "exit", &mut cmd);
@@ -105,34 +128,45 @@ impl App {
                 item(ui, "Copy as HTML", "", "copy_html", &mut cmd);
                 item(ui, "Paste", "Ctrl+V", "paste", &mut cmd);
                 item(ui, "Paste and Indent", "Ctrl+Shift+V", "paste_indent", &mut cmd);
-                item(ui, "Paste from History", "Ctrl+K, Ctrl+V", "paste_history", &mut cmd);
+                if hist_empty {
+                    off(ui, "Paste from History", "Ctrl+K, Ctrl+V", "Nothing has been copied yet");
+                } else {
+                    item(ui, "Paste from History", "Ctrl+K, Ctrl+V", "paste_history", &mut cmd);
+                }
                 ui.separator();
                 ui.menu_button("Line", |ui| {
                     item(ui, "Indent", "Ctrl+]", "indent", &mut cmd);
                     item(ui, "Unindent", "Ctrl+[", "unindent", &mut cmd);
-                    off(ui, "Reindent", "", "Needs indentation rules from the language package");
+                    item(ui, "Reindent", "Ctrl+K, Ctrl+]", "reindent", &mut cmd);
                     item(ui, "Swap Line Up", "Ctrl+Shift+Up", "swap_up", &mut cmd);
                     item(ui, "Swap Line Down", "Ctrl+Shift+Down", "swap_down", &mut cmd);
                     item(ui, "Duplicate Line", "Ctrl+Shift+D", "dup_line", &mut cmd);
                     item(ui, "Delete Line", "Ctrl+Shift+K", "del_line", &mut cmd);
-                    item(ui, "Join Lines", "Ctrl+J", "join_lines", &mut cmd);
+                    item(ui, "Join Lines", "Ctrl+Shift+J", "join_lines", &mut cmd);
                 });
                 ui.menu_button("Comment", |ui| {
                     item(ui, "Toggle Comment", "Ctrl+/", "comment", &mut cmd);
                     item(ui, "Toggle Block Comment", "Ctrl+Shift+/", "block_comment", &mut cmd);
                 });
                 ui.menu_button("Text", |ui| {
-                    item(ui, "Revert Hunk", "Ctrl+K, Ctrl+Z", "revert_mod", &mut cmd);
-                    item(ui, "Revert Modification", "", "revert_mod", &mut cmd);
-                    off(ui, "Toggle Inline Diff", "", "Not available yet");
+                    if doc_has_mod {
+                        item(ui, "Revert Hunk", "Ctrl+K, Ctrl+Z", "revert_mod", &mut cmd);
+                        item(ui, "Revert Modification", "Ctrl+K, Ctrl+Shift+Z", "revert_mod", &mut cmd);
+                    } else {
+                        off(ui, "Revert Hunk", "Ctrl+K, Ctrl+Z", "No changes since the last save");
+                        off(ui, "Revert Modification", "Ctrl+K, Ctrl+Shift+Z", "No changes since the last save");
+                    }
+                    off(ui, "Toggle Diff Hunk", "Ctrl+K, Ctrl+/", "Inline diffs aren't available yet");
                     ui.separator();
                     item(ui, "Insert Line Before", "Ctrl+Shift+Enter", "line_before", &mut cmd);
                     item(ui, "Insert Line After", "Ctrl+Enter", "line_after", &mut cmd);
-                    item(ui, "Delete Word Forward", "Ctrl+Del", "del_word_fwd", &mut cmd);
+                    ui.separator();
+                    item(ui, "Delete Word Forward", "Ctrl+Delete", "del_word_fwd", &mut cmd);
                     item(ui, "Delete Word Backward", "Ctrl+Backspace", "del_word_back", &mut cmd);
                     item(ui, "Delete Line", "Ctrl+Shift+K", "del_line", &mut cmd);
                     item(ui, "Delete to End", "Ctrl+K, Ctrl+K", "del_to_end", &mut cmd);
                     item(ui, "Delete to Beginning", "Ctrl+K, Ctrl+Backspace", "del_to_start", &mut cmd);
+                    ui.separator();
                     item(ui, "Transpose", "Ctrl+T", "transpose", &mut cmd);
                 });
                 ui.menu_button("Tag", |ui| {
@@ -147,14 +181,23 @@ impl App {
                     item(ui, "Swap with Mark", "Ctrl+K, Ctrl+X", "swap_with_mark", &mut cmd);
                     item(ui, "Clear Mark", "Ctrl+K, Ctrl+G", "clear_mark", &mut cmd);
                     ui.separator();
-                    item(ui, "Yank", "Ctrl+K, Ctrl+Y", "yank", &mut cmd);
+                    if yank_empty {
+                        off(ui, "Yank", "Ctrl+K, Ctrl+Y", "Nothing has been deleted with the Mark commands yet");
+                    } else {
+                        item(ui, "Yank", "Ctrl+K, Ctrl+Y", "yank", &mut cmd);
+                    }
                 });
                 ui.menu_button("Code Folding", |ui| {
                     let why = "Folding isn't supported by this editor's text view yet";
                     off(ui, "Fold", "Ctrl+Shift+[", why);
                     off(ui, "Unfold", "Ctrl+Shift+]", why);
                     off(ui, "Unfold All", "Ctrl+K, Ctrl+J", why);
+                    ui.separator();
                     off(ui, "Fold All", "Ctrl+K, Ctrl+1", why);
+                    for n in 2..=9 {
+                        off(ui, &format!("Fold Level {n}"), &format!("Ctrl+K, Ctrl+{n}"), why);
+                    }
+                    ui.separator();
                     off(ui, "Fold Tag Attributes", "Ctrl+K, Ctrl+T", why);
                 });
                 ui.menu_button("Convert Case", |ui| {
@@ -162,14 +205,13 @@ impl App {
                     item(ui, "Upper Case", "Ctrl+K, Ctrl+U", "upper", &mut cmd);
                     item(ui, "Lower Case", "Ctrl+K, Ctrl+L", "lower", &mut cmd);
                     item(ui, "Swap Case", "", "swap_case", &mut cmd);
-                    ui.separator();
                     item(ui, "lowerCamelCase", "", "camel", &mut cmd);
                     item(ui, "UpperCamelCase", "", "pascal", &mut cmd);
                     item(ui, "snake_case", "", "snake", &mut cmd);
                     item(ui, "kebab-case", "", "kebab", &mut cmd);
                 });
                 ui.menu_button("Wrap", |ui| {
-                    item(ui, "Wrap Paragraph at Ruler", "Alt+Q", "wrap_at:0", &mut cmd);
+                    item(ui, "Wrap Paragraph", "Alt+Q", "wrap_at:0", &mut cmd);
                     for w in [70, 72, 78, 80, 100, 120] {
                         item(ui, &format!("Wrap paragraph at {w} characters"), "", &format!("wrap_at:{w}"), &mut cmd);
                     }
@@ -194,34 +236,33 @@ impl App {
             ui.menu_button("Selection", |ui| {
                 off(ui, "Split into Lines", "Ctrl+Shift+L", MULTI);
                 item(ui, "Single Selection", "Escape", "single_selection", &mut cmd);
-                item(ui, "Select All", "Ctrl+A", "select_all", &mut cmd);
                 ui.separator();
-                item(ui, "Expand Selection", "Ctrl+Shift+Space", "expand_sel", &mut cmd);
+                item(ui, "Select All", "Ctrl+A", "select_all", &mut cmd);
+                item(ui, "Expand Selection", "Ctrl+Shift+A", "expand_sel", &mut cmd);
                 item(ui, "Expand Selection to Line", "Ctrl+L", "expand_line", &mut cmd);
-                item(ui, "Expand Selection to Line Upward", "", "expand_line_up", &mut cmd);
+                item(ui, "Expand Selection to Line Upward", "Alt+L", "expand_line_up", &mut cmd);
                 item(ui, "Expand Selection to Word", "Ctrl+D", "expand_word", &mut cmd);
                 item(ui, "Expand Selection to Block", "", "expand_para", &mut cmd);
                 item(ui, "Expand Selection to Paragraph", "", "expand_para", &mut cmd);
-                item(ui, "Expand Selection to Scope", "", "expand_scope", &mut cmd);
+                item(ui, "Expand Selection to Scope", "Ctrl+Shift+Space", "expand_scope", &mut cmd);
                 item(ui, "Expand Selection to Brackets", "Ctrl+Shift+M", "expand_brackets", &mut cmd);
-                item(ui, "Expand Selection to Indentation", "Ctrl+Shift+J", "expand_indent", &mut cmd);
-                item(ui, "Expand Selection to Tag", "Ctrl+Shift+A", "expand_tag", &mut cmd);
+                item(ui, "Expand Selection to Indentation", "", "expand_indent", &mut cmd);
                 ui.separator();
-                off(ui, "Add Previous Line", "Ctrl+Alt+Up", MULTI);
-                off(ui, "Add Next Line", "Ctrl+Alt+Down", MULTI);
+                off(ui, "Add Previous Line", "Alt+Shift+Up", MULTI);
+                off(ui, "Add Next Line", "Alt+Shift+Down", MULTI);
                 ui.separator();
                 ui.menu_button("Tab Selection", |ui| {
-                    for l in ["Unselect Others", "Unselect to Left", "Unselect to Right", "Unselect Current", "Select to Left", "Select to Right"] {
-                        off(ui, l, "", "Selecting several tabs at once isn't available yet");
-                    }
+                    let why = "Selecting several tabs at once isn't available yet";
+                    off(ui, "Unselect Others", "Ctrl+J, Ctrl+Up", why);
+                    off(ui, "Unselect to Left", "Ctrl+J, Ctrl+Left", why);
+                    off(ui, "Unselect to Right", "Ctrl+J, Ctrl+Right", why);
+                    off(ui, "Unselect Current", "", why);
                     ui.separator();
-                    item(ui, "Focus to Left", "Ctrl+PageUp", "focus_left", &mut cmd);
-                    item(ui, "Focus to Right", "Ctrl+PageDown", "focus_right", &mut cmd);
+                    off(ui, "Select to Left", "Ctrl+J, Ctrl+Shift+Left", why);
+                    off(ui, "Select to Right", "Ctrl+J, Ctrl+Shift+Right", why);
                     ui.separator();
-                    for n in 1..=10 {
-                        let sc = if n == 10 { "Alt+0".to_string() } else { format!("Alt+{n}") };
-                        item(ui, &format!("Focus Selected Tab {n}"), &sc, &format!("tab:{n}"), &mut cmd);
-                    }
+                    item(ui, "Focus to Left", "Ctrl+J, Ctrl+Pageup", "focus_left", &mut cmd);
+                    item(ui, "Focus to Right", "Ctrl+J, Ctrl+Pagedown", "focus_right", &mut cmd);
                 });
                 ui.separator();
                 item(ui, "Edit Color at Cursor…", "Alt+C", "color_at_cursor", &mut cmd);
@@ -248,8 +289,13 @@ impl App {
                 item(ui, "Find in Files…", "Ctrl+Shift+F", "find_in_files", &mut cmd);
                 ui.menu_button("Find Results", |ui| {
                     item(ui, "Show Results Panel", "", "show_results", &mut cmd);
-                    item(ui, "Next Result", "F4", "next_result", &mut cmd);
-                    item(ui, "Previous Result", "Shift+F4", "prev_result", &mut cmd);
+                    if has_results {
+                        item(ui, "Next Result", "F4", "next_result", &mut cmd);
+                        item(ui, "Previous Result", "Shift+F4", "prev_result", &mut cmd);
+                    } else {
+                        off(ui, "Next Result", "F4", "Run a search first");
+                        off(ui, "Previous Result", "Shift+F4", "Run a search first");
+                    }
                 });
                 if self.fif.rx.is_some() {
                     item(ui, "Cancel Find in Files", "", "cancel_fif", &mut cmd);
@@ -261,35 +307,73 @@ impl App {
             // ---------------------------------------------------------------- View
             ui.menu_button("View", |ui| {
                 ui.menu_button("Side Bar", |ui| {
-                    check(ui, "Show Side Bar", "Ctrl+K, Ctrl+B", self.s.show_sidebar, "toggle_sidebar", &mut cmd);
-                    check(ui, "Show Open Files", "", self.s.show_open_files, "toggle_open_files", &mut cmd);
+                    item(ui, if self.s.show_sidebar { "Hide Side Bar" } else { "Show Side Bar" }, "Ctrl+K, Ctrl+B", "toggle_sidebar", &mut cmd);
+                    item(ui, if self.s.show_open_files { "Hide Open Files" } else { "Show Open Files" }, "", "toggle_open_files", &mut cmd);
                 });
-                check(ui, "Show Minimap", "", self.s.show_minimap, "toggle_minimap", &mut cmd);
-                check(ui, "Show Tabs", "", self.s.show_tabs, "toggle_tabs", &mut cmd);
-                check(ui, "Show Status Bar", "", self.s.show_status_bar, "toggle_status", &mut cmd);
-                check(ui, "Show Menu", "", self.s.show_menu, "toggle_menu", &mut cmd);
-                check(ui, "Show Console", "Ctrl+`", self.panel == Some(BottomPanel::Console), "console", &mut cmd);
-                check(ui, "Show Problems", "", self.panel == Some(BottomPanel::Problems), "toggle_problems", &mut cmd);
+                item(ui, if self.s.show_minimap { "Hide Minimap" } else { "Show Minimap" }, "", "toggle_minimap", &mut cmd);
+                item(ui, if self.s.show_tabs { "Hide Tabs" } else { "Show Tabs" }, "", "toggle_tabs", &mut cmd);
+                item(ui, if self.s.show_status_bar { "Hide Status Bar" } else { "Show Status Bar" }, "", "toggle_status", &mut cmd);
+                item(ui, "Hide Menu", "", "toggle_menu", &mut cmd);
+                item(ui, if self.panel == Some(BottomPanel::Console) { "Hide Console" } else { "Show Console" }, "Ctrl+`", "console", &mut cmd);
                 ui.separator();
-                check(ui, "Enter Full Screen", "F11", self.fullscreen, "fullscreen", &mut cmd);
-                check(ui, "Enter Distraction Free Mode", "Shift+F11", self.distraction.is_some(), "distraction_free", &mut cmd);
+                item(ui, if self.fullscreen { "Exit Full Screen" } else { "Enter Full Screen" }, "F11", "fullscreen", &mut cmd);
+                item(ui, if self.distraction.is_some() { "Exit Distraction Free Mode" } else { "Enter Distraction Free Mode" }, "Shift+F11", "distraction_free", &mut cmd);
                 ui.separator();
                 ui.menu_button("Layout", |ui| {
-                    item(ui, "Single", "Alt+Shift+1", "noop", &mut cmd);
-                    for l in ["Columns: 2", "Columns: 3", "Columns: 4", "Rows: 2", "Rows: 3", "Grid: 4"] {
-                        off(ui, l, "", PANES);
+                    for (label, g, c, sc) in [
+                        ("Single", 1, 1, "Alt+Shift+1"),
+                        ("Columns: 2", 2, 2, "Alt+Shift+2"),
+                        ("Columns: 3", 3, 3, "Alt+Shift+3"),
+                        ("Columns: 4", 4, 4, "Alt+Shift+4"),
+                        ("Rows: 2", 2, 1, "Alt+Shift+8"),
+                        ("Rows: 3", 3, 1, "Alt+Shift+9"),
+                        ("Grid: 4", 4, 2, "Alt+Shift+5"),
+                    ] {
+                        check(ui, label, sc, groups == g && cols == c, &format!("layout:{g}:{c}"), &mut cmd);
                     }
                 });
                 ui.menu_button("Groups", |ui| {
-                    for l in ["Move File to New Group", "New Group", "Close Group"] {
-                        off(ui, l, "", PANES);
+                    item(ui, "Move File to New Group", "Ctrl+K, Ctrl+Up", "move_new_group", &mut cmd);
+                    item(ui, "New Group", "Ctrl+K, Ctrl+Shift+Up", "new_group", &mut cmd);
+                    if groups > 1 {
+                        item(ui, "Close Group", "Ctrl+K, Ctrl+Down", "close_group", &mut cmd);
+                    } else {
+                        off(ui, "Close Group", "Ctrl+K, Ctrl+Down", "There is only one group");
+                    }
+                    ui.separator();
+                    for n in 1..=5 {
+                        check(ui, &format!("Max Columns: {n}"), "", max_cols == n, &format!("max_cols:{n}"), &mut cmd);
                     }
                 });
-                ui.menu_button("Focus Group", |ui| off(ui, "Next", "", PANES));
-                ui.menu_button("Move File to Group", |ui| off(ui, "Next", "", PANES));
+                ui.menu_button("Focus Group", |ui| {
+                    if groups > 1 {
+                        item(ui, "Next", "Ctrl+K, Ctrl+Right", "focus_group_next", &mut cmd);
+                        item(ui, "Previous", "Ctrl+K, Ctrl+Left", "focus_group_prev", &mut cmd);
+                    } else {
+                        off(ui, "Next", "Ctrl+K, Ctrl+Right", "There is only one group");
+                        off(ui, "Previous", "Ctrl+K, Ctrl+Left", "There is only one group");
+                    }
+                    ui.separator();
+                    for n in 1..=groups.min(8) {
+                        item(ui, &format!("Group {n}"), &format!("Ctrl+{n}"), &format!("focus_group:{n}"), &mut cmd);
+                    }
+                });
+                ui.menu_button("Move File to Group", |ui| {
+                    if groups > 1 {
+                        item(ui, "Next", "Ctrl+K, Ctrl+Shift+Right", "move_group_next", &mut cmd);
+                        item(ui, "Previous", "Ctrl+K, Ctrl+Shift+Left", "move_group_prev", &mut cmd);
+                    } else {
+                        off(ui, "Next", "Ctrl+K, Ctrl+Shift+Right", "There is only one group");
+                        off(ui, "Previous", "Ctrl+K, Ctrl+Shift+Left", "There is only one group");
+                    }
+                    ui.separator();
+                    for n in 1..=groups.min(8) {
+                        item(ui, &format!("Group {n}"), &format!("Ctrl+Shift+{n}"), &format!("move_group:{n}"), &mut cmd);
+                    }
+                });
                 ui.separator();
                 ui.menu_button("Syntax", |ui| {
-                    egui::ScrollArea::vertical().max_height(480.0).show(ui, |ui| {
+                    egui::ScrollArea::vertical().max_height(520.0).show(ui, |ui| {
                         for s in &syntaxes {
                             check(ui, s, "", *s == cur_syntax, &format!("syntax:{s}"), &mut cmd);
                         }
@@ -327,13 +411,17 @@ impl App {
                     }
                 });
                 ui.separator();
+                let nospell = "No spelling dictionaries in this version yet";
+                off(ui, "Spell Check", "F6", nospell);
+                off(ui, "Next Misspelling", "Ctrl+F6", nospell);
+                off(ui, "Prev Misspelling", "Ctrl+Shift+F6", nospell);
+                ui.menu_button("Dictionary", |ui| {
+                    off(ui, "English (American)", "", nospell);
+                });
+                ui.separator();
                 check(ui, "Line Numbers", "", self.s.line_numbers, "toggle_line_numbers", &mut cmd);
                 check(ui, "Highlight Current Line", "", self.s.highlight_line, "toggle_highlight_line", &mut cmd);
-                ui.separator();
-                off(ui, "Spell Check", "F6", "No spelling dictionaries in this version yet");
-                off(ui, "Next Misspelling", "Ctrl+F6", "No spelling dictionaries in this version yet");
-                off(ui, "Prev Misspelling", "Ctrl+Shift+F6", "No spelling dictionaries in this version yet");
-                ui.separator();
+                check(ui, "Problems Panel", "", self.panel == Some(BottomPanel::Problems), "toggle_problems", &mut cmd);
                 ui.menu_button("Markdown Preview", |ui| {
                     item(ui, "Split", "Alt+M", "md_split", &mut cmd);
                     item(ui, "Preview Only", "", "md_preview", &mut cmd);
@@ -351,30 +439,32 @@ impl App {
                 item(ui, "Goto Symbol in Project…", "Ctrl+Shift+R", "goto_symbol_project", &mut cmd);
                 item(ui, "Goto Definition…", "F12", "goto_def", &mut cmd);
                 item(ui, "Goto Reference…", "Shift+F12", "goto_reference", &mut cmd);
-                ui.separator();
                 item(ui, "Goto Line…", "Ctrl+G", "goto_line", &mut cmd);
                 ui.separator();
-                item(ui, "Next Modification", "", "next_mod", &mut cmd);
-                item(ui, "Previous Modification", "", "prev_mod", &mut cmd);
+                if doc_has_mod {
+                    item(ui, "Next Modification", "Ctrl+.", "next_mod", &mut cmd);
+                    item(ui, "Previous Modification", "Ctrl+,", "prev_mod", &mut cmd);
+                } else {
+                    off(ui, "Next Modification", "Ctrl+.", "No changes since the last save");
+                    off(ui, "Previous Modification", "Ctrl+,", "No changes since the last save");
+                }
                 ui.separator();
                 item(ui, "Jump Back", "Alt+-", "jump_back", &mut cmd);
                 item(ui, "Jump Forward", "Alt+Shift+-", "jump_forward", &mut cmd);
                 ui.separator();
                 ui.menu_button("Switch File", |ui| {
-                    item(ui, "Next File", "Ctrl+PageDown", "next_tab", &mut cmd);
-                    item(ui, "Previous File", "Ctrl+PageUp", "prev_tab", &mut cmd);
+                    item(ui, "Next File", "Ctrl+Pagedown", "next_tab", &mut cmd);
+                    item(ui, "Previous File", "Ctrl+Pageup", "prev_tab", &mut cmd);
                     ui.separator();
                     item(ui, "Next File in Stack", "Ctrl+Tab", "next_in_stack", &mut cmd);
                     item(ui, "Previous File in Stack", "Ctrl+Shift+Tab", "prev_in_stack", &mut cmd);
                     ui.separator();
                     item(ui, "Switch Header/Implementation", "Alt+O", "switch_header", &mut cmd);
                     ui.separator();
-                    for n in 1..=10 {
+                    for (k, name) in tab_titles.iter().enumerate() {
+                        let n = k + 1;
                         let sc = if n == 10 { "Alt+0".to_string() } else { format!("Alt+{n}") };
-                        let name = self.docs.get(n - 1).map(|d| d.title.clone()).unwrap_or_else(|| format!("File {n}"));
-                        if n <= self.docs.len() {
-                            item(ui, &name, &sc, &format!("tab:{n}"), &mut cmd);
-                        }
+                        item(ui, name, &sc, &format!("tab:{n}"), &mut cmd);
                     }
                 });
                 ui.menu_button("Scroll", |ui| {
@@ -388,6 +478,13 @@ impl App {
                     item(ui, "Prev Bookmark", "Shift+F2", "prev_bookmark", &mut cmd);
                     item(ui, "Clear Bookmarks", "Ctrl+Shift+F2", "clear_bookmarks", &mut cmd);
                     off(ui, "Select All Bookmarks", "Alt+F2", MULTI);
+                    ui.separator();
+                    if bookmarks.is_empty() {
+                        off(ui, "(No Bookmarks)", "", "Toggle a bookmark with Ctrl+F2");
+                    }
+                    for l in &bookmarks {
+                        item(ui, &format!("Line {}", l + 1), "", &format!("bookmark_goto:{l}"), &mut cmd);
+                    }
                 });
                 ui.separator();
                 item(ui, "Jump to Matching Bracket", "Ctrl+M", "matching_bracket", &mut cmd);
@@ -419,9 +516,15 @@ impl App {
                     off(ui, "Cancel Build", "Ctrl+Break", "No build is running");
                 }
                 ui.menu_button("Build Results", |ui| {
-                    item(ui, "Show Build Results", "", "show_build", &mut cmd);
-                    item(ui, "Next Result", "F4", "next_result_build", &mut cmd);
-                    item(ui, "Previous Result", "Shift+F4", "prev_result_build", &mut cmd);
+                    if has_build_output {
+                        item(ui, "Show Build Results", "Shift+Escape", "show_build", &mut cmd);
+                        item(ui, "Next Result", "F4", "next_result_build", &mut cmd);
+                        item(ui, "Previous Result", "Shift+F4", "prev_result_build", &mut cmd);
+                    } else {
+                        off(ui, "Show Build Results", "Shift+Escape", "Run a build first");
+                        off(ui, "Next Result", "F4", "Run a build first");
+                        off(ui, "Previous Result", "Shift+F4", "Run a build first");
+                    }
                 });
                 check(ui, "Save All on Build", "", self.s.save_all_on_build, "toggle_save_on_build", &mut cmd);
                 ui.separator();
@@ -434,12 +537,25 @@ impl App {
                     item(ui, "Save Macro…", "", "save_macro", &mut cmd);
                 }
                 ui.menu_button("Macros", |ui| {
-                    if macros.is_empty() {
-                        ui.weak("No saved macros");
+                    for (pkg, names) in &pkg_macros {
+                        ui.menu_button(pkg, |ui| {
+                            egui::ScrollArea::vertical().max_height(480.0).show(ui, |ui| {
+                                for n in names {
+                                    item(ui, n, "", &format!("pkg_macro:{pkg}|{n}"), &mut cmd);
+                                }
+                            });
+                        });
                     }
-                    for m in &macros {
-                        let n = m.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
-                        item(ui, &n, "", &format!("macro_file:{}", m.display()), &mut cmd);
+                    if !user_macros.is_empty() {
+                        ui.menu_button("User", |ui| {
+                            for m in &user_macros {
+                                let n = m.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default();
+                                item(ui, &n, "", &format!("macro_file:{}", m.display()), &mut cmd);
+                            }
+                        });
+                    }
+                    if pkg_macros.is_empty() && user_macros.is_empty() {
+                        ui.weak("No macros");
                     }
                 });
                 ui.separator();
@@ -447,47 +563,58 @@ impl App {
                     off(ui, "New Plugin…", "", "Python plugins need Sublime Text's own plugin host");
                     item(ui, "New Snippet…", "", "new_snippet", &mut cmd);
                     item(ui, "New Syntax…", "", "new_syntax", &mut cmd);
-                    off(ui, "New Syntax from .tmLanguage…", "", "Old-style .tmLanguage files aren't supported");
+                    off(ui, "New Syntax from Plain text.tmLanguage…", "", "Old-style .tmLanguage files aren't supported");
+                    ui.separator();
                     off(ui, "Profile Plugins", "", "Python plugins need Sublime Text's own plugin host");
                     ui.separator();
                     item(ui, "View Package File…", "", "view_package_file", &mut cmd);
                     item(ui, "Show Scope Name", "Ctrl+Alt+Shift+P", "scope_name", &mut cmd);
                 });
+                item(ui, "Enable Package Control", "", "package_control", &mut cmd);
                 ui.separator();
                 item(ui, "Color Codes in This File…", "", "colors_list", &mut cmd);
                 check(ui, "Colorizer", "", self.s.colorizer, "toggle_colorizer", &mut cmd);
                 ui.separator();
                 item(ui, "Language Servers (LSP)…", "", "lsp", &mut cmd);
                 item(ui, "Sublime Packages…", "", "packages", &mut cmd);
-                item(ui, "Browse Package Control Website…", "", "package_control", &mut cmd);
             });
 
             // ---------------------------------------------------------------- Project
             ui.menu_button("Project", |ui| {
                 item(ui, "Open Project…", "", "open_project", &mut cmd);
                 item(ui, "Switch Project…", "", "switch_project", &mut cmd);
-                item(ui, "Quick Switch Project…", "Ctrl+Alt+P", "switch_project", &mut cmd);
+                item(ui, "Quick Switch Project…", "Alt+Shift+P", "switch_project", &mut cmd);
                 ui.menu_button("Open Recent", |ui| {
-                    if self.s.recent_projects.is_empty() {
-                        ui.weak("Nothing yet");
-                    }
                     for p in self.s.recent_projects.clone() {
                         item(ui, &p, "", &format!("project:{p}"), &mut cmd);
                     }
-                    ui.separator();
+                    if !self.s.recent_projects.is_empty() {
+                        ui.separator();
+                    }
                     item(ui, "Clear Items", "", "clear_recent_projects", &mut cmd);
+                    item(ui, "Remove Deleted", "", "remove_deleted_projects", &mut cmd);
                 });
                 ui.separator();
                 item(ui, "Save Project As…", "", "save_project", &mut cmd);
-                item(ui, "Close Project", "", "close_project", &mut cmd);
-                item(ui, "Edit Project", "", "edit_project", &mut cmd);
+                if has_project {
+                    item(ui, "Close Project", "", "close_project", &mut cmd);
+                    item(ui, "Edit Project", "", "edit_project", &mut cmd);
+                } else {
+                    off(ui, "Close Project", "", "No project is open");
+                    off(ui, "Edit Project", "", "No project is open");
+                }
                 ui.separator();
                 off(ui, "New Workspace for Project", "", "One window per project in this version");
-                off(ui, "Save Workspace As…", "", "Open files are kept automatically between runs");
+                item(ui, "Save Workspace As…", "", "save_project", &mut cmd);
                 ui.separator();
                 item(ui, "Add Folder to Project…", "", "add_folder", &mut cmd);
-                item(ui, "Remove all Folders from Project", "", "remove_folders", &mut cmd);
-                item(ui, "Refresh Folders", "", "refresh_folders", &mut cmd);
+                if has_folders {
+                    item(ui, "Remove all Folders from Project", "", "remove_folders", &mut cmd);
+                    item(ui, "Refresh Folders", "", "refresh_folders", &mut cmd);
+                } else {
+                    off(ui, "Remove all Folders from Project", "", "No folders are open");
+                    off(ui, "Refresh Folders", "", "No folders are open");
+                }
             });
 
             // ---------------------------------------------------------------- Preferences

@@ -124,9 +124,16 @@ pub struct FindInFiles {
     pub cancel: Option<Arc<AtomicBool>>,
     pub rx: Option<Receiver<FifMsg>>,
     pub title: String,
+    /// `Searching N files for "q" (regex, case sensitive, whole word)` (sub_140068cc4)
+    pub header: String,
+    pub flags: String,
+    /// `N matches across M files` (sub_140069544), shown when the search is done
+    pub footer: String,
+    pub cancelled: bool,
 }
 
 pub enum FifMsg {
+    Total(usize),
     Hit(Hit),
     Files(usize),
     Done,
@@ -445,6 +452,36 @@ impl App {
     // ------------------------------------------------------------------
     // find
 
+    /// The query as (pattern, match case, regex) with `whole_word` applied.
+    pub(super) fn find_spec(&self) -> (String, bool, bool) {
+        let q = self.find.query.clone();
+        if self.find.whole && !q.is_empty() {
+            let inner = if self.find.regex { format!("(?:{q})") } else { fancy_regex::escape(&q).to_string() };
+            (format!(r"\b{inner}\b"), self.find.case, true)
+        } else {
+            (q, self.find.case, self.find.regex)
+        }
+    }
+
+    fn find_spec_for(&self, q: &str) -> (String, bool, bool) {
+        let mut me = self.find_spec();
+        if !self.find.whole {
+            me.0 = q.to_string();
+        }
+        me
+    }
+
+    /// All matches in `text` (byte ranges), limited to the "in selection" range when on.
+    pub(super) fn find_all(&self, text: &str) -> Vec<(usize, usize)> {
+        let (q, case, regex) = self.find_spec();
+        let mut m = editor::find_matches(text, &q, case, regex);
+        if let Some((a, b)) = self.find.in_sel {
+            let (ba, bb) = (char_to_byte(text, a), char_to_byte(text, b));
+            m.retain(|x| x.0 >= ba && x.1 <= bb);
+        }
+        m
+    }
+
     pub(super) fn find_step(&mut self, forward: bool) {
         let q = self.find.query.clone();
         if q.is_empty() {
@@ -453,16 +490,17 @@ impl App {
         let (case, regex) = (self.find.case, self.find.regex);
         let (lo, hi) = self.sel();
         let Some(d) = self.docs.get(self.active) else { return };
-        let matches = editor::find_matches(&d.text, &q, case, regex);
+        let matches = self.find_all(&d.text);
+        let _ = (case, regex);
         if matches.is_empty() {
             self.log(format!("Unable to find {q}"));
             return;
         }
         let cur = char_to_byte(&d.text, if forward { hi } else { lo });
         let m = if forward {
-            matches.iter().find(|m| m.0 >= cur && !(m.0 == cur && m.1 == cur)).or(matches.first())
+            matches.iter().find(|m| m.0 >= cur && !(m.0 == cur && m.1 == cur)).or(if self.find.wrap { matches.first() } else { None })
         } else {
-            matches.iter().rev().find(|m| m.1 <= cur && m.0 < cur).or(matches.last())
+            matches.iter().rev().find(|m| m.1 <= cur && m.0 < cur).or(if self.find.wrap { matches.last() } else { None })
         };
         if let Some(&(a, b)) = m {
             let (ca, cb) = (byte_to_char(&d.text, a), byte_to_char(&d.text, b));
@@ -478,13 +516,14 @@ impl App {
         let (lo, hi) = self.sel();
         let rep = self.find.replace.clone();
         let (case, regex) = (self.find.case, self.find.regex);
+        let (sq, sc, sr) = self.find_spec_for(&q);
         if let Some(d) = self.docs.get_mut(self.active) {
             let (bl, bh) = (char_to_byte(&d.text, lo), char_to_byte(&d.text, hi));
             let sel = d.text[bl..bh].to_string();
-            let hit = editor::find_matches(&sel, &q, case, regex).first().map(|m| *m == (0, sel.len())).unwrap_or(false);
+            let hit = editor::find_matches(&sel, &sq, sc, sr).first().map(|m| *m == (0, sel.len())).unwrap_or(false);
             if lo != hi && hit {
                 let new = if regex {
-                    let pat = if case { q.clone() } else { format!("(?i){q}") };
+                    let pat = if case { sq.clone() } else { format!("(?i){sq}") };
                     fancy_regex::Regex::new(&pat).map(|re| re.replace(&sel, rep.as_str()).to_string()).unwrap_or(rep.clone())
                 } else {
                     rep.clone()
@@ -504,15 +543,17 @@ impl App {
         }
         let rep = self.find.replace.clone();
         let (case, regex) = (self.find.case, self.find.regex);
+        let (spec_q, spec_c, spec_r) = self.find_spec();
+        let in_sel = self.find.in_sel;
         let Some(d) = self.docs.get_mut(self.active) else { return };
         let n;
         if regex {
-            let pat = if case { q.clone() } else { format!("(?i){q}") };
+            let pat = if case { spec_q.clone() } else { format!("(?i){spec_q}") };
             let Ok(re) = fancy_regex::Regex::new(&pat) else { return };
             n = re.find_iter(&d.text).count();
             d.text = re.replace_all(&d.text, rep.as_str()).to_string();
         } else {
-            let m = editor::find_matches(&d.text, &q, case, false);
+            let m = { let (sq, sc, sr) = (spec_q.clone(), spec_c, spec_r); let mut v = editor::find_matches(&d.text, &sq, sc, sr); if let Some((a, b)) = in_sel { let (ba, bb) = (char_to_byte(&d.text, a), char_to_byte(&d.text, b)); v.retain(|x| x.0 >= ba && x.1 <= bb); } v };
             n = m.len();
             for (a, b) in m.into_iter().rev() {
                 d.text.replace_range(a..b, &rep);
@@ -568,11 +609,11 @@ impl App {
             self.fif.where_.split(',').map(|s| PathBuf::from(s.trim())).collect()
         };
         let open_files: Vec<(PathBuf, String)> = self.docs.iter().filter_map(|d| d.path.clone().map(|p| (p, d.text.clone()))).collect();
-        let (case, regex) = (self.find.case, self.find.regex);
+        let (qspec, case, regex) = self.find_spec();
         let cancel = Arc::new(AtomicBool::new(false));
         let (tx, rx) = std::sync::mpsc::channel();
         let cc = cancel.clone();
-        let qq = q.clone();
+        let qq = qspec;
         std::thread::spawn(move || {
             let mut files = Vec::new();
             for r in &roots {
@@ -582,6 +623,7 @@ impl App {
                     files.extend(index_files(r));
                 }
             }
+            let _ = tx.send(FifMsg::Total(files.len()));
             let mut n = 0;
             for f in files {
                 if cc.load(Ordering::Relaxed) {
@@ -620,7 +662,22 @@ impl App {
         self.fif.hits.clear();
         self.fif.cur = None;
         self.fif.files = 0;
-        self.fif.title = format!("Searching for \"{q}\"");
+        self.fif.cancelled = false;
+        let mut flags: Vec<&str> = Vec::new();
+        if self.find.regex {
+            flags.push("regex");
+        }
+        if self.find.case {
+            flags.push("case sensitive");
+        }
+        if self.find.whole {
+            flags.push("whole word");
+        }
+        self.fif.flags = if flags.is_empty() { String::new() } else { format!(" ({})", flags.join(", ")) };
+        self.fif.query = q.clone();
+        self.fif.header = format!("Searching \"{q}\"{}", self.fif.flags);
+        self.fif.footer = String::new();
+        self.fif.title = String::new();
         self.fif.cancel = Some(cancel);
         self.fif.rx = Some(rx);
         self.panel = Some(BottomPanel::FindResults);
@@ -637,6 +694,9 @@ impl App {
                     }
                 }
                 FifMsg::Files(n) => self.fif.files = n,
+                FifMsg::Total(n) => {
+                    self.fif.header = format!("Searching {n} file{} for \"{}\"{}", if n == 1 { "" } else { "s" }, self.fif.query, self.fif.flags);
+                }
                 FifMsg::Done => done = true,
             }
         }
@@ -644,7 +704,21 @@ impl App {
             self.fif.rx = None;
             self.fif.cancel = None;
             let files: std::collections::HashSet<&PathBuf> = self.fif.hits.iter().map(|h| &h.path).collect();
-            self.fif.title = format!("{} matches across {} files ({} searched) for \"{}\"", self.fif.hits.len(), files.len(), self.fif.files, self.find.query);
+            // summary line, sub_140069544: "N matches across M files" / "1 match in 1 file"
+            let n = self.fif.hits.len();
+            let m = files.len();
+            let cancelled = self.fif.cancelled;
+            self.fif.footer = format!(
+                "{}{}{}",
+                if cancelled { "Cancelled!\n" } else { "" },
+                if n == 1 { "1 match".to_string() } else { format!("{n} matches") },
+                match m {
+                    0 => String::new(),
+                    1 => " in 1 file".to_string(),
+                    k => format!(" across {k} files"),
+                }
+            );
+            self.fif.title = self.fif.footer.clone();
         }
     }
 
@@ -1065,6 +1139,84 @@ impl App {
                 }
             }
             "close_window" => self.viewport_cmds.push(egui::ViewportCommand::Close),
+            // split panes (View ▸ Layout / Groups, File ▸ Split View)
+            "split_view" => self.split_view(),
+            _ if id.starts_with("layout:") => {
+                let mut it = id[7..].split(':');
+                let g: usize = it.next().and_then(|x| x.parse().ok()).unwrap_or(1);
+                let c: usize = it.next().and_then(|x| x.parse().ok()).unwrap_or(1);
+                self.set_layout(g, c);
+            }
+            "new_group" => self.new_group(),
+            "move_new_group" => {
+                self.new_group();
+                let g = self.groups - 1;
+                self.move_file_to_group(g);
+            }
+            "close_group" => self.close_group(),
+            _ if id.starts_with("max_cols:") => self.max_columns = id[9..].parse().unwrap_or(3),
+            _ if id.starts_with("focus_group:") => {
+                let g: usize = id[12..].parse().unwrap_or(1);
+                self.focus_group_to(g.saturating_sub(1));
+            }
+            "focus_group_next" => {
+                let g = (self.focus_group + 1) % self.groups;
+                self.focus_group_to(g);
+            }
+            "focus_group_prev" => {
+                let g = (self.focus_group + self.groups - 1) % self.groups;
+                self.focus_group_to(g);
+            }
+            _ if id.starts_with("move_group:") => {
+                let g: usize = id[11..].parse().unwrap_or(1);
+                self.move_file_to_group(g.saturating_sub(1));
+            }
+            "move_group_next" => {
+                let g = (self.focus_group + 1) % self.groups;
+                self.move_file_to_group(g);
+            }
+            "move_group_prev" => {
+                let g = (self.focus_group + self.groups - 1) % self.groups;
+                self.move_file_to_group(g);
+            }
+            _ if id.starts_with("bookmark_goto:") => {
+                let l: usize = id[14..].parse().unwrap_or(0);
+                self.push_jump();
+                self.goto_line0(l);
+            }
+            "remove_deleted_projects" => self.s.recent_projects.retain(|p| Path::new(p).exists()),
+            _ if id.starts_with("pkg_macro:") => {
+                // The original's macros run through its macro engine; the common ones
+                // from the Default package map onto this editor's own commands.
+                let (_, name) = id[10..].split_once('|').unwrap_or(("", ""));
+                let cmd = match name {
+                    "Add Line Before" => Some("line_before"),
+                    "Add Line" => Some("line_after"),
+                    "Delete Line" => Some("del_line"),
+                    "Delete to BOL" | "Delete to Hard BOL" => Some("del_to_start"),
+                    "Delete to EOL" | "Delete to Hard EOL" => Some("del_to_end"),
+                    "Add Line in Braces" => Some("line_in_braces"),
+                    _ => None,
+                };
+                match cmd {
+                    Some(c) => {
+                        self.run(c);
+                    }
+                    None => self.log(format!("The macro \"{name}\" needs the original's macro engine, which isn't in this version")),
+                }
+            }
+            "line_in_braces" => self.edit_active(|t, lo, _| {
+                let c: Vec<char> = t.chars().collect();
+                let ls = textops::line_start(&c, lo);
+                let ind: String = c[ls..].iter().take_while(|ch| **ch == ' ' || **ch == '\t').collect();
+                let ins = format!("\n{ind}\t\n{ind}");
+                let mut out: String = c[..lo].iter().collect();
+                out.push_str(&ins);
+                out.extend(c[lo..].iter());
+                let p = lo + 1 + ind.chars().count() + 1;
+                Some(Out { text: out, sel: (p, p) })
+            }),
+            "reindent" =>self.edit_active(|t, lo, hi| Some(textops::reindent(t, lo, hi, &unit))),
             "close_all" => {
                 while !self.docs.is_empty() {
                     let n = self.docs.len();
@@ -1155,9 +1307,15 @@ impl App {
             "transpose" => self.edit_active(textops::transpose),
             "close_tag" => self.edit_active(|t, lo, _| textops::close_tag(t, lo)),
             "expand_tag" => {
+                // Ctrl+Shift+A: grow to the surrounding tag, else grow the selection normally
                 let (lo, hi) = self.sel();
+                let scope = self.doc_scope();
+                // keymap: tag expansion only where selector is "(text.html, text.xml) - source"
+                let markup = (scope.starts_with("text.html") || scope.starts_with("text.xml")) && !scope.starts_with("source");
                 if let Some(d) = self.docs.get(self.active) {
-                    if let Some((a, b)) = textops::expand_to_tag(&d.text, lo, hi) {
+                    let c: Vec<char> = d.text.chars().collect();
+                    let r = if markup { textops::expand_to_tag(&d.text, lo, hi) } else { None }.or_else(|| Some(textops::expand_smart(&c, lo, hi)));
+                    if let Some((a, b)) = r {
                         self.select(a, b);
                     }
                 }
@@ -1309,6 +1467,7 @@ impl App {
             "cancel_fif" => {
                 if let Some(c) = &self.fif.cancel {
                     c.store(true, Ordering::Relaxed);
+                    self.fif.cancelled = true;
                 }
             }
             // View

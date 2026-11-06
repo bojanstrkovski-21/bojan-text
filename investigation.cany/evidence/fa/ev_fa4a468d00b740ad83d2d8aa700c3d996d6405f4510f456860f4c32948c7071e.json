@@ -1,0 +1,88 @@
+{
+  "id": "ev_fa4a468d00b740ad83d2d8aa700c3d996d6405f4510f456860f4c32948c7071e",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140069544"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax",
+      "sub_140035790",
+      "sub_140041436",
+      "sub_140069893",
+      "sub_1400698cd",
+      "sub_140069920"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140069544",
+    "function": "sub_140069544",
+    "gotos": 1,
+    "inline_asm": 4,
+    "pseudo_code": "int64_t sub_140069544(int64_t rcx)\n{\n    rsi = rcx;\n    __asm(\"xorps xmm0, xmm0\");\n    __asm(\"movaps [rsp+0x20], xmm0\");\n    stack_30 &= 0;\n    stack_38 = 3;\n    rax = *(uint64_t*)(rcx + 0x30);\n    if ((*(uint8_t*)(rax + 0xb8) & 1) != 0) {\n        rax = *(uint64_t*)(rsi + 0x30);\n        rax = *(uint64_t*)(rax + 0x108);\n        rcx = *(uint64_t*)(rsi + 0x30);\n        if (rax <= *(uint64_t*)(rcx + 0xf8)) {\n            rax = \"Cancelled!\\n\";\n            rdx = &stack_40;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406da197;\n        } else {\n            rax = \"Reached maximum result size. Check \\\"find_in_files_max_result_size\\\".\\n\";\n            rdx = &stack_40;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406da081;\n        }\n        *(uint64_t*)(rdx + 8) = rax;\n        sub_140069920(&stack_20);\n    }\n    rdx = rsi + 0x40;\n    eax = *(uint32_t*)(rsi + 0x40);\n    if (eax != 1) {\n        if (!(/* Le */ flags)) {\n            rdi = &stack_20;\n            sub_1400698cd(rdi);\n            rax = \" errors suppressed\\n\";\n            rdx = &stack_40;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406d9e44;\nlabel_14006961c:\n            *(uint64_t*)(rdx + 8) = rax;\n            sub_140069920(rdi);\n        }\n    } else {\n        rdi = &stack_20;\n        sub_1400698cd(rdi);\n        rax = \" error suppressed\\n\";\n        rdx = &stack_40;\n        *(uint64_t*)(rdx) = rax;\n        rax = &data_1406d9e57;\n        goto label_14006961c;\n    }\n    edi = *(uint32_t*)(rsi + 0x38);\n    sub_1400698cd(&stack_20, rsi + 0x38);\n    if (edi != 1) {\n        sub_140069893(&stack_20, \" matches\");\n    } else {\n        sub_140069893(&stack_20, \" \");\n    }\n    eax = *(uint32_t*)(rsi + 0x3c);\n    if (eax != 0) {\n        rdi = rsi + 0x3c;\n        if (eax != 1) {\n            rbx = &stack_20;\n            sub_140069893(rbx, \" across \");\n            sub_1400698cd(rbx, rdi);\n            rax = \" files\\n\";\n            rdx = &stack_40;\n            *(uint64_t*)(rdx) = rax;\n            rax = &data_1406d9add;\n            *(uint64_t*)(rdx + 8) = rax;\n            sub_140069920(rbx);\n        } else {\n            rbx = &stack_20;\n            sub_140069893(rbx, \" in \");\n            sub_1400698cd(rbx, rdi);\n            sub_140069893(rbx, \" file\\n\");\n        }\n    }\n    __asm(\"xorps xmm0, xmm0\");\n    rdi = &stack_40;\n    __asm(\"movaps [rdi], xmm0\");\n    *(uint64_t*)(rdi + 16) &= 0;\n    rax = *(uint64_t*)(rsi + 8);\n    (**(uint64_t*)(rax))(rsi + 8, &stack_20, rdi, *(uint64_t*)(rsi + 0x30));\n    sub_140035790(rdi);\n    rax = *(uint64_t*)(rsi + 0x28);\n    rcx = *(uint64_t*)(rax + 0x200);\n    if (rcx == *(uint64_t*)(rsi + 0x30)) {\n        *(uint64_t*)(rax + 0x200) &= 0;\n    }\n    rax = *(uint64_t*)(rsi);\n    (**(uint64_t*)(rax))(rsi, 1);\n    sub_140041436(&stack_20);\n    return rax;\n}\n",
+    "signature": "int64_t sub_140069544(int64_t rcx)",
+    "strings": [
+      "Reached maximum result size. Check \"find_in_files_max_result_size\".\n",
+      "Cancelled!\n",
+      " error suppressed\n",
+      " errors suppressed\n",
+      " ",
+      " matches",
+      " in ",
+      " file\n",
+      " across ",
+      " files\n"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_140069544 (93 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "1 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "4 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140069544"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

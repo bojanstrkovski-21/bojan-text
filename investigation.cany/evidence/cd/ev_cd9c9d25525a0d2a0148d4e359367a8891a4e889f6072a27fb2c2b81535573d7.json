@@ -1,0 +1,144 @@
+{
+  "id": "ev_cd9c9d25525a0d2a0148d4e359367a8891a4e889f6072a27fb2c2b81535573d7",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x14004367c"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax + 0x238",
+      "*(uint64_t*)(rax + 0x28",
+      "*(uint64_t*)(rax + 0x38",
+      "*(uint64_t*)(rax + 0xb0",
+      "sub_14002e47e",
+      "sub_14002e7ec",
+      "sub_14002e81f",
+      "sub_14002e9b1",
+      "sub_140031560",
+      "sub_140032338",
+      "sub_140032d24",
+      "sub_140032d68",
+      "sub_140032d8a",
+      "sub_1400352f0",
+      "sub_140035790",
+      "sub_1400359f8",
+      "sub_140035a54",
+      "sub_1400360ac",
+      "sub_140038ee6",
+      "sub_140038f0e",
+      "sub_140038f54",
+      "sub_140039005",
+      "sub_140039a46",
+      "sub_14003ac64",
+      "sub_14003b828",
+      "sub_14003bc7c",
+      "sub_14003c516",
+      "sub_140040e05",
+      "sub_1400415ff",
+      "sub_140044424",
+      "sub_14004454e",
+      "sub_14004458c",
+      "sub_1400445d2",
+      "sub_140053646",
+      "sub_14005365c",
+      "sub_140053728",
+      "sub_140056f26",
+      "sub_140072ff8",
+      "sub_140073cb0",
+      "sub_14008fb3a",
+      "sub_14010dbbe",
+      "sub_14010e0c9",
+      "sub_14014a260",
+      "sub_1401564e4",
+      "sub_140156568",
+      "sub_140156964",
+      "sub_14018a25a",
+      "sub_1401ab478",
+      "sub_1401ab506",
+      "sub_1401ab584",
+      "sub_1401ab5b2"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x14004367c",
+    "function": "sub_14004367c",
+    "gotos": 4,
+    "inline_asm": 20,
+    "pseudo_code": "int64_t sub_14004367c(int64_t rcx, int64_t rdx, int64_t r8)\n{\n    __asm(\"movaps [rsp+0x240], xmm6\");\n    ebx = r8d;\n    r12 = rdx;\n    r8 = &stack_3f;\n    *(uint8_t*)(r8) = 0;\n    rax = \"remember_layout\";\n    rdx = &stack_230;\n    *(uint64_t*)(rdx) = rax;\n    rax = &data_1406b48b1;\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_140032338(*(uint64_t*)(rcx + 0x218));\n    stack_3d = bl;\n    if (bl != 0) {\nlabel_1400436e1:\n        rsi = &stack_80;\n        sub_140032d24(rsi);\n        sub_14008fb3a(&arg_228, rsi);\n        rbx = &stack_b8;\n        sub_140038f54(rbx, rsi);\n        r14 = &stack_48;\n        sub_14002e47e(r14, \"layout\");\n        rax = sub_140032d68(r12, r14);\n        sub_1401ab5b2(rax, rbx);\n        sub_14002e7ec(r14);\n        sub_1401ab478(rbx);\n        sub_140032d8a(rsi);\n    } else {\n        if (stack_3f == 1) {\n            goto label_1400436e1;\n        }\n    }\n    sub_140044424(&arg_4ab, r12);\n    rsi = &stack_1c0;\n    sub_140032d24(rsi);\n    sub_140044424(&arg_4b1, rsi);\n    rbx = &stack_b8;\n    sub_140038f54(rbx, rsi);\n    rsi = &stack_48;\n    sub_14002e47e(rsi, \"distraction_free\");\n    rax = sub_140032d68(r12, rsi);\n    sub_1401ab5b2(rax, rbx);\n    sub_14002e7ec(rsi);\n    sub_1401ab478(rbx);\n    rsi = &arg_2a0;\n    rbx = &stack_b8;\n    sub_14002e47e(rbx, \"side_bar_width\");\n    sub_1400415ff(r12, rbx, rsi);\n    sub_14002e7ec(rbx);\n    stack_78 = r12;\n    stack_40 = rbp;\n    if (stack_3d == 0) {\nlabel_140043fd3:\n        rsi = &arg_360;\n        rbx = &stack_b8;\n        sub_14002e47e(rbx, \"select_project\");\n        sub_14004458c(r12, rbx, rsi);\n        sub_14002e7ec(rbx);\n        rsi = &arg_3b0;\n        rbx = &stack_b8;\n        sub_14002e47e(rbx, \"command_palette\");\n        sub_14004458c(r12, rbx, rsi);\n        sub_14002e7ec(rbx);\n        rsi = &arg_400;\n        rbx = &stack_48;\n        sub_14002e47e(rbx, \"auto_complete\");\n        r14 = &stack_b8;\n        sub_14014a260(r14, rsi);\n        rax = sub_140032d68(r12, rbx);\n        sub_1401ab5b2(rax, r14);\n        sub_1401ab478(r14);\n        sub_14002e7ec(rbx);\n        if (stack_3d == 0) {\n            rsi = &stack_b8;\n            sub_140156964(&arg_420, rsi);\n            rax = arg_278;\n            rdi = *(uint64_t*)(rax + 0x28);\n            r15 = *(uint64_t*)(rax + 0x30);\n            rbx = &stack_48;\n            r14 = &stack_1d0;\n            while (true) {\n                if (rdi == r15) {\n                    break;\n                } else {\n                    rax = *(uint64_t*)(rdi);\n                    r12 = *(uint64_t*)(rax + 0x68);\n                    r13 = *(uint64_t*)(rax + 0x70);\n                    while (true) {\n                        if (r12 == r13) {\n                            break;\n                        } else {\n                            rcx = *(uint64_t*)(r12);\n                            rax = *(uint64_t*)(rcx);\n                            (**(uint64_t*)(rax + 0x28))(rcx, rbx);\n                            rax = sub_1400445d2(rbp, rbx, *(uint64_t*)(r12));\n                            if (al != 0) {\n                                __asm(\"movups xmm0, [rsp+0x48]\");\n                                __asm(\"movups xmm1, [rsp+0x58]\");\n                                stack_58 &= 0;\n                                __asm(\"movaps [rsp+0x1e0], xmm1\");\n                                __asm(\"movaps [rsp+0x1d0], xmm0\");\n                                stack_60 = 15;\n                                stack_48 = 0;\n                                sub_140156568(rsi, r14);\n                            }\n                            sub_14002e7ec(rbx);\n                            r12 += 8;\n                            continue;\n                        }\n                        break;\n                    }\n                    rdi += 8;\n                    r12 = stack_78;\n                    continue;\n                }\n                break;\n            }\n            rsi = &stack_48;\n            sub_14002e47e(rsi, \"file_history\");\n            rbx = &stack_b8;\n            sub_140040e05(r12, rsi, rbx);\n            sub_14002e7ec(rsi);\n            sub_1401564e4(rbx);\n        } else {\n            rsi = &arg_420;\n            rbx = &stack_b8;\n            sub_14002e47e(rbx, \"file_history\");\n            sub_140040e05(r12, rbx, rsi);\n            sub_14002e7ec(rbx);\n        }\n        rsi = &arg_2e0;\n        rax = arg_2e0;\n        rcx = *(uint64_t*)(rax);\n        rbx = &stack_80;\n        *(uint64_t*)(rbx) = rcx;\n        r14 = &stack_48;\n        r15 = &stack_b8;\n        while (true) {\n            if (rcx == rax) {\n                break;\n            } else {\n                sub_140032d24(r14);\n                rax = stack_80;\n                rcx = *(uint64_t*)(rax + 0x40);\n                rax = *(uint64_t*)(rcx);\n                rax = (**(uint64_t*)(rax + 0x238))(rcx, r14);\n                if (al != 0) {\n                    sub_140038f54(r15, r14);\n                    rdx = stack_80;\n                    rdx += 0x20;\n                    rax = sub_140039a46(r12);\n                    sub_1401ab5b2(rax, r15);\n                    sub_1401ab478(r15);\n                }\n                sub_140032d8a(r14);\n                sub_14003b828(rbx);\n                rax = *(uint64_t*)(rsi);\n                rcx = stack_80;\n                continue;\n            }\n            break;\n        }\n        rdi = stack_40;\n        rax = *(uint64_t*)(rdi + 0x2f0);\n        r15 = *(uint64_t*)(rax);\n        rbx = &stack_48;\n        *(uint64_t*)(rbx) = r15;\n        r14 = &stack_b8;\n        while (true) {\n            if (r15 == rax) {\n                break;\n            } else {\n                r15 += 0x20;\n                sub_1400359f8(rsi, r14, r15);\n                rax = sub_140035a54(rsi, stack_c8, r15);\n                if (al == 0) {\n                    r15 = stack_48;\n                    r15 += 0x40;\n                    rax = sub_140039a46(r12, r15 + 0x20);\n                    sub_1401ab584(rax, r15);\n                }\n                sub_14003b828(rbx);\n                rdi = stack_40;\n                rax = *(uint64_t*)(rdi + 0x2f0);\n                r15 = stack_48;\n                continue;\n            }\n            break;\n        }\n        rsi = &stack_80;\n        sub_14018a25a(*(uint64_t*)(rdi + 0x2c8), rsi);\n        rbx = &stack_b8;\n        sub_140038f54(rbx, rsi);\n        r14 = &stack_48;\n        sub_14002e47e(r14, \"settings\");\n        rax = sub_140032d68(r12, r14);\n        sub_1401ab5b2(rax, rbx);\n        sub_14002e7ec(r14);\n        sub_1401ab478(rbx);\n        sub_140032d8a(rsi);\n        rsi = &stack_80;\n        sub_14018a25a(*(uint64_t*)(rdi + 0x2d0), rsi);\n        rbx = &stack_b8;\n        sub_140038f54(rbx, rsi);\n        r14 = &stack_48;\n        sub_14002e47e(r14, \"template_settings\");\n        rax = sub_140032d68(r12, r14);\n        sub_1401ab5b2(rax, rbx);\n        sub_14002e7ec(r14);\n        sub_1401ab478(rbx);\n        sub_140032d8a(rsi);\n        rsi = *(uint64_t*)(rdi + 0x140);\n        rdi = *(uint64_t*)(rdi + 0x148);\n        while (true) {\n            if (rsi == rdi) {\n                break;\n            } else {\n                rcx = *(uint64_t*)(rsi);\n                rax = *(uint64_t*)(rcx);\n                (**(uint64_t*)(rax + 0x38))(rcx, r12);\n                rsi += 8;\n                continue;\n            }\n            break;\n        }\n        sub_140032d8a(&stack_1c0);\n        __asm(\"movaps xmm6, [rsp+0x240]\");\n        return rax;\n    } else {\n        rsi = arg_278;\n        __asm(\"xorps xmm6, xmm6\");\n        rax = &stack_180;\n        *(uint64_t*)(rax + 16) &= 0;\n        rcx = &stack_160;\n        *(uint64_t*)(rcx + 16) &= 0;\n        __asm(\"movaps [rax], xmm6\");\n        __asm(\"movaps [rcx], xmm6\");\n        rdi = &stack_110;\n        __asm(\"movaps [rdi], xmm6\");\n        rax = sub_140056f26(rdi, 1);\n        *(uint64_t*)(rax) = rax;\n        *(uint64_t*)(rax + 8) = rax;\n        *(uint64_t*)(rax + 16) = rax;\n        *(uint16_t*)(rax + 0x18) = 0x101;\n        *(uint64_t*)(rdi) = rax;\n        r14 = *(uint64_t*)(rsi + 0x28);\n        rax = *(uint64_t*)(rsi + 0x30);\n        stack_128 = rax;\n        rax = &arg_168;\n        stack_70 = rax;\n        rdi = &stack_50;\n        rbx = &stack_1b0;\n        r13 = &stack_b8;\n        rsi = &stack_80;\n        while (true) {\n            if (r14 == stack_128) {\n                break;\n            } else {\n                sub_140032d24(rbx);\n                rax = *(uint64_t*)(r14);\n                r15 = *(uint64_t*)(rax + 0x70);\n                rax = *(uint64_t*)(rax + 0x68);\n                rbx = r15;\n                rbx -= rax;\n                r15 -= rax;\n                if (r15 == 0) {\n                    r15d = 0;\n                    r12d = 0;\n                    eax = 0;\nlabel_140043913:\n                    rax -= r12;\n                    rax >>= 3;\n                    ecx = 0;\n                    while (true) {\n                        if (rax == rcx) {\n                            break;\n                        } else {\n                            rdx = *(uint64_t*)(r14);\n                            rdx = *(uint64_t*)(rdx + 0x90);\n                            rdx = *(uint64_t*)(rdx + rcx * 8);\n                            r8d = edx;\n                            rdx >>= 0x20;\n                            *(uint32_t*)(r12 + r8 * 8) = ecx;\n                            *(uint8_t*)(r12 + r8 * 8 + 4) = dl;\n                            rcx++;\n                            continue;\n                        }\n                        break;\n                    }\n                    stack_130 = r15;\n                    rdx = *(uint64_t*)(r14);\n                    rax = *(uint64_t*)(rdx + 16);\n                    stack_48 = rax;\n                    rdx += 0x18;\n                    sub_14005365c(rdi);\n                    stack_b0 &= 0;\n                    rdi = stack_50;\n                    __asm(\"movaps [rsp+0xa0], xmm6\");\n                    rax = *(uint64_t*)(r14);\n                    rcx = *(uint64_t*)(rax + 0x70);\n                    rcx -= *(uint64_t*)(rax + 0x68);\n                    rcx >>= 3;\n                    sub_140038f0e(&stack_a0, ecx);\n                    stack_138 = r12;\n                    rbx = r12;\n                    ebp = 0;\n                    while (true) {\n                        rcx = *(uint64_t*)(r14);\n                        rax = *(uint64_t*)(rcx + 0x68);\n                        rcx = *(uint64_t*)(rcx + 0x70);\n                        rcx -= rax;\n                        rcx >>= 3;\n                        if (rbp == rcx) {\n                            break;\n                        } else {\n                            r15 = r14;\n                            if (rdi == stack_58) {\n                                r14d = 0;\n                            } else {\n                                ecx = *(uint32_t*)(rdi);\n                                __asm(\"sete r14b\");\n                            }\n                            r12 = *(uint64_t*)(rax + rbp * 8);\n                            r13 = rsi;\n                            sub_140032d24(rsi);\n                            rcx = stack_40;\n                            rax = stack_70;\n                            if (*(uint64_t*)(rcx + 0x180) >= 16 /* unsigned */) {\n                                rax = *(uint64_t*)(rcx + 0x168);\n                            }\n                            stack_150 = rax;\n                            rax += *(uint64_t*)(rcx + 0x178);\n                            stack_158 = rax;\n                            rsi = &stack_220;\n                            sub_14010dbbe(rsi, &stack_150);\n                            rax = *(uint64_t*)(r12);\n                            rcx = &stack_110;\n                            stack_28 = rcx;\n                            __asm(\"sete [rsp+0x20]\");\n                            rsi = r13;\n                            rax = (**(uint64_t*)(rax + 0xb0))(r12, r13, rsi, &stack_160);\n                            r13 = &stack_b8;\n                            if (al != 0) {\n                                al = *(uint8_t*)(r12 + 0x20);\n                                al &= 1;\n                                stack_3e = al;\n                                sub_14002e47e(r13, \"semi_\");\n                                sub_1400360ac(rsi, r13, &stack_3e);\n                                sub_14002e7ec(r13);\n                                sub_14002e47e(r13, \"stack_index\");\n                                sub_14004454e(rsi, r13, rbx);\n                                sub_14002e7ec(r13);\n                                r12 = rbx + 4;\n                                sub_14002e47e(r13, \"stack_multiselect\");\n                                sub_1400360ac(rsi, r13, r12);\n                                sub_14002e7ec(r13);\n                                if (r14l != 0) {\n                                    stack_3e = 1;\n                                    sub_14002e47e(r13, \"selected\");\n                                    sub_1400360ac(rsi, r13, &stack_3e);\n                                    sub_14002e7ec(r13);\n                                }\n                                sub_140038f54(r13, rsi);\n                                sub_14003c516(&stack_a0, r13);\n                                sub_1401ab478(r13);\n                            }\n                            eax = r14l;\n                            rdi = rdi + rax * 4;\n                            sub_140032d8a(rsi);\n                            rbp++;\n                            rbx += 8;\n                            r14 = r15;\n                            continue;\n                        }\n                        break;\n                    }\n                    rdi = &stack_a0;\n                    sub_140038ee6(r13, rdi);\n                    sub_14002e47e(rsi, \"sheets\");\n                    rbx = &stack_1b0;\n                    rax = sub_140032d68(rbx, rsi);\n                    sub_1401ab5b2(rax, r13);\n                    sub_14002e7ec(rsi);\n                    sub_1401ab478(r13);\n                    sub_140038f54(r13, rbx);\n                    sub_14003c516(&stack_180, r13);\n                    sub_1401ab478(r13);\n                    sub_14003ac64(rdi);\n                    rdi = &stack_50;\n                    sub_140035790(rdi);\n                    rcx = stack_138;\n                    if (rcx != 0) {\n                        rdx = stack_130;\n                        rdx -= rcx;\n                        sub_14002e81f();\n                    }\n                    sub_140032d8a(rbx);\n                    r14 += 8;\n                    continue;\n                } else {\n                    rbx >>= 3;\n                    rax = rbx;\n                    rax >>= 0x3d;\n                    if (rax != 0) {\n                        goto label_14004441e;\n                    } else {\n                        rax = sub_140031560(rbx);\n                        rax = sub_14002e9b1(rax);\n                        r12 = rax;\n                        sub_140053646(rax, rbx);\n                        r15 += r12;\n                        rax = r15;\n                        goto label_140043913;\n                    }\n                }\n            }\n        }\n        rsi = &stack_b8;\n        sub_140038ee6(rsi, &stack_180);\n        rbx = &stack_48;\n        sub_14002e47e(rbx, \"groups\");\n        r12 = stack_78;\n        rax = sub_140032d68(r12, rbx);\n        sub_1401ab5b2(rax, rsi);\n        sub_14002e7ec(rbx);\n        sub_1401ab478(rsi);\n        rsi = &stack_b8;\n        sub_140038ee6(rsi, &stack_160);\n        rbx = &stack_48;\n        sub_14002e47e(rbx, \"buffers\");\n        rax = sub_140032d68(r12, rbx);\n        sub_1401ab5b2(rax, rsi);\n        sub_14002e7ec(rbx);\n        sub_1401ab478(rsi);\n        rdi = stack_40;\n        rax = *(uint64_t*)(rdi + 0x278);\n        rax = *(uint32_t*)(rax + 0x60);\n        rcx = -0xffffffff;\n        *(uint64_t*)(rsi) = rcx;\n        *(uint64_t*)(rsi + 8) = rax;\n        rsi = &stack_48;\n        sub_14002e47e(rsi, \"selected_group\");\n        rax = sub_140032d68(r12, rsi);\n        rbx = &stack_b8;\n        sub_1401ab5b2(rax, rbx);\n        sub_14002e7ec(rsi);\n        sub_1401ab478(rbx);\n        rcx = *(uint64_t*)(rdi + 0x300);\n        rax = *(uint64_t*)(rcx + 0x178);\n        rdx = *(uint64_t*)(rcx + 0x180);\n        if (rax != rdx) {\n            if (*(uint64_t*)(rdi + 0x198) == 0) {\n                rax = -0x100000000;\n                rsi = &stack_b8;\n                *(uint64_t*)(rsi) = rax;\n                __asm(\"xorps xmm0, xmm0\");\n                r8 = &stack_1f0;\n                __asm(\"movaps [r8], xmm0\");\n                sub_140072ff8(rcx, rsi);\n                rbx = &stack_48;\n                sub_1401ab506(rbx, rsi);\n                r15 = &stack_80;\n                sub_14002e47e(r15, \"folders\");\n                rax = sub_140032d68(r12, r15);\n                sub_1401ab5b2(rax, rbx);\n                sub_14002e7ec(r15);\n                sub_1401ab478(rbx);\n                sub_1401ab478(rsi);\n                rcx = *(uint64_t*)(rdi + 0x300);\n                rax = *(uint64_t*)(rcx + 0x178);\n                rdx = *(uint64_t*)(rcx + 0x180);\n            }\n        }\n        if (rax != rdx) {\n            __asm(\"xorps xmm0, xmm0\");\n            rsi = &stack_80;\n            __asm(\"movaps [rsi], xmm0\");\n            *(uint64_t*)(rsi + 16) &= 0;\n            rbx = &stack_a0;\n            __asm(\"movaps [rbx], xmm0\");\n            *(uint64_t*)(rbx + 16) &= 0;\n            sub_140073cb0(rcx, rbx);\n            rdi = *(uint64_t*)(rbx);\n            r14 = *(uint64_t*)(rbx + 8);\n            rbx = &stack_b8;\n            r15 = &stack_1a0;\n            while (true) {\n                if (rdi == r14) {\n                    break;\n                } else {\n                    rax = *(uint64_t*)(rdi);\n                    __asm(\"movups xmm0, [rax+0x28]\");\n                    __asm(\"movaps [rsp+0x1a0], xmm0\");\n                    sub_14003bc7c(rbx, r15);\n                    sub_14003c516(rsi, rbx);\n                    sub_1401ab478(rbx);\n                    rdi += 8;\n                    continue;\n                }\n                break;\n            }\n            rbx = &stack_b8;\n            rsi = &stack_80;\n            sub_140038ee6(rbx, rsi);\n            r15 = &stack_48;\n            sub_14002e47e(r15, \"expanded_folders\");\n            rax = sub_140032d68(r12, r15);\n            sub_1401ab5b2(rax, rbx);\n            sub_14002e7ec(r15);\n            sub_1401ab478(rbx);\n            sub_140035790(&stack_a0);\n            sub_14003ac64(rsi);\n        }\n        if (arg_1a0 < 16 /* unsigned */) {\n            rax = &arg_188;\n        } else {\n            rax = arg_188;\n        }\n        stack_140 = rax;\n        rax += arg_198;\n        stack_148 = rax;\n        if (arg_180 >= 16 /* unsigned */) {\n            rax = arg_168;\n            stack_70 = rax;\n        }\n        rdx = &stack_200;\n        rax = stack_70;\n        *(uint64_t*)(rdx) = rax;\n        rax += arg_178;\n        *(uint64_t*)(rdx + 8) = rax;\n        rsi = &stack_210;\n        sub_14010dbbe(rsi);\n        rbx = &stack_48;\n        sub_14010e0c9(rbx, rsi, &stack_140);\n        rsi = &stack_b8;\n        sub_14002e47e(rsi, \"project\");\n        sub_140039005(r12, rsi, rbx);\n        sub_14002e7ec(rsi);\n        rax = stack_110;\n        sub_140053728(*(uint64_t*)(rax + 8));\n        sub_14002e81f(stack_110, 0x30);\n        sub_14003ac64(&stack_160);\n        sub_14003ac64(&stack_180);\n        goto label_140043fd3;\n    }\nlabel_14004441e:\n    sub_1400352f0();\n    __debugbreak();\n}\n",
+    "signature": "int64_t sub_14004367c(int64_t rcx, int64_t rdx, int64_t r8)",
+    "strings": [
+      "remember_layout",
+      "layout",
+      "distraction_free",
+      "side_bar_width",
+      "semi_",
+      "stack_index",
+      "stack_multiselect",
+      "selected",
+      "sheets",
+      "groups",
+      "buffers",
+      "selected_group",
+      "folders",
+      "expanded_folders",
+      "project",
+      "select_project",
+      "command_palette",
+      "auto_complete",
+      "file_history",
+      "settings",
+      "template_settings"
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_14004367c (550 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "4 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "20 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x14004367c"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

@@ -1,0 +1,120 @@
+{
+  "id": "ev_630dc57159c519f5b0a51733f70489c475a953d6d1994860566b4e3f18ca9639",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_strings_find",
+  "params": {
+    "case_sensitive": false,
+    "limit": 40,
+    "mode": "regex",
+    "offset": 0,
+    "pattern": "(Searching |matches across|match in|files\\)|Line %d|files for|^\\d+ match)"
+  },
+  "result": {
+    "matches": [
+      {
+        "address": "0x1406bffb5",
+        "references": [
+          {
+            "from": "0x140068f36",
+            "function": "sub_140068eaa"
+          }
+        ],
+        "section": ".rdata",
+        "text": "ERROR: Regex exhausted stack searching file"
+      },
+      {
+        "address": "0x1406bffe1",
+        "references": [
+          {
+            "from": "0x140068f2d",
+            "function": "sub_140068eaa"
+          }
+        ],
+        "section": ".rdata",
+        "text": "ERROR: Regex complexity too high searching file"
+      },
+      {
+        "address": "0x1406ce5e1",
+        "references": [
+          {
+            "from": "0x140074dc7",
+            "function": "sub_140074d8c"
+          }
+        ],
+        "section": ".rdata",
+        "text": " (%d files)"
+      },
+      {
+        "address": "0x1406d1b05",
+        "references": [
+          {
+            "from": "0x140069df7",
+            "function": "sub_140069d7a"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Regex exhausted stack searching "
+      },
+      {
+        "address": "0x1406d1b26",
+        "references": [
+          {
+            "from": "0x140069e5c",
+            "function": "sub_140069d7a"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Regex complexity too high searching "
+      },
+      {
+        "address": "0x1406d1b4b",
+        "references": [
+          {
+            "from": "0x140068cef",
+            "function": "sub_140068cc4"
+          }
+        ],
+        "section": ".rdata",
+        "text": "Searching "
+      },
+      {
+        "address": "0x1406d9b2f",
+        "references": [
+          {
+            "from": "0x140565e28",
+            "function": "sub_140565e09"
+          }
+        ],
+        "section": ".rdata",
+        "text": "LTC_ARGCHK '%s' failure on line %d of file %s\n"
+      }
+    ],
+    "total": 7
+  },
+  "summary": "7 strings match \"(Searching |matches across|match in|files\\)|Line %d|files for|^\\d+ match)\".",
+  "confidence": "observed",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "data_sections_only",
+      "message": "only strings stored in the file are searched (absence is not proof)"
+    }
+  ],
+  "coverage": {
+    "status": "complete",
+    "examined": 7,
+    "total": 7
+  },
+  "locations": [],
+  "links": []
+}

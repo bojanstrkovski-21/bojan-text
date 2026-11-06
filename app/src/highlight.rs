@@ -248,6 +248,8 @@ pub struct ScanResult {
 pub struct Extras {
     pub snippets: Vec<Snippet>,
     pub builds: Vec<BuildSystem>,
+    /// (package, macro name) from *.sublime-macro files
+    pub macros: Vec<(String, String)>,
 }
 
 #[derive(Clone, Default, Debug, serde::Serialize, serde::Deserialize)]
@@ -398,7 +400,7 @@ fn collect_files(pkg_path: &Path) -> Vec<FileEntry> {
         let l = n.to_ascii_lowercase();
         l.ends_with(".sublime-syntax") || l.ends_with(".sublime-color-scheme") || l.ends_with(".tmtheme")
             || l.ends_with(".tmlanguage") || l.ends_with(".py") || l.ends_with(".sublime-snippet")
-            || l.ends_with(".sublime-completions") || l.ends_with("lsp.sublime-settings") || l.ends_with(".sublime-build")
+            || l.ends_with(".sublime-completions") || l.ends_with("lsp.sublime-settings") || l.ends_with(".sublime-build") || l.ends_with(".sublime-macro")
     };
     let mut out = Vec::new();
     if pkg_path.is_file() {
@@ -444,7 +446,7 @@ fn collect_files(pkg_path: &Path) -> Vec<FileEntry> {
 /// Same as [`scan_sublime_packages`], but reuses a saved result while the
 /// package folders are unchanged (the full scan takes tens of seconds).
 pub fn scan_sublime_packages_cached(dirs: &[PathBuf]) -> ScanResult {
-    let mut fp = String::from("v4|");
+    let mut fp = String::from("v5|");
     for d in dirs {
         fp.push_str(&d.display().to_string());
         if let Ok(rd) = std::fs::read_dir(d) {
@@ -553,6 +555,8 @@ pub fn scan_sublime_packages(dirs: &[PathBuf], include_sublime_syntaxes: bool) -
                     if let Some(sn) = parse_snippet(&String::from_utf8_lossy(&f.data), &name, &short) {
                         extras.snippets.push(sn);
                     }
+                } else if lower.ends_with(".sublime-macro") {
+                    extras.macros.push((name.clone(), short.trim_end_matches(".sublime-macro").to_string()));
                 } else if lower.ends_with(".sublime-build") {
                     if let Some(b) = parse_build(&String::from_utf8_lossy(&f.data), &name, &short) {
                         extras.builds.push(b);

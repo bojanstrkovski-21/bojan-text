@@ -1,0 +1,77 @@
+{
+  "id": "ev_6fbd67231a897ea3a59fa730f8e339480e0d2cc1f789638f84cd5620b5feb7d6",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x1400e3d5a"
+  },
+  "result": {
+    "calls": [
+      "rax",
+      "sub_1400e403e",
+      "sub_1401652c6",
+      "sub_1401653a8",
+      "sub_14017a9d0",
+      "sub_14051bbcc"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x1400e3d5a",
+    "function": "sub_1400e3d5a",
+    "gotos": 0,
+    "inline_asm": 0,
+    "pseudo_code": "int64_t sub_1400e3d5a()\n{\n    eax = *(uint8_t*)0x14073faf0;\n    rcx = &data_14073f280;\n    rax = *(uint64_t*)(rcx + rax * 8);\n    if (rax != 0) {\n        (*rax)();\n    }\n    rax = 0x4066800000000000;\n    rsi = &stack_28;\n    *(uint64_t*)(rsi) = rax;\n    rax = \"tab_width\";\n    rcx = &stack_a0;\n    *(uint64_t*)(rcx) = rax;\n    rax = &sub_1400e2e50;\n    rdi = &stack_40;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    rax = &data_1406bcc73;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2e60;\n    rbx = &stack_30;\n    *(uint64_t*)(rbx) = rax;\n    *(uint32_t*)(rbx + 8) &= 0;\n    sub_1400e403e(rcx, rdi, rbx, rsi);\n    rax = 0x4048000000000000;\n    *(uint64_t*)(rsi) = rax;\n    rax = \"tab_min_width\";\n    rcx = &stack_90;\n    *(uint64_t*)(rcx) = rax;\n    rax = &data_1406bcc4a;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2e6c;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    rax = &sub_1400e2e7c;\n    *(uint64_t*)(rbx) = rax;\n    *(uint32_t*)(rbx + 8) &= 0;\n    rsi = &stack_40;\n    rdi = &stack_30;\n    rbx = &stack_28;\n    sub_1400e403e(rcx, rsi, rdi, rbx);\n    rax = 0x4041800000000000;\n    *(uint64_t*)(rbx) = rax;\n    rax = \"tab_height\";\n    rcx = &stack_80;\n    *(uint64_t*)(rcx) = rax;\n    rax = &data_1406b53b1;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2e88;\n    *(uint64_t*)(rsi) = rax;\n    *(uint32_t*)(rsi + 8) &= 0;\n    rax = &sub_1400e2e98;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    rsi = &stack_40;\n    rdi = &stack_30;\n    rbx = &stack_28;\n    sub_1400e403e(rcx, rsi, rdi, rbx);\n    *(uint64_t*)(rbx) &= 0;\n    rax = \"connector_height\";\n    rcx = &stack_70;\n    *(uint64_t*)(rcx) = rax;\n    rax = &data_1406b53a6;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2ea4;\n    *(uint64_t*)(rsi) = rax;\n    *(uint32_t*)(rsi + 8) &= 0;\n    rax = &sub_1400e2eae;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    rsi = &stack_40;\n    rdi = &stack_30;\n    rbx = &stack_28;\n    sub_1400e403e(rcx, rsi, rdi, rbx);\n    rax = 0x4031000000000000;\n    *(uint64_t*)(rbx) = rax;\n    rax = \"tab_overlap\";\n    rcx = &stack_60;\n    *(uint64_t*)(rcx) = rax;\n    rax = &data_1406b9c2e;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2f2c;\n    *(uint64_t*)(rsi) = rax;\n    *(uint32_t*)(rsi + 8) &= 0;\n    rax = &sub_1400e2f3c;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    rdi = &stack_40;\n    rsi = &stack_28;\n    sub_1400e403e(rcx, rdi, &stack_30, rsi);\n    rax = \"mouse_wheel_switch\";\n    *(uint64_t*)(rdi) = rax;\n    rax = &data_1406bcfb5;\n    *(uint64_t*)(rdi + 8) = rax;\n    rdi = &stack_30;\n    rbx = &stack_40;\n    sub_14017a9d0(rdi, rbx);\n    rax = sub_14051bbcc(0x40);\n    ecx = *(uint16_t*)(rdi);\n    rdx = &sub_1400e2f50;\n    *(uint64_t*)(rax + 0x18) = rdx;\n    *(uint32_t*)(rax + 0x20) &= 0;\n    *(uint64_t*)(rax + 8) &= 0;\n    rdx = &data_1405d8a38;\n    *(uint64_t*)(rax) = rdx;\n    *(uint16_t*)(rax + 16) = cx;\n    rcx = &sub_1400e2f5e;\n    *(uint64_t*)(rax + 0x28) = rcx;\n    *(uint32_t*)(rax + 0x30) &= 0;\n    *(uint8_t*)(rax + 0x38) = 0;\n    sub_1401652c6(&data_14073aed8, rax);\n    *(uint64_t*)(rsi) &= 0;\n    rsi = &data_14073aeb8;\n    rax = \"spacing\";\n    rcx = &stack_50;\n    *(uint64_t*)(rcx) = rax;\n    rax = &data_1406bdad6;\n    *(uint64_t*)(rcx + 8) = rax;\n    rax = &sub_1400e2ee8;\n    *(uint64_t*)(rbx) = rax;\n    *(uint32_t*)(rbx + 8) &= 0;\n    rax = &sub_1400e2ef2;\n    *(uint64_t*)(rdi) = rax;\n    *(uint32_t*)(rdi + 8) &= 0;\n    sub_1400e403e(rcx, &stack_40, &stack_30, &stack_28);\n    sub_1401653a8(rsi);\n    return rax;\n}\n",
+    "signature": "int64_t sub_1400e3d5a()",
+    "strings": [
+      "tab_width",
+      "tab_min_width",
+      "tab_height",
+      "connector_height",
+      "tab_overlap",
+      "mouse_wheel_switch",
+      "spacing"
+    ],
+    "structured": true
+  },
+  "summary": "Pseudo-C for sub_1400e3d5a (129 lines).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x1400e3d5a"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

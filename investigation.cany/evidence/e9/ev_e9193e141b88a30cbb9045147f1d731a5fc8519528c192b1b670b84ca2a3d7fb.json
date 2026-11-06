@@ -1,0 +1,79 @@
+{
+  "id": "ev_e9193e141b88a30cbb9045147f1d731a5fc8519528c192b1b670b84ca2a3d7fb",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140069d7a"
+  },
+  "result": {
+    "calls": [
+      "sub_14002e4b4",
+      "sub_14002e5f4",
+      "sub_14002e636",
+      "sub_14002e69a",
+      "sub_14002e7ec",
+      "sub_14003d180",
+      "sub_140055190"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140069d7a",
+    "function": "sub_140069d7a",
+    "gotos": 3,
+    "inline_asm": 0,
+    "pseudo_code": "int64_t sub_140069d7a(int64_t rcx, int64_t rdx)\n{\n    rsi = rdx;\n    rdi = rcx;\n    eax = *(uint32_t*)(rdx + 4);\n    eax--;\n    if (eax <= 4 /* unsigned */) {\n        rcx = &data_1405bdd3c;\n        rax = *(uint32_t*)(rcx + rax * 4);\n        rax += rcx;\n        switch (rax) {\n            case_140069dac:\n                rdx = &data_1406da712;\n                rbx = &stack_40;\n                sub_14002e5f4(rbx, rdx, rdx, 0);\n                rcx = &stack_50;\n                rdx = \"Unable to open \";\nlabel_140069e26:\n                rax = sub_14002e4b4();\n                sub_14002e69a(rax, rsi + 8);\nlabel_140069e83:\n                sub_14002e636(rbx);\n                break;\n            case_140069dd4:\n                rdx = &data_1406da712;\n                rbx = &stack_40;\n                sub_14002e5f4(rbx, rdx, rdx, 0);\n                r14 = &stack_50;\n                r8 = rsi + 8;\n                rdx = \"Regex exhausted stack searching \";\nlabel_140069e63:\n                r15 = &stack_20;\n                sub_14003d180(r15);\n                sub_14002e69a(r14, r15);\n                sub_14002e7ec(r15);\n                goto label_140069e83;\n            case_140069e00:\n                rdx = &data_1406da712;\n                rbx = &stack_40;\n                sub_14002e5f4(rbx, rdx, rdx, 0);\n                rcx = &stack_50;\n                rdx = \"skipping binary file: \";\n                goto label_140069e26;\n            case_140069e39:\n                rdx = &data_1406da712;\n                rbx = &stack_40;\n                sub_14002e5f4(rbx, rdx, rdx, 0);\n                r14 = &stack_50;\n                r8 = rsi + 8;\n                rdx = \"Regex complexity too high searching \";\n                goto label_140069e63;\n            case_140069e8b:\n                break;\n        }\n    }\n    eax = *(uint32_t*)(rsi);\n    if (eax != 0) {\n        *(uint32_t*)(rdi + 0x40) += eax;\n        *(uint32_t*)(rdi + 0x44)++;\n        rdi += 0x48;\n        rsi += 8;\n        sub_140055190(rdi, rsi);\n    }\n    return rax;\n}\n",
+    "signature": "int64_t sub_140069d7a(int64_t rcx, int64_t rdx)",
+    "strings": [
+      "Unable to open ",
+      "Regex exhausted stack searching ",
+      "skipping binary file: ",
+      "Regex complexity too high searching "
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_140069d7a (65 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "3 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140069d7a"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

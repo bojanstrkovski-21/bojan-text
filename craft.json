@@ -7,10 +7,10 @@
     "path": "C:\\Program Files\\Sublime Text\\sublime_text.exe"
   },
   "stack": "Rust + egui (eframe)",
-  "status": "ready",
-  "note": "Ready: all 3 checks pass, 5 of 5 claims hold. 1 question about the original is still open.",
+  "status": "building",
+  "note": "The builder stopped (Claude Code stopped: You've hit your 5-hour limit · resets 6:30pm (Europe/Skopje)). Picking up where it left off…",
   "created_ms": 1793869182278,
-  "updated_ms": 1793887639727,
+  "updated_ms": 1793973048792,
   "checks": [
     {
       "round": 1,
@@ -105,11 +105,145 @@
           "passed": true
         }
       ]
+    },
+    {
+      "round": 3,
+      "check": "build",
+      "passed": true,
+      "similarity": null,
+      "note": "Build succeeded.",
+      "artifacts": [],
+      "at_ms": 1793954001600
+    },
+    {
+      "round": 3,
+      "check": "app-screenshot",
+      "passed": true,
+      "similarity": null,
+      "note": "The program starts and draws (1280×800).",
+      "artifacts": [
+        "checks\\round-3\\screenshot.png"
+      ],
+      "at_ms": 1793954004537
+    },
+    {
+      "round": 3,
+      "check": "mechanics",
+      "passed": true,
+      "similarity": null,
+      "note": "app/mechanics.json has 59 values (53 with a source, 6 estimated).",
+      "artifacts": [],
+      "at_ms": 1793954004543,
+      "claims": [
+        {
+          "title": "font size (11) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "font size in pixels (14.67) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab size (4) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab bar height (35) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab max width (180) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab min width (48) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab overlap (17) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "wrap paragraph fallback width (78) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "minimap click centring factor (0.5) is used in the code",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "check": "build",
+      "passed": true,
+      "similarity": null,
+      "note": "Build succeeded.",
+      "artifacts": [],
+      "at_ms": 1793972609436
+    },
+    {
+      "round": 4,
+      "check": "app-screenshot",
+      "passed": true,
+      "similarity": null,
+      "note": "The program starts and draws (1280×800).",
+      "artifacts": [
+        "checks\\round-4\\screenshot.png"
+      ],
+      "at_ms": 1793972612477
+    },
+    {
+      "round": 4,
+      "check": "mechanics",
+      "passed": true,
+      "similarity": null,
+      "note": "app/mechanics.json has 66 values (60 with a source, 6 estimated).",
+      "artifacts": [],
+      "at_ms": 1793972612485,
+      "claims": [
+        {
+          "title": "font size (11) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "font size in pixels (14.67) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab size (4) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab bar height (35) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab max width (180) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab min width (48) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "tab overlap (17) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "wrap paragraph fallback width (78) is used in the code",
+          "passed": true
+        },
+        {
+          "title": "minimap click centring factor (0.5) is used in the code",
+          "passed": true
+        }
+      ]
     }
   ],
   "agent_session": "78fd27fa-bb3d-4f11-a3ed-0989d7eb1fd2",
   "allowed_actions": [],
-  "last_reply": "You're right that I only decompiled three functions; the rest came from the original's settings files. I'll now read the code behind the parts I built and replace estimates with real values where the code has them.The status bar code shows exact rules I didn't have. Reading the copy, minimap, word-wrap and ruler functions next:The join-lines function is just the table where the built-in text commands are registered, so it has no rules to take. Reading the original's Python command scripts straight from its package:The column count defaults to \"virtual\": a tab counts as its width in spaces, using the formula from function 0x14036805e. Updating the status bar to match:Next, the wrap-width order (wrap width, then ruler, then 78) and the word-swapping part of Transpose:Minimap updates: use the original's default viewport color (68, 68, 68 at alpha 96); a click outside the box centers the clicked line, and dragging the box keeps the grab point under the mouse.It builds. Adding tests for the new rules:All 9 tests pass. Now writing the decompiled values into the mechanics sheet, with their function addresses:I decompiled the original's code behind the status bar, Copy/Cut, Wrap Paragraph and the minimap, and read its own sort and transpose scripts. The editor now uses those rules, the mechanics sheet lists each one with its function address, and it builds and passes the comparison check. I haven't clicked through the changed behaviour by hand; the tests cover the status-bar text and Transpose.\n\nWhat changed in the editor:\n- **Status bar:** a tab counts to the next tab stop in \"Column\", a selection reads like \"2 lines, 5 characters selected\", and while the find bar is open it shows \"3 of 12 matches\".\n- **Wrap Paragraph:** it uses your wrap column, then your first ruler, then 78 characters (it was 80 before).\n- **Transpose:** with the cursor at the end of a word it swaps whole words, not just two letters.\n- **Minimap:** the view box is the original's grey, clicking outside it centres the clicked line, and dragging the box keeps hold of it where you grabbed it.\n\nA few sizes are still estimates: the minimap line height and width, the tab bar and status bar heights, and the side bar width. Running the original to measure its window was declined, and the one minimap measure I found in the code isn't clear enough to use.",
+  "last_reply": "I'll read more of the code behind what I built: the view settings (scroll past end, margins, caret, indent guides) and the minimap drawing.The struct already has a `query` field, so my new duplicate has to go.I decompiled the original's Find in Files code this round and rebuilt the results panel to match it; it builds and passes the check. The panel now shows `Searching N files for \"query\" (regex, case sensitive, whole word)`, then each file as `path:` with its matches as ` 1436: text`, then `N matches across M files` or `1 match in 1 file`. I ran a real search in a test and the header and file blocks appeared as expected, but the summary line sat below the visible part of the panel, so I haven't seen it. It takes the formats and messages from the original's code, listed with function addresses in the mechanics notes, but not the original's binary-file and error blocks, which are skipped.\n\nI also found, when reading the code behind the results view, that its line numbers are off and a few other view settings differ from a normal file. Say if you want those matched too.",
   "asset_budget_usd": 5.0,
   "generate_assets": false
 }

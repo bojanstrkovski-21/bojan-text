@@ -12,39 +12,50 @@ impl App {
         let s = Modifiers::SHIFT;
         let a = Modifiers::ALT;
         let cs = Modifiers::COMMAND | Modifiers::SHIFT;
-        let ca = Modifiers::COMMAND | Modifiers::ALT;
         let as_ = Modifiers::ALT | Modifiers::SHIFT;
         let cas = Modifiers::COMMAND | Modifiers::ALT | Modifiers::SHIFT;
         let editor_focused = self.editor_focus_id().map(|id| ctx.memory(|m| m.has_focus(id))).unwrap_or(false);
 
-        // second key of a Ctrl+K chord
+        // second key of a Ctrl+K chord (most specific first; Ctrl may stay held or not)
         let mut hits: Vec<String> = Vec::new();
         if let Some(t) = self.chord_k {
             if t.elapsed().as_secs_f32() > 2.0 {
                 self.chord_k = None;
             } else {
-                let chord: &[(Key, &str)] = &[
-                    (Key::B, "toggle_sidebar"),
-                    (Key::U, "upper"),
-                    (Key::L, "lower"),
-                    (Key::K, "del_to_end"),
-                    (Key::Backspace, "del_to_start"),
-                    (Key::Space, "set_mark"),
-                    (Key::A, "select_to_mark"),
-                    (Key::W, "delete_to_mark"),
-                    (Key::X, "swap_with_mark"),
-                    (Key::G, "clear_mark"),
-                    (Key::Y, "yank"),
-                    (Key::C, "scroll_to_sel"),
-                    (Key::Z, "revert_mod"),
-                    (Key::V, "paste_history"),
-                    (Key::D, "quick_add_next"),
+                let chord: &[(Modifiers, Key, &str)] = &[
+                    (cs, Key::ArrowUp, "new_group"),
+                    (cs, Key::ArrowRight, "move_group_next"),
+                    (cs, Key::ArrowLeft, "move_group_prev"),
+                    (cs, Key::Z, "revert_mod"),
+                    (c, Key::ArrowUp, "move_new_group"),
+                    (c, Key::ArrowDown, "close_group"),
+                    (c, Key::ArrowRight, "focus_group_next"),
+                    (c, Key::ArrowLeft, "focus_group_prev"),
+                    (c, Key::CloseBracket, "reindent"),
+                    (c, Key::Slash, "noop"),
+                    (c, Key::Backspace, "del_to_start"),
+                    (c, Key::B, "toggle_sidebar"),
+                    (c, Key::U, "upper"),
+                    (c, Key::L, "lower"),
+                    (c, Key::K, "del_to_end"),
+                    (c, Key::Space, "set_mark"),
+                    (c, Key::A, "select_to_mark"),
+                    (c, Key::W, "delete_to_mark"),
+                    (c, Key::X, "swap_with_mark"),
+                    (c, Key::G, "clear_mark"),
+                    (c, Key::Y, "yank"),
+                    (c, Key::C, "scroll_to_sel"),
+                    (c, Key::Z, "revert_mod"),
+                    (c, Key::V, "paste_history"),
+                    (c, Key::D, "quick_add_next"),
                 ];
                 ctx.input_mut(|i| {
-                    for (k, id) in chord {
-                        if i.consume_shortcut(&sc(c, *k)) || i.consume_shortcut(&sc(n, *k)) {
+                    for (m, k, id) in chord {
+                        let plain = Modifiers { command: false, ctrl: false, mac_cmd: false, ..*m };
+                        if i.consume_shortcut(&sc(*m, *k)) || i.consume_shortcut(&sc(plain, *k)) {
                             hits.push(id.to_string());
                             self.chord_k = None;
+                            break;
                         }
                     }
                     // any other key press ends the chord
@@ -73,7 +84,7 @@ impl App {
             (sc(cs, Key::ArrowDown), "swap_down"),
             (sc(cs, Key::D), "dup_line"),
             (sc(cs, Key::K), "del_line"),
-            (sc(c, Key::J), "join_lines"),
+            (sc(cs, Key::J), "join_lines"),
             (sc(cs, Key::Slash), "block_comment"),
             (sc(cs, Key::Questionmark), "block_comment"),
             (sc(c, Key::Slash), "comment"),
@@ -89,11 +100,11 @@ impl App {
             (sc(c, Key::F9), "sort_case"),
             (sc(n, Key::F9), "sort_lines"),
             // Selection
-            (sc(cs, Key::Space), "expand_sel"),
+            (sc(cs, Key::Space), "expand_scope"),
+            (sc(a, Key::L), "expand_line_up"),
             (sc(c, Key::L), "expand_line"),
             (sc(c, Key::D), "quick_add_next"),
             (sc(cs, Key::M), "expand_brackets"),
-            (sc(cs, Key::J), "expand_indent"),
             (sc(a, Key::C), "color_at_cursor"),
             // Find
             (sc(cs, Key::F), "find_in_files"),
@@ -143,7 +154,26 @@ impl App {
             (sc(cs, Key::Q), "play_macro"),
             (sc(c, Key::Q), "record_macro"),
             (sc(cas, Key::P), "scope_name"),
-            (sc(ca, Key::P), "switch_project"),
+            (sc(as_, Key::P), "switch_project"),
+            (sc(s, Key::Escape), "show_build"),
+            (sc(c, Key::Period), "next_mod"),
+            (sc(c, Key::Comma), "prev_mod"),
+            // split panes
+            (sc(as_, Key::Num1), "layout:1:1"),
+            (sc(as_, Key::Num2), "layout:2:2"),
+            (sc(as_, Key::Num3), "layout:3:3"),
+            (sc(as_, Key::Num4), "layout:4:4"),
+            (sc(as_, Key::Num5), "layout:4:2"),
+            (sc(as_, Key::Num8), "layout:2:1"),
+            (sc(as_, Key::Num9), "layout:3:1"),
+            (sc(cs, Key::Num1), "move_group:1"),
+            (sc(cs, Key::Num2), "move_group:2"),
+            (sc(cs, Key::Num3), "move_group:3"),
+            (sc(cs, Key::Num4), "move_group:4"),
+            (sc(c, Key::Num1), "focus_group:1"),
+            (sc(c, Key::Num2), "focus_group:2"),
+            (sc(c, Key::Num3), "focus_group:3"),
+            (sc(c, Key::Num4), "focus_group:4"),
             // Preferences
             (sc(c, Key::Equals), "zoom_in"),
             (sc(c, Key::Plus), "zoom_in"),
@@ -155,24 +185,29 @@ impl App {
         let mut start_chord = false;
         let mut escape = false;
         let mut tab_key: Option<bool> = None; // Some(shift)
+        let mut enter_key = false;
         let mut del_word_back = false;
         ctx.input_mut(|i| {
             if i.consume_shortcut(&sc(c, Key::K)) {
                 start_chord = true;
-            }
-            for (k, key) in tabs_keys.iter().enumerate() {
-                if i.consume_shortcut(&sc(a, *key)) {
-                    tab_hit = Some(k + 1);
-                }
             }
             for (sh, id) in &list {
                 if i.consume_shortcut(sh) {
                     hits.push(id.to_string());
                 }
             }
+            // Alt+1…Alt+0 (after the Alt+Shift layout keys, which must win)
+            for (k, key) in tabs_keys.iter().enumerate() {
+                if i.consume_shortcut(&sc(a, *key)) {
+                    tab_hit = Some(k + 1);
+                }
+            }
             if editor_focused {
                 if i.consume_shortcut(&sc(c, Key::Backspace)) {
                     del_word_back = true;
+                }
+                if i.consume_shortcut(&sc(n, Key::Enter)) || i.consume_shortcut(&sc(s, Key::Enter)) {
+                    enter_key = true;
                 }
                 if i.consume_shortcut(&sc(s, Key::Tab)) {
                     tab_key = Some(true);
@@ -193,6 +228,10 @@ impl App {
         }
         if del_word_back {
             hits.push("del_word_back".into());
+        }
+        if enter_key {
+            let unit = if self.s.translate_tabs { " ".repeat(self.s.tab_size.max(1)) } else { "\t".to_string() };
+            self.edit_active(|t, lo, hi| Some(crate::textops::newline(t, lo, hi, &unit, true)));
         }
         if let Some(shift) = tab_key {
             self.tab_key(shift);
@@ -244,31 +283,103 @@ impl App {
         }
     }
 
-    /// Tab / Shift+Tab: indent a multi-line selection, else insert a tab (or spaces).
+    /// Tab / Shift+Tab, following the original's key map (later rules win):
+    /// 1. a multi-line selection is indented (Shift+Tab: unindented);
+    /// 2. on an empty line with `auto_indent`, the line is reindented;
+    /// 3. a snippet trigger before the cursor expands (`tab_completion`);
+    /// 4. a word before the cursor is completed when there is exactly one candidate
+    ///    (`commit_single`), else the completion list opens;
+    /// 5. otherwise a tab (or spaces) is inserted. Shift+Tab unindents when only
+    ///    whitespace precedes the cursor, else inserts a tab.
     fn tab_key(&mut self, shift: bool) {
         let tab = self.s.tab_size.max(1);
+        let unit = if self.s.translate_tabs { " ".repeat(tab) } else { "\t".to_string() };
         let (lo, hi) = self.sel();
-        let multi = self.docs.get(self.active).map(|d| d.text.chars().skip(lo).take(hi - lo).any(|c| c == '\n')).unwrap_or(false);
+        let Some(d) = self.docs.get(self.active) else { return };
+        let chars: Vec<char> = d.text.chars().collect();
+        let multi = chars[lo..hi].iter().any(|c| *c == '\n');
+        let ls = crate::textops::line_start(&chars, lo);
+        let le = crate::textops::line_end(&chars, lo);
+        let before_ws = chars[ls..lo].iter().all(|c| *c == ' ' || *c == '\t');
         if shift {
-            self.run("unindent");
+            if multi || before_ws {
+                self.run("unindent");
+                return;
+            }
         } else if multi {
             self.run("indent");
-        } else {
-            let col = self.docs.get(self.active).map(|d| {
-                let before: Vec<char> = d.text.chars().take(lo).collect();
-                let ls = crate::textops::line_start(&before, before.len());
-                before[ls..].iter().map(|c| if *c == '\t' { tab } else { 1 }).sum::<usize>()
-            }).unwrap_or(0);
-            let ins = if self.s.translate_tabs { " ".repeat(tab - col % tab) } else { "\t".to_string() };
-            self.edit_active(|t, lo, hi| {
-                let c: Vec<char> = t.chars().collect();
-                let mut out: String = c[..lo].iter().collect();
-                out.push_str(&ins);
-                out.extend(c[hi..].iter());
-                let p = lo + ins.chars().count();
-                Some(crate::textops::Out { text: out, sel: (p, p) })
+            return;
+        } else if lo == hi && ls == le {
+            // empty line: reindent it from the lines above
+            self.edit_active(|t, lo, _| {
+                let o = crate::textops::reindent(t, lo, lo, &unit);
+                let c: Vec<char> = o.text.chars().collect();
+                let ls = crate::textops::line_start(&c, lo.min(c.len()));
+                let p = crate::textops::line_end(&c, ls);
+                Some(crate::textops::Out { text: o.text, sel: (p, p) })
             });
+            return;
+        } else if lo == hi && lo > 0 && (chars[lo - 1].is_alphanumeric() || chars[lo - 1] == '_') {
+            let mut a = lo;
+            while a > 0 && (chars[a - 1].is_alphanumeric() || chars[a - 1] == '_') {
+                a -= 1;
+            }
+            let word: String = chars[a..lo].iter().collect();
+            let name = self.syntax_name_for(d);
+            let scope = highlight::syntax_by_name(&self.syntax_set, &name).map(|s| s.scope.build_string()).unwrap_or_default();
+            let back = lo - a;
+            if let Some(sn) = self.extras.snippets.iter().find(|s| s.trigger == word && super::palette::scope_matches(&s.scope, &scope)).cloned() {
+                let (body, at) = crate::textops::expand_snippet(&sn.content);
+                self.edit_active(|t, lo, hi| {
+                    let c: Vec<char> = t.chars().collect();
+                    let a = lo - back;
+                    let mut out: String = c[..a].iter().collect();
+                    out.push_str(&body);
+                    out.extend(c[hi..].iter());
+                    let p = a + at;
+                    Some(crate::textops::Out { text: out, sel: (p, p) })
+                });
+                return;
+            }
+            // words already in the file that continue what was typed
+            let pl = word.to_lowercase();
+            let mut seen = HashSet::new();
+            let cands: Vec<String> = d
+                .text
+                .split(|ch: char| !(ch.is_alphanumeric() || ch == '_'))
+                .filter(|w| w.chars().count() > word.chars().count() && w.to_lowercase().starts_with(&pl) && seen.insert(w.to_string()))
+                .map(String::from)
+                .collect();
+            if cands.len() == 1 {
+                let w = cands[0].clone();
+                self.edit_active(|t, lo, hi| {
+                    let c: Vec<char> = t.chars().collect();
+                    let a = lo - back;
+                    let mut out: String = c[..a].iter().collect();
+                    out.push_str(&w);
+                    out.extend(c[hi..].iter());
+                    let p = a + w.chars().count();
+                    Some(crate::textops::Out { text: out, sel: (p, p) })
+                });
+                return;
+            } else if cands.len() > 1 {
+                self.open_palette(PaletteMode::Complete);
+                return;
+            }
         }
+        let mut vcol = 0usize;
+        for c in &chars[ls..lo] {
+            vcol += if *c == '\t' { tab - vcol % tab } else { 1 };
+        }
+        let ins = if self.s.translate_tabs { " ".repeat(tab - vcol % tab) } else { "\t".to_string() };
+        self.edit_active(|t, lo, hi| {
+            let c: Vec<char> = t.chars().collect();
+            let mut out: String = c[..lo].iter().collect();
+            out.push_str(&ins);
+            out.extend(c[hi..].iter());
+            let p = lo + ins.chars().count();
+            Some(crate::textops::Out { text: out, sel: (p, p) })
+        });
     }
 
     /// Find / Replace / Find in Files bar.
@@ -282,7 +393,15 @@ impl App {
         ui.horizontal(|ui| {
             ui.add_space(8.0);
             ui.toggle_value(&mut self.find.regex, ".*").on_hover_text("Regular expression");
-            ui.toggle_value(&mut self.find.case, "Aa").on_hover_text("Match case");
+            ui.toggle_value(&mut self.find.case, "Aa").on_hover_text("Case sensitive");
+            ui.toggle_value(&mut self.find.whole, "\"ab\"").on_hover_text("Whole word");
+            ui.toggle_value(&mut self.find.wrap, "↺").on_hover_text("Wrap around");
+            let mut in_sel = self.find.in_sel.is_some();
+            if ui.toggle_value(&mut in_sel, "▭").on_hover_text("In selection").changed() {
+                let (lo, hi) = self.sel();
+                self.find.in_sel = if in_sel && lo != hi { Some((lo, hi)) } else { None };
+            }
+            ui.toggle_value(&mut self.find.highlight, "▤").on_hover_text("Highlight matches");
             ui.label(RichText::new(if self.fif.open { "Find in files:" } else { "Find:" }).color(p.muted));
             let r = ui.add(egui::TextEdit::singleline(&mut self.find.query).hint_text("Find").desired_width(240.0));
             if self.find.focus {
@@ -339,7 +458,7 @@ impl App {
                 }
                 if let Some(d) = self.docs.get(self.active) {
                     if !self.find.query.is_empty() {
-                        let n = editor::find_matches(&d.text, &self.find.query, self.find.case, self.find.regex).len();
+                        let n = self.find_all(&d.text).len();
                         ui.weak(if n == 0 { "No results".to_string() } else { format!("{n} matches") });
                     }
                 }
@@ -398,21 +517,50 @@ impl App {
         match self.panel {
             Some(BottomPanel::Problems) => self.problems_panel(ui),
             Some(BottomPanel::FindResults) => {
-                ui.label(RichText::new(&self.fif.title).color(p.muted));
+                // The original's Find Results text: a "Searching…" header, then per file
+                // `path:` followed by ` %4d: line` rows (sub_140068eaa), then the summary.
+                let mut rows: Vec<(Option<usize>, String, u8)> = Vec::new(); // (hit, text, 0 plain / 1 file / 2 hit)
+                if self.fif.header.is_empty() && self.fif.hits.is_empty() {
+                    rows.push((None, "No find results yet".into(), 0));
+                } else {
+                    rows.push((None, self.fif.header.clone(), 0));
+                    rows.push((None, String::new(), 0));
+                }
+                let mut last: Option<&PathBuf> = None;
+                for (i, h) in self.fif.hits.iter().enumerate() {
+                    if last != Some(&h.path) {
+                        if last.is_some() {
+                            rows.push((None, String::new(), 0));
+                        }
+                        rows.push((None, format!("{}:", h.path.display()), 1));
+                        last = Some(&h.path);
+                    }
+                    rows.push((Some(i), format!(" {:>4}: {}", h.line + 1, h.text.trim_end()), 2));
+                }
+                if self.fif.rx.is_none() && !self.fif.footer.is_empty() {
+                    rows.push((None, String::new(), 0));
+                    for l in self.fif.footer.lines() {
+                        rows.push((None, l.to_string(), 0));
+                    }
+                }
                 let mut open: Option<usize> = None;
-                egui::ScrollArea::vertical().auto_shrink([false, false]).show_rows(ui, 18.0, self.fif.hits.len(), |ui, range| {
-                    for i in range {
-                        let h = &self.fif.hits[i];
-                        let show_file = i == 0 || self.fif.hits[i - 1].path != h.path;
-                        let sel = self.fif.cur == Some(i);
-                        let file = if show_file { h.path.display().to_string() } else { String::new() };
-                        ui.horizontal(|ui| {
-                            ui.add_sized([260.0, 16.0], egui::Label::new(RichText::new(file).color(p.accent).size(12.0)).truncate());
-                            let t = format!("{:>5}:  {}", h.line + 1, h.text.trim_end());
-                            if ui.add(egui::Button::selectable(sel, RichText::new(t).font(mono.clone())).frame_when_inactive(false)).clicked() {
-                                open = Some(i);
+                egui::ScrollArea::vertical().auto_shrink([false, false]).show_rows(ui, 18.0, rows.len(), |ui, range| {
+                    for k in range {
+                        let (hit, text, kind) = &rows[k];
+                        match kind {
+                            1 => {
+                                ui.label(RichText::new(text).font(mono.clone()).color(p.accent));
                             }
-                        });
+                            2 => {
+                                let sel = self.fif.cur == *hit;
+                                if ui.add(egui::Button::selectable(sel, RichText::new(text).font(mono.clone())).frame_when_inactive(false)).clicked() {
+                                    open = *hit;
+                                }
+                            }
+                            _ => {
+                                ui.label(RichText::new(text).font(mono.clone()).color(p.fg));
+                            }
+                        }
                     }
                 });
                 if let Some(i) = open {

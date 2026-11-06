@@ -1,0 +1,102 @@
+{
+  "id": "ev_129e32ac5c286131f60490b1c0c690346488ef09b1972802bb760f5432c60ba4",
+  "subject": {
+    "kind": "pe",
+    "sha256": "b3bba60bf219501996fe5349ec659eff25daf0072c0ae81f2ceac8b0c06788f2",
+    "name": "sublime_text.exe"
+  },
+  "operation": "native_function_pseudocode",
+  "params": {
+    "function": "0x140068eaa"
+  },
+  "result": {
+    "calls": [
+      "*(uint64_t*)(rax",
+      "sub_14002e7ec",
+      "sub_140035790",
+      "sub_140041250",
+      "sub_140041436",
+      "sub_14004146e",
+      "sub_140069893",
+      "sub_1400698e5",
+      "sub_140069920",
+      "sub_140069976",
+      "sub_1400699eb",
+      "sub_140069a24",
+      "sub_140069aba",
+      "sub_140069bec",
+      "sub_14010e8ea"
+    ],
+    "engine": "clean-room lifter",
+    "entry": "0x140068eaa",
+    "function": "sub_140068eaa",
+    "gotos": 5,
+    "inline_asm": 19,
+    "pseudo_code": "int64_t sub_140068eaa(int64_t rcx, int64_t rdx)\n{\n    __asm(\"movaps [rsp+0x140], xmm6\");\n    r14 = rdx;\n    rbx = rcx;\n    if (*(uint64_t*)(rdx + 0x20) < 16 /* unsigned */) {\n        rax = r14 + 8;\n    } else {\n        rax = *(uint64_t*)(r14 + 8);\n    }\n    rdx = &stack_110;\n    *(uint64_t*)(rdx) = rax;\n    rax += *(uint64_t*)(r14 + 0x18);\n    *(uint64_t*)(rdx + 8) = rax;\n    sub_14010e8ea(&stack_d0);\n    eax = *(uint32_t*)(r14 + 4);\n    rcx = &data_1405bdd24;\n    rax = *(uint32_t*)(rcx + rax * 4);\n    rax += rcx;\n    switch (rax) {\n        case_140068f10:\n            stack_28 &= 0;\n            break;\n        case_140068f1b:\n            rax = \"File too large, skipping\";\nlabel_140068f3d:\n            stack_28 = rax;\n            eax = *(uint32_t*)(rbx + 0x40);\n            if (eax < 0) {\n                __asm(\"xorps xmm6, xmm6\");\n                rsi = &stack_a0;\n                __asm(\"movaps [rsi], xmm6\");\n                *(uint64_t*)(rsi + 16) &= 0;\n                *(uint64_t*)(rsi + 0x18) = 3;\n                sub_1400699eb(rsi, &stack_d0);\n                sub_140069893(rsi, \":\\n  \");\n                sub_1400698e5(rsi, &stack_28);\n                sub_140069893(rsi, \"\\n\");\n                rdi = &stack_40;\n                __asm(\"movaps [rdi], xmm6\");\n                *(uint64_t*)(rdi + 16) &= 0;\n                rax = *(uint64_t*)(rbx + 8);\n                (**(uint64_t*)(rax))(rbx + 8, rsi, rdi, *(uint64_t*)(rbx + 0x30));\n                sub_140035790(rdi);\n                sub_140041436(rsi);\n            } else {\n                eax++;\n                *(uint32_t*)(rbx + 0x40) = eax;\n            }\n            break;\n        case_140068f24:\n            rax = \"ERROR: Unable to open file\";\n            goto label_140068f3d;\n        case_140068f2d:\n            rax = \"ERROR: Regex complexity too high searching file\";\n            goto label_140068f3d;\n        case_140068f36:\n            rax = \"ERROR: Regex exhausted stack searching file\";\n            goto label_140068f3d;\n    }\n    eax = *(uint32_t*)(r14);\n    if (eax != 0) {\n        *(uint32_t*)(rbx + 0x38) += eax;\n        *(uint32_t*)(rbx + 0x3c)++;\n        if (*(uint32_t*)(r14 + 4) != 3) {\n            __asm(\"xorps xmm6, xmm6\");\n            rdi = &stack_a0;\n            __asm(\"movaps [rdi], xmm6\");\n            *(uint64_t*)(rdi + 16) &= 0;\n            *(uint64_t*)(rdi + 0x18) = 3;\n            sub_1400699eb(rdi, &stack_d0);\n            sub_140069893(rdi, \":\\n\");\n            rax = &stack_f0;\n            *(uint64_t*)(rax + 16) &= 0;\n            __asm(\"movaps [rax], xmm6\");\n            stack_68 = rbx;\n            rax = *(uint64_t*)(rbx + 0x30);\n            rax = *(uint64_t*)(rax + 0x100);\n            rbx = *(uint64_t*)(r14 + 0x28);\n            rcx = rax + rax;\n            stack_c8 = rcx;\n            r15 = &stack_40;\n            esi = 0;\n            stack_30 = r14;\n            stack_38 = rax;\n            while (true) {\n                if (rbx == *(uint64_t*)(r14 + 0x30)) {\n                    break;\n                } else {\n                    eax = rsi + 1;\n                    __asm(\"sete al\");\n                    __asm(\"sete cl\");\n                    cl |= al;\n                    if (cl == 0) {\n                        rax = stack_68;\n                        rax = *(uint64_t*)(rax + 0x30);\n                        if (*(uint32_t*)(rax + 0xe8) > 0) {\n                            sub_14004146e(rdi, 0x20);\n                            esi += 2;\n                            rax = \"   \";\n                            if (esi >= 10) {\n                                rax = \"  \";\n                                if (esi >= 0x64 /* unsigned */) {\n                                    rax = \" \";\n                                    if (esi >= 0x3e8 /* unsigned */) {\n                                        rax = \".\";\n                                        rcx = \"....\";\n                                        rax = rcx;\n                                    }\n                                }\n                            }\n                            stack_40 = rax;\n                            sub_1400698e5(rdi, r15);\n                            sub_14004146e(rdi, 10);\n                        }\n                    }\n                    sub_140069976(rdi, \" %4d\", &arg_1);\n                    rsi = *(uint64_t*)(rbx + 0x18);\n                    rax = *(uint64_t*)(rbx + 0x28);\n                    rcx = rbx + 8;\n                    stack_20 = rcx;\n                    if (rax == *(uint64_t*)(rbx + 0x30)) {\n                        sub_140069893(rdi, \"  \");\n                        stack_50 &= 0;\n                        __asm(\"movaps [rsp+0x40], xmm6\");\n                        stack_58 = 3;\n                        if (stack_38 <= 0) {\nlabel_14006942f:\n                            sub_140041250(rdi, stack_20);\n                            sub_140069893(rdi, \"\\n\");\n                        } else {\n                            rdx = rsi;\n                            rdx -= stack_c8;\n                            if (rdx <= 0) {\n                                goto label_14006942f;\n                            } else {\n                                rax = sub_140069a24(r15, rdx, 0);\n                                if (al == 0) {\n                                    goto label_14006942f;\n                                } else {\n                                    r13 = stack_20;\n                                    r12 = rsi;\n                                    rsi = stack_38;\n                                    sub_140069aba(r13, &stack_80, 0, rsi);\n                                    sub_140041250(rdi, &stack_80);\n                                    sub_140041250(rdi, r15);\n                                    r12 -= rsi;\n                                    r13 = &stack_120;\n                                    sub_140069aba(r13, r13, r12, rsi);\n                                    sub_140041250(rdi, r13);\n                                    sub_140069893(rdi, \"\\n\");\n                                    sub_140041436(r13);\n                                    sub_140041436(&stack_80);\n                                }\n                            }\n                        }\n                        sub_140041436(r15);\n                    } else {\n                        stack_78 = rsi;\n                        stack_70 = rbp;\n                        sub_140069893(rdi, \": \");\n                        rsi = *(uint64_t*)(rbx + 0x28);\n                        r12d = 0;\n                        while (true) {\n                            rcx = stack_38;\n                            if (rsi == *(uint64_t*)(rbx + 0x30)) {\n                                break;\n                            } else {\n                                rax = *(uint64_t*)(rsi + 16);\n                                stack_90 = rax;\n                                __asm(\"movups xmm0, [rsi]\");\n                                __asm(\"movaps [rsp+0x80], xmm0\");\n                                if (rcx > 0) {\n                                    r13 = rbx;\n                                    rax = stack_80;\n                                    rdi = stack_88;\n                                    r14 = rdi;\n                                    r14 = rax;\n                                    rdi = rax;\n                                    r14 -= rcx;\n                                    eax = 0;\n                                    r14 = rax;\n                                    rdi += rcx;\n                                    rax = stack_78;\n                                    rdi = rax;\n                                    rbx = r14;\n                                    rbx -= r12;\n                                    if (rbx <= 0) {\n                                        rbx = r13;\n                                    } else {\n                                        __asm(\"sete r8b\");\n                                        __asm(\"movaps [rsp+0x40], xmm6\");\n                                        stack_50 &= 0;\n                                        stack_58 = 3;\n                                        rax = sub_140069a24(r15, rbx);\n                                        if (al != 0) {\n                                            sub_140041250(&stack_a0, r15);\n                                            r12 = r14;\n                                        }\n                                        rbx = r13;\n                                        sub_140041436(r15);\n                                    }\n                                    r9 = rdi;\n                                    r9 -= r12;\n                                    sub_140069aba(stack_20, r15, r12);\n                                    sub_140041250(&stack_a0, r15);\n                                    sub_140041436(r15);\n                                    r12 = rdi;\n                                }\n                                stack_80 += rbp;\n                                stack_88 += rbp;\n                                sub_140069bec(&stack_f0, &stack_80);\n                                rsi += 0x18;\n                                continue;\n                            }\n                            break;\n                        }\n                        if (r12 == 0) {\n                            rdi = &stack_a0;\n                            sub_140041250(rdi, stack_20);\n                            r14 = stack_30;\n                        } else {\n                            rsi = stack_78;\n                            rdx = rsi;\n                            rdx -= r12;\n                            __asm(\"movaps [rsp+0x40], xmm6\");\n                            stack_50 &= 0;\n                            stack_58 = 3;\n                            rax = sub_140069a24(r15, rdx, 0);\n                            if (al == 0) {\n                                rsi = &stack_80;\n                                sub_140069aba(stack_20, rsi, r12, rsi);\n                                rdi = &stack_a0;\n                                sub_140041250(rdi, rsi);\n                                sub_140041436(rsi);\n                            } else {\n                                rdi = &stack_a0;\n                                sub_140041250(rdi, r15);\n                            }\n                            r14 = stack_30;\n                            sub_140041436(r15);\n                        }\n                        sub_140069893(rdi, \"\\n\");\n                    }\n                    rbx += 0x40;\n                    esi = ebp;\n                    continue;\n                }\n                break;\n            }\n            rsi = &stack_a0;\n            sub_140069893(rsi, \"\\n\");\n            rdx = stack_68;\n            rcx = rdx + 8;\n            rax = *(uint64_t*)(rdx + 8);\n            r9 = *(uint64_t*)(rdx + 0x30);\n            rdi = &stack_f0;\n        } else {\n            __asm(\"xorps xmm6, xmm6\");\n            rsi = &stack_a0;\n            __asm(\"movaps [rsi], xmm6\");\n            *(uint64_t*)(rsi + 16) &= 0;\n            *(uint64_t*)(rsi + 0x18) = 3;\n            sub_1400699eb(rsi, &stack_d0);\n            rax = \":\\n    <binary>\\n\\n\";\n            rdi = &stack_40;\n            *(uint64_t*)(rdi) = rax;\n            rax = &data_1406da1e8;\n            *(uint64_t*)(rdi + 8) = rax;\n            sub_140069920(rsi, rdi);\n            rcx = rbx + 8;\n            r9 = *(uint64_t*)(rbx + 0x30);\n            __asm(\"movaps [rdi], xmm6\");\n            *(uint64_t*)(rdi + 16) &= 0;\n            rax = *(uint64_t*)(rbx + 8);\n            rdi = &stack_40;\n        }\n        (**(uint64_t*)(rax))(rcx, rsi, rdi);\n        sub_140035790(rdi);\n        sub_140041436(rsi);\n    }\n    sub_14002e7ec(&stack_d0);\n    __asm(\"movaps xmm6, [rsp+0x140]\");\n    return rax;\n}\n",
+    "signature": "int64_t sub_140068eaa(int64_t rcx, int64_t rdx)",
+    "strings": [
+      "File too large, skipping",
+      "ERROR: Unable to open file",
+      "ERROR: Regex complexity too high searching file",
+      "ERROR: Regex exhausted stack searching file",
+      ":\n  ",
+      "\n",
+      ":\n    <binary>\n\n",
+      ":\n",
+      "   ",
+      "  ",
+      " ",
+      ".",
+      "....",
+      " %4d",
+      ": "
+    ],
+    "structured": false
+  },
+  "summary": "Pseudo-C for sub_140068eaa (285 lines, partly unstructured).",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.3.0",
+    "host": "windows-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "register_level",
+      "message": "variables are machine registers and stack slots; types are not recovered"
+    },
+    {
+      "code": "calling_convention_assumed",
+      "message": "call arguments follow the usual x86_64 convention and may be wrong for unusual functions"
+    },
+    {
+      "code": "conditions_from_flags",
+      "message": "branch conditions are rebuilt from the last compare and may be approximate"
+    },
+    {
+      "code": "unstructured_flow",
+      "message": "5 gotos remain where the control flow isn't a simple if/loop"
+    },
+    {
+      "code": "inline_asm",
+      "message": "19 instructions have no C rule and are shown as __asm(...)"
+    },
+    {
+      "code": "deep_engine_unavailable",
+      "message": "Ghidra couldn't open this program (could not start Ghidra: Ghidra's analysis failed; see \\\\?\\D:\\craft\\craft-anything-0.3.0-windows-x64-portable\\CraftAnythingData\\engines\\ghidra-cache\\b3bba60bf2195019-f2dfab6faedc84f0.log). So this came from the built-in decompiler, which is less exact."
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [
+    {
+      "kind": "address",
+      "value": "0x140068eaa"
+    }
+  ],
+  "links": [],
+  "carries_target_content": true
+}

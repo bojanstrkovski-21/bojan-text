@@ -138,6 +138,10 @@ pub struct Doc {
     pub saved_text: String,
     pub bookmarks: Vec<usize>,
     pub mod_cache: (u64, Option<(usize, usize)>),
+    /// split pane this file is shown in (View ▸ Layout)
+    pub group: usize,
+    /// non-zero: this is a split copy (File ▸ Split View) kept in sync with its twin
+    pub clone_id: u64,
 }
 
 impl Doc {
@@ -186,6 +190,14 @@ struct FindState {
     replace: String,
     case: bool,
     regex: bool,
+    /// whole_word
+    whole: bool,
+    /// wrap (default on)
+    wrap: bool,
+    /// highlight matches (default on)
+    highlight: bool,
+    /// in_selection: search only inside this char range
+    in_sel: Option<(usize, usize)>,
     focus: bool,
 }
 
@@ -273,6 +285,19 @@ pub struct App {
     /// palette lists computed when the palette opens: (label, id, detail)
     pal_items: Vec<(String, String, String)>,
     project_symbols_rx: Option<Receiver<Vec<(String, String, String)>>>,
+    // syntax chooser (status bar)
+    syntax_popup: bool,
+    syntax_anchor: egui::Rect,
+    syntax_scrolled: bool,
+    // split panes (View ▸ Layout / Groups)
+    groups: usize,
+    cols: usize,
+    max_columns: usize,
+    focus_group: usize,
+    group_active: Vec<Option<u64>>,
+    last_active_id: Option<u64>,
+    clone_sync: HashMap<u64, u64>,
+    next_clone: u64,
 }
 
 const SAMPLE_WELCOME: &str = include_str!("../assets/samples/Welcome.md");
@@ -308,7 +333,7 @@ impl App {
             pal_query: String::new(),
             pal_sel: 0,
             pal_focus: false,
-            find: FindState::default(),
+            find: FindState { wrap: true, highlight: true, ..Default::default() },
             win_theme: false,
             win_packages: false,
             win_lsp: false,
@@ -354,6 +379,17 @@ impl App {
             chord_k: None,
             pal_items: Vec::new(),
             project_symbols_rx: None,
+            syntax_popup: false,
+            syntax_anchor: egui::Rect::NOTHING,
+            syntax_scrolled: false,
+            groups: 1,
+            cols: 1,
+            max_columns: 3,
+            focus_group: 0,
+            group_active: vec![None],
+            last_active_id: None,
+            clone_sync: HashMap::new(),
+            next_clone: 1,
         };
         if app.s.font_file.is_some() {
             theme::install_fonts_with(&cc.egui_ctx, app.s.font_file.as_deref());
@@ -463,6 +499,8 @@ impl App {
             saved_text: String::new(),
             bookmarks: Vec::new(),
             mod_cache: (0, None),
+            group: self.focus_group.min(self.groups.saturating_sub(1)),
+            clone_id: 0,
         };
         if d.path.is_some() {
             d.saved_text = d.text.clone();
@@ -532,6 +570,16 @@ impl App {
                 d.title = path.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
                 d.path = Some(path.clone());
                 d.view.hl.invalidate();
+                // split copies of the same file share the saved state
+                let (cid, h, t, title) = (d.clone_id, d.saved_hash, d.saved_text.clone(), d.title.clone());
+                if cid != 0 {
+                    for o in self.docs.iter_mut().filter(|o| o.clone_id == cid) {
+                        o.saved_hash = h;
+                        o.saved_text = t.clone();
+                        o.path = Some(path.clone());
+                        o.title = title.clone();
+                    }
+                }
                 self.flash(format!("Saved {}", path.display()));
                 let key = lsp::norm_key(&path);
                 for c in self.clients.values_mut() {
@@ -1341,6 +1389,58 @@ impl eframe::App for App {
         if !pending.is_empty() {
             self.macro_playback(&ctx, pending);
         }
+        // test switches for --screenshot runs: --layout G:C, --split-view, --syntax-popup
+        if self.shot.is_some() && self.frame == 8 {
+            let args: Vec<String> = std::env::args().collect();
+            if let Some(i) = args.iter().position(|a| a == "--layout") {
+                let mut it = args.get(i + 1).map(|v| v.split(':').map(|x| x.parse::<usize>().unwrap_or(1)).collect::<Vec<_>>()).unwrap_or_default().into_iter();
+                let (g, c) = (it.next().unwrap_or(1), it.next().unwrap_or(1));
+                self.set_layout(g, c);
+                if self.groups > 1 && self.docs.len() > 1 {
+                    self.active = 1;
+                    self.move_file_to_group(1);
+                    self.active = 0;
+                }
+            }
+            if args.iter().any(|a| a == "--split-view") {
+                self.split_view();
+            }
+            if args.iter().any(|a| a == "--syntax-popup") {
+                self.syntax_popup = true;
+            }
+        }
+        // --demo-typing (screenshot runs only): type into a new file to test Enter / Tab
+        if self.shot.is_some() && std::env::args().any(|a| a == "--demo-typing") {
+            let key = |k: Key| egui::Event::Key { key: k, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::NONE };
+            match self.frame {
+                10 => {
+                    self.run("new");
+                    if let Some(d) = self.docs.get_mut(self.active) {
+                        d.syntax_override = Some("Rust".into());
+                    }
+                }
+                14 => self.pending_events.push(egui::Event::Text("fn main() {}".into())),
+                18 => self.pending_events.push(key(Key::ArrowLeft)),
+                22 => self.pending_events.push(key(Key::Enter)),
+                26 => self.pending_events.push(egui::Event::Text("let x = 1;".into())),
+                30 => self.pending_events.push(key(Key::Enter)),
+                34 => self.pending_events.push(egui::Event::Text("let ab".into())),
+                38 => self.pending_events.push(key(Key::Enter)),
+                42 => self.pending_events.push(egui::Event::Text("ab".into())),
+                46 => self.pending_events.push(key(Key::Tab)),
+                _ => {}
+            }
+        }
+        if self.shot.is_some() && self.frame == 12 && std::env::args().any(|a| a == "--demo-find") {
+            self.folder = std::env::current_dir().ok().map(|d| d.join("src"));
+            self.find.query = "fn newline".into();
+            self.find.open = true;
+            self.fif.open = true;
+            self.fif.where_ = "<open folders>".into();
+            self.start_find_in_files();
+        }
+        self.sync_clones();
+        self.sync_groups();
         self.shortcuts(&ctx);
         self.handle_drops(&ctx);
 
@@ -1393,33 +1493,25 @@ impl eframe::App for App {
                 });
         }
         egui::CentralPanel::no_frame().show(ui, |ui| {
-            if self.s.show_tabs {
-                egui::Panel::top("tabbar").exact_size(36.0).frame(egui::Frame::new().fill(p.tabbar_bg)).show(ui, |ui| {
-                    ui.horizontal(|ui| {
-                        if !self.s.show_menu && ui.add(egui::Button::new(RichText::new("☰").size(16.0).color(p.muted)).frame(false)).on_hover_text("Show the menu again").clicked() {
-                            self.s.show_menu = true;
-                        }
-                        self.tab_bar(ui);
-                    });
+            if self.find.open {
+                egui::Panel::top("findbar").frame(egui::Frame::new().fill(mix(p.sidebar_bg, p.bg, 0.5)).inner_margin(egui::Margin::symmetric(4, 6))).show(ui, |ui| {
+                    self.find_bar(ui);
                 });
-            } else if !self.s.show_menu && self.distraction.is_none() {
+            }
+            if !self.s.show_tabs && !self.s.show_menu && self.distraction.is_none() {
                 egui::Panel::top("menu_toggle").frame(egui::Frame::new().fill(p.bg)).show(ui, |ui| {
                     if ui.add(egui::Button::new(RichText::new("☰").size(16.0).color(p.muted)).frame(false)).on_hover_text("Show the menu again").clicked() {
                         self.s.show_menu = true;
                     }
                 });
             }
-            if self.find.open {
-                egui::Panel::top("findbar").frame(egui::Frame::new().fill(mix(p.sidebar_bg, p.bg, 0.5)).inner_margin(egui::Margin::symmetric(4, 6))).show(ui, |ui| {
-                    self.find_bar(ui);
-                });
-            }
             egui::CentralPanel::no_frame().show(ui, |ui| {
-                self.editor_area(ui);
+                self.panes(ui);
             });
         });
 
         self.command_palette(&ctx);
+        self.syntax_chooser(&ctx);
         self.windows(&ctx);
 
         // Show Scope Name popup

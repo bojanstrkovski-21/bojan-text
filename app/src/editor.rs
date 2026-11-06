@@ -260,7 +260,8 @@ pub fn editor_view(ui: &mut egui::Ui, id: egui::Id, text: &mut String, vs: &mut 
     let line_count = text.bytes().filter(|&b| b == b'\n').count() + 1;
     let digits = (line_count.max(1) as f32).log10().floor() as usize + 1;
     let gutter_w = if cfg.line_numbers { (digits.max(2) as f32) * char_w + 36.0 } else { 18.0 };
-    let mm_w = if cfg.minimap { 110.0 } else { 0.0 };
+    // the minimap is hidden in narrow panes so the text keeps its room
+    let mm_w = if cfg.minimap && full.width() > 400.0 { 110.0 } else { 0.0 };
     let gutter_rect = Rect::from_min_max(full.min, Pos2::new(full.left() + gutter_w, full.bottom()));
     let mm_rect = Rect::from_min_max(Pos2::new(full.right() - mm_w, full.top()), full.max);
     let text_rect = Rect::from_min_max(Pos2::new(gutter_rect.right(), full.top()), Pos2::new(mm_rect.left(), full.bottom()));
@@ -555,7 +556,7 @@ pub fn editor_view(ui: &mut egui::Ui, id: egui::Id, text: &mut String, vs: &mut 
     }
 
     // minimap
-    if cfg.minimap {
+    if cfg.minimap && mm_w > 0.0 {
         minimap(ui, id, mm_rect, vs, cfg, line_count, text_now);
     }
     out
